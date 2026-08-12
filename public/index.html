@@ -534,86 +534,504 @@ button{cursor:pointer}
 
 </style>
 
-<section id="brainstorm" class="view hidden">
-  <div class="brain-v2">
+<style id="QTRC_BRAINSTORM_V3_UI">
 
-    <div class="brain-v2-head">
-      <div class="eyebrow">QTRC THINKING SPACE</div>
-      <h1>Brainstorming</h1>
+.qtrc-brain-v3{
+  max-width:860px;
+  margin:0 auto;
+}
+
+.qtrc-brain-head{
+  text-align:center;
+  padding:34px 20px 26px;
+}
+
+.qtrc-brain-head .eyebrow{
+  margin-bottom:10px;
+}
+
+.qtrc-brain-head h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:-.04em;
+  font-weight:650;
+}
+
+.qtrc-brain-head p{
+  max-width:620px;
+  margin:12px auto 0;
+  color:#737373;
+  font-size:14px;
+  line-height:1.7;
+}
+
+.qtrc-chat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.045);
+  overflow:hidden;
+}
+
+.qtrc-chat-scroll{
+  min-height:500px;
+  max-height:calc(100vh - 330px);
+  overflow-y:auto;
+  padding:28px 26px 16px;
+}
+
+.qtrc-empty-state{
+  min-height:430px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+}
+
+.qtrc-empty-mark{
+  width:48px;
+  height:48px;
+  border:1px solid #ddd;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  margin-bottom:20px;
+  background:#fff;
+}
+
+.qtrc-empty-state h2{
+  margin:0;
+  font-size:21px;
+  letter-spacing:-.025em;
+}
+
+.qtrc-empty-state p{
+  max-width:530px;
+  margin:10px auto 0;
+  color:#777;
+  line-height:1.7;
+  font-size:13px;
+}
+
+.qtrc-message{
+  display:flex;
+  margin:18px 0;
+}
+
+.qtrc-message.user{
+  justify-content:flex-end;
+}
+
+.qtrc-message-bubble{
+  max-width:760px;
+  font-size:14px;
+  line-height:1.78;
+}
+
+.qtrc-message.user .qtrc-message-bubble{
+  background:#171717;
+  color:#fff;
+  padding:11px 14px;
+  border-radius:14px 14px 4px 14px;
+  line-height:1.6;
+}
+
+.qtrc-message.qtrc .qtrc-message-bubble{
+  max-width:780px;
+  color:#222;
+}
+
+.qtrc-message.qtrc .qtrc-message-bubble p{
+  margin:0 0 12px;
+}
+
+.qtrc-message.qtrc .qtrc-message-bubble p:last-child{
+  margin-bottom:0;
+}
+
+.qtrc-processing{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#777;
+  font-size:12px;
+  padding:9px 0;
+}
+
+.qtrc-processing-dots{
+  display:inline-flex;
+  gap:3px;
+}
+
+.qtrc-processing-dots span{
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:#888;
+  animation:qtrcBrainDot 1.15s infinite ease-in-out;
+}
+
+.qtrc-processing-dots span:nth-child(2){
+  animation-delay:.15s;
+}
+
+.qtrc-processing-dots span:nth-child(3){
+  animation-delay:.3s;
+}
+
+@keyframes qtrcBrainDot{
+  0%,80%,100%{
+    opacity:.25;
+    transform:translateY(0);
+  }
+  40%{
+    opacity:1;
+    transform:translateY(-2px);
+  }
+}
+
+.qtrc-map{
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fafafa;
+  overflow:hidden;
+}
+
+.qtrc-map-summary{
+  padding:14px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+}
+
+.qtrc-map-summary strong{
+  font-size:12px;
+}
+
+.qtrc-map-summary span{
+  color:#888;
+  font-size:11px;
+}
+
+.qtrc-map-body{
+  display:none;
+  border-top:1px solid var(--line);
+  padding:10px;
+}
+
+.qtrc-map.open .qtrc-map-body{
+  display:block;
+}
+
+.qtrc-map-item{
+  background:#fff;
+  border:1px solid #ececea;
+  border-radius:10px;
+  padding:11px 12px;
+  margin-bottom:7px;
+}
+
+.qtrc-map-item:last-child{
+  margin-bottom:0;
+}
+
+.qtrc-map-item-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.qtrc-map-name{
+  font-size:12px;
+  font-weight:650;
+}
+
+.qtrc-map-status{
+  font-size:9px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#f1f1ef;
+}
+
+.qtrc-map-status.found{
+  background:#eef6ef;
+  color:#2d6a3d;
+}
+
+.qtrc-map-status.partial{
+  background:#fff6df;
+  color:#8a6a18;
+}
+
+.qtrc-map-status.missing{
+  background:#fff0ee;
+  color:#9c2b21;
+}
+
+.qtrc-map-detail{
+  margin-top:7px;
+  color:#666;
+  font-size:11px;
+  line-height:1.55;
+}
+
+.qtrc-proposal{
+  margin-top:15px;
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+}
+
+.qtrc-proposal h4{
+  margin:0 0 6px;
+  font-size:13px;
+}
+
+.qtrc-proposal p{
+  margin:0;
+  color:#666;
+  font-size:11px;
+  line-height:1.6;
+}
+
+.qtrc-proposal-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.qtrc-attachments{
+  padding:9px 14px;
+  border-top:1px solid var(--line);
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  min-height:0;
+}
+
+.qtrc-attachment{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 9px;
+  border:1px solid var(--line);
+  background:#fafafa;
+  border-radius:8px;
+  font-size:10px;
+  color:#555;
+}
+
+.qtrc-attachment button{
+  border:0;
+  background:transparent;
+  padding:0;
+  color:#999;
+  cursor:pointer;
+}
+
+.qtrc-composer{
+  border-top:1px solid var(--line);
+  padding:12px;
+  background:#fff;
+}
+
+.qtrc-composer-inner{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:8px;
+  background:#fff;
+}
+
+.qtrc-composer textarea{
+  flex:1;
+  min-height:48px;
+  max-height:180px;
+  resize:none;
+  border:0;
+  outline:0;
+  padding:8px 9px;
+  font-size:14px;
+  line-height:1.55;
+  background:transparent;
+}
+
+.qtrc-composer-actions{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.qtrc-upload{
+  width:38px;
+  height:38px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.qtrc-upload:hover{
+  background:#f5f5f3;
+}
+
+.qtrc-send{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  border:0;
+  background:#171717;
+  color:#fff;
+  cursor:pointer;
+}
+
+.qtrc-send:disabled{
+  opacity:.45;
+  cursor:default;
+}
+
+.qtrc-file-input{
+  display:none;
+}
+
+.qtrc-note{
+  text-align:center;
+  color:#999;
+  font-size:10px;
+  padding:9px 10px 0;
+}
+
+@media(max-width:760px){
+  .qtrc-brain-head h1{
+    font-size:29px;
+  }
+
+  .qtrc-chat-scroll{
+    padding:20px 15px 12px;
+  }
+}
+
+</style>
+
+<section id="brainstorm" class="view hidden">
+
+  <div class="qtrc-brain-v3">
+
+    <div class="qtrc-brain-head">
+
+      <div class="eyebrow">
+        QTRC THINKING SPACE
+      </div>
+
+      <h1>
+        Brainstorming
+      </h1>
+
       <p>
-        Talk through your research, drop in a file, and let QTRC help map what you already have across the 11-block canvas.
+        Bring an idea, a draft, or your research material here. We can work through it together before anything is moved into the canvas.
       </p>
+
     </div>
 
-    <div class="brain-v2-layout">
+    <div class="qtrc-chat">
 
-      <div class="brain-chat">
+      <div
+        class="qtrc-chat-scroll"
+        id="brainMessages"
+      >
 
-        <div class="brain-messages" id="brainMessages">
-          <div class="brain-msg qtrc">
-            Hey — send me whatever you're working with. You can just talk through the idea, upload a file, or do both.
-            <span class="muted">
-              I’ll look at it across all 11 QTRC blocks and point out what’s clear, what’s partial, and what still needs work.
-            </span>
+        <div
+          class="qtrc-empty-state"
+          id="brainEmptyState"
+        >
+
+          <div class="qtrc-empty-mark">
+            ◇
           </div>
-        </div>
 
-        <div class="brain-upload">
-          <input
-            id="brainFileInput"
-            class="brain-file-input"
-            type="file"
-            multiple
-            accept=".pdf,.doc,.docx,.txt,.md,.csv"
-          >
+          <h2>
+            What are you working on?
+          </h2>
 
-          <button class="btn" id="brainUploadBtn">
-            📎 Upload file
-          </button>
+          <p>
+            You can start with a question, describe an idea, or upload your research material. I’ll help you work through it and see how it connects to the 11 QTRC blocks.
+          </p>
 
-          <span class="brain-file-name" id="brainFileName">
-            No file attached
-          </span>
-        </div>
-
-        <div class="brain-composer">
-          <textarea
-            id="brainInput"
-            placeholder="Tell QTRC what you're working on..."
-          ></textarea>
-
-          <button class="btn primary" id="brainThink">
-            Send
-          </button>
         </div>
 
       </div>
 
-      <aside>
+      <div
+        class="qtrc-attachments"
+        id="brainAttachments"
+        style="display:none"
+      ></div>
 
-        <div class="brain-assessment">
+      <div class="qtrc-composer">
 
-          <h3>11-Block Check</h3>
+        <div class="qtrc-composer-inner">
 
-          <div class="brain-assessment-intro">
-            Once QTRC has enough material, you'll see how the conversation or uploaded file maps onto each block.
-          </div>
+          <input
+            id="brainFileInput"
+            class="qtrc-file-input"
+            type="file"
+            multiple
+          >
 
-          <div id="brainAssessment">
-            <div class="empty" style="padding:24px;font-size:11px">
-              Nothing checked yet.
-            </div>
-          </div>
+          <button
+            class="qtrc-upload"
+            id="brainUploadBtn"
+            type="button"
+            title="Upload files"
+            aria-label="Upload files"
+          >
+            +
+          </button>
 
-          <div id="brainProposal"></div>
+          <textarea
+            id="brainInput"
+            rows="1"
+            placeholder="Discuss your research with QTRC…"
+          ></textarea>
+
+          <button
+            class="qtrc-send"
+            id="brainThink"
+            type="button"
+            aria-label="Send"
+          >
+            ↑
+          </button>
 
         </div>
 
-      </aside>
+        <div class="qtrc-note">
+          QTRC guides the research process; it does not make scholarly decisions on your behalf.
+        </div>
+
+      </div>
 
     </div>
 
   </div>
+
 </section>
 
 <section id="guide" class="view hidden">
@@ -725,7 +1143,11 @@ function go(view){
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
   if(view==="dashboard") renderDashboard();
   if(view==="canvas" && current) renderCanvas();
-  if(view==="brainstorm") { renderBrainThreads(); document.getElementById("brainLevel").textContent=current?.level||"Basic"; }
+  if(view==="brainstorm") {
+    if(window.qtrcBrainOpen){
+      window.qtrcBrainOpen();
+    }
+  }
   document.getElementById("topTitle").textContent=view==="canvas"?(current?.name||"QTRC+"):"Qur’anic Tafsir Research Canvas+";
 }
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
@@ -881,65 +1303,814 @@ const saveApi=document.getElementById("saveApiUrl"); if(saveApi) saveApi.onclick
 document.getElementById("clearData").onclick=()=>{if(confirm("Clear all locally saved canvases?")){localStorage.removeItem("qtrc_canvases");canvases=[];current=null;renderRecent();go("home")}};
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
-let brainMode="explore";
-let brainThreads=JSON.parse(localStorage.getItem("qtrc_brain_threads")||"[]");
 
-document.querySelectorAll(".brain-chip").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".brain-chip").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    brainMode=btn.dataset.brainMode;
-    const prompts={
-      explore:"Tulis kegelisahan, ide topik, ayat yang menarik perhatian, teori yang sedang dipertimbangkan, atau pertanyaan yang masih mentah...",
-      question:"Tulis pertanyaan yang sedang kamu coba rumuskan. Belum perlu sempurna.",
-      theory:"Tulis teori, pendekatan, metode tafsir, atau kemungkinan lensa analisis yang sedang kamu pertimbangkan.",
-      novelty:"Tulis dugaan kontribusi, gap, atau hal yang menurutmu belum banyak dibahas."
-    };
-    document.getElementById("brainInput").placeholder=prompts[brainMode];
-  };
-});
+/* =========================================================
+   QTRC BRAINSTORMING V3
+   ========================================================= */
 
-function renderBrainThreads(){
- const box=document.getElementById("brainThreads"); if(!box)return;
- box.innerHTML="";
- brainThreads.forEach((t,idx)=>{
-   const el=document.createElement("div");el.className="brain-thread";
-   el.innerHTML=`<div class="thread-head"><span class="thread-title">${esc(t.modeLabel)}</span><span class="thread-time">${esc(t.time)}</span></div>
-   <div class="thread-body">${esc(t.text)}</div>
-   <div class="thread-suggestion"><strong>QTRC exploratory note:</strong><br>${esc(t.note)}</div>
-   <div class="thread-transfer">
-     <button class="btn transfer">Move to Canvas</button>
-     <button class="btn delete-thread">Delete</button>
-   </div>`;
-   el.querySelector(".delete-thread").onclick=()=>{brainThreads.splice(idx,1);localStorage.setItem("qtrc_brain_threads",JSON.stringify(brainThreads));renderBrainThreads()};
-   el.querySelector(".transfer").onclick=()=>{
-     if(!current){alert("Open or create a canvas first.");go("setup");return}
-     const map={explore:0,question:1,theory:6,novelty:9};
-     const target=map[t.mode] ?? 0;
-     current.blocks[target].content=t.text;
-     current.blocks[target].status="Provisional";
-     current.updatedAt=new Date().toISOString();current.validated=false;saveAll();go("canvas");
-   };
-   box.appendChild(el);
- });
+let brainV3Files = [];
+let brainV3Conversation = [];
+let brainV3Processing = null;
+
+const brainUploadBtn =
+  document.getElementById("brainUploadBtn");
+
+const brainFileInput =
+  document.getElementById("brainFileInput");
+
+const brainAttachments =
+  document.getElementById("brainAttachments");
+
+const brainMessages =
+  document.getElementById("brainMessages");
+
+const brainInput =
+  document.getElementById("brainInput");
+
+const brainThink =
+  document.getElementById("brainThink");
+
+function brainV3ClearEmptyState(){
+
+  const empty =
+    document.getElementById("brainEmptyState");
+
+  if(empty){
+    empty.remove();
+  }
+
 }
 
-document.getElementById("brainThink").onclick=async()=>{
- const input=document.getElementById("brainInput").value.trim();
- if(!input){alert("Write an idea first.");return}
- const labels={explore:"Exploratory Idea",question:"Research Question Draft",theory:"Theory & Method Exploration",novelty:"Contribution & Novelty Exploration"};
- const btn=document.getElementById("brainThink");
- btn.disabled=true;btn.textContent="Thinking...";
- try{
-   const data=await qtrcApi("/api/brainstorm",{input,brainMode,context:qtrcContext()});
-   brainThreads.unshift({mode:brainMode,modeLabel:labels[brainMode],text:input,note:data.analysis||"No analysis returned.",time:new Date().toLocaleString()});
-   brainThreads=brainThreads.slice(0,30);
-   localStorage.setItem("qtrc_brain_threads",JSON.stringify(brainThreads));
-   document.getElementById("brainInput").value="";
-   renderBrainThreads();
- }catch(err){
-   alert(err.message+"\n\nSet QTRC API Base URL in Settings after deploying the backend.");
- }finally{btn.disabled=false;btn.textContent="Think with QTRC";}
+function brainV3DetectLanguage(text){
+
+  const value =
+    String(text || "").toLowerCase();
+
+  const indoSignals = [
+    "saya","aku","ingin","mau","tentang",
+    "penelitian","riset","tolong","bisa",
+    "apa","bagaimana","kenapa","dengan",
+    "untuk","yang","ini","itu","dalam"
+  ];
+
+  let score = 0;
+
+  indoSignals.forEach(function(word){
+
+    if(
+      value.includes(" " + word + " ") ||
+      value.startsWith(word + " ") ||
+      value.endsWith(" " + word)
+    ){
+      score++;
+    }
+
+  });
+
+  if(score >= 2){
+    return "id";
+  }
+
+  return (
+    navigator.language &&
+    navigator.language.toLowerCase().startsWith("id")
+  )
+    ? "id"
+    : "en";
+}
+
+function brainV3AddMessage(role,text){
+
+  brainV3ClearEmptyState();
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "qtrc-message " +
+    (role === "user" ? "user" : "qtrc");
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className =
+    "qtrc-message-bubble";
+
+  if(role === "qtrc"){
+
+    const parts =
+      String(text || "")
+        .trim()
+        .split(/\n\s*\n+/)
+        .map(function(part){
+          return part.replace(/\s*\n\s*/g," ").trim();
+        })
+        .filter(Boolean);
+
+    bubble.innerHTML =
+      parts.map(function(part){
+        return "<p>" + esc(part) + "</p>";
+      }).join("");
+
+  }else{
+
+    bubble.textContent =
+      String(text || "");
+
+  }
+
+  wrapper.appendChild(bubble);
+
+  brainMessages.appendChild(wrapper);
+
+  brainV3Conversation.push({
+    role:
+      role === "user"
+        ? "user"
+        : "assistant",
+    content:String(text || "")
+  });
+
+  brainV3Conversation =
+    brainV3Conversation.slice(-12);
+
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
+}
+
+function brainV3ShowProcessing(stage){
+
+  brainV3HideProcessing();
+
+  const lang =
+    brainV3DetectLanguage(
+      brainInput.value ||
+      brainV3Conversation
+        .filter(function(item){
+          return item.role === "user";
+        })
+        .slice(-1)[0]?.content ||
+      ""
+    );
+
+  const labels =
+    lang === "id"
+      ? {
+          reading:"Membaca material…",
+          analyzing:"Menganalisis isi…",
+          mapping:"Mencocokkan dengan 11 blok QTRC…",
+          synthesizing:"Menyusun hasilnya…"
+        }
+      : {
+          reading:"Reading your material…",
+          analyzing:"Analyzing the content…",
+          mapping:"Cross-checking against the 11 QTRC blocks…",
+          synthesizing:"Putting the findings together…"
+        };
+
+  const el =
+    document.createElement("div");
+
+  el.id = "brainProcessing";
+  el.className = "qtrc-processing";
+
+  el.innerHTML = `
+    <span>${esc(labels[stage] || labels.analyzing)}</span>
+    <span class="qtrc-processing-dots">
+      <span></span><span></span><span></span>
+    </span>
+  `;
+
+  brainMessages.appendChild(el);
+
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
+
+  brainV3Processing = {
+    element:el,
+    labels
+  };
+}
+
+function brainV3UpdateProcessing(stage){
+
+  if(!brainV3Processing){
+    brainV3ShowProcessing(stage);
+    return;
+  }
+
+  const text =
+    brainV3Processing.labels[stage] ||
+    brainV3Processing.labels.analyzing;
+
+  const label =
+    brainV3Processing.element.querySelector("span");
+
+  if(label){
+    label.textContent = text;
+  }
+
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
+}
+
+function brainV3HideProcessing(){
+
+  const current =
+    document.getElementById("brainProcessing");
+
+  if(current){
+    current.remove();
+  }
+
+  brainV3Processing = null;
+}
+
+function brainV3RenderAttachments(){
+
+  if(!brainV3Files.length){
+
+    brainAttachments.style.display =
+      "none";
+
+    brainAttachments.innerHTML = "";
+
+    return;
+  }
+
+  brainAttachments.style.display =
+    "flex";
+
+  brainAttachments.innerHTML = "";
+
+  brainV3Files.forEach(function(file,index){
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "qtrc-attachment";
+
+    item.innerHTML = `
+      <span>📎 ${esc(file.name)}</span>
+      <button
+        type="button"
+        data-remove-file="${index}"
+        aria-label="Remove file"
+      >
+        ×
+      </button>
+    `;
+
+    brainAttachments.appendChild(item);
+  });
+
+  brainAttachments
+    .querySelectorAll("[data-remove-file]")
+    .forEach(function(button){
+
+      button.onclick = function(){
+
+        const index =
+          Number(
+            button.getAttribute("data-remove-file")
+          );
+
+        brainV3Files.splice(index,1);
+
+        brainV3RenderAttachments();
+      };
+
+    });
+}
+
+async function brainV3ExtractBrowserText(file){
+
+  const name =
+    file.name.toLowerCase();
+
+  const isText =
+    file.type.startsWith("text/") ||
+    name.endsWith(".txt") ||
+    name.endsWith(".md") ||
+    name.endsWith(".csv") ||
+    name.endsWith(".json") ||
+    name.endsWith(".xml") ||
+    name.endsWith(".html") ||
+    name.endsWith(".htm");
+
+  if(!isText){
+    return "";
+  }
+
+  try{
+    return String(
+      await file.text()
+    ).slice(0,30000);
+  }catch{
+    return "";
+  }
+}
+
+brainUploadBtn.onclick = function(){
+
+  brainFileInput.click();
+
+};
+
+brainFileInput.addEventListener(
+  "change",
+  function(){
+
+    const selected =
+      Array.from(
+        brainFileInput.files || []
+      );
+
+    if(!selected.length){
+      return;
+    }
+
+    brainV3Files =
+      brainV3Files.concat(selected);
+
+    brainV3RenderAttachments();
+
+    brainV3ClearEmptyState();
+
+    brainV3AddMessage(
+      "user",
+      selected.length === 1
+        ? "Saya mengunggah " + selected[0].name + "."
+        : "Saya mengunggah " +
+          selected.length +
+          " file."
+    );
+
+    brainFileInput.value = "";
+
+  }
+);
+
+brainInput.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter" && !event.shiftKey){
+
+      event.preventDefault();
+
+      brainThink.click();
+
+    }
+
+  }
+);
+
+brainThink.onclick = async function(){
+
+  const input =
+    brainInput.value.trim();
+
+  if(!input && !brainV3Files.length){
+
+    brainV3AddMessage(
+      "qtrc",
+      "Silakan mulai dengan ide, pertanyaan, atau bahan penelitian yang ingin kita bahas."
+    );
+
+    return;
+  }
+
+  if(input){
+
+    brainV3AddMessage(
+      "user",
+      input
+    );
+
+  }
+
+  brainInput.value = "";
+
+  brainThink.disabled = true;
+
+  brainV3ShowProcessing(
+    brainV3Files.length
+      ? "reading"
+      : "analyzing"
+  );
+
+  try{
+
+    const fileResults = [];
+
+    for(const file of brainV3Files){
+
+      const text =
+        await brainV3ExtractBrowserText(file);
+
+      fileResults.push({
+        name:file.name,
+        type:file.type,
+        size:file.size,
+        browserText:text,
+        browserReadable:Boolean(text)
+      });
+
+    }
+
+    const sourceText =
+      fileResults
+        .filter(function(file){
+          return file.browserReadable;
+        })
+        .map(function(file){
+          return (
+            "\n===== FILE: " +
+            file.name +
+            " =====\n" +
+            file.browserText
+          );
+        })
+        .join("\n");
+
+    brainV3UpdateProcessing(
+      sourceText
+        ? "mapping"
+        : "analyzing"
+    );
+
+    brainV3UpdateProcessing(
+      "synthesizing"
+    );
+
+    const languageHint =
+      brainV3DetectLanguage(
+        input ||
+        brainV3Conversation
+          .filter(function(item){
+            return item.role === "user";
+          })
+          .slice(-1)[0]?.content ||
+        ""
+      );
+
+    const data =
+      await qtrcApi(
+        "/api/brainstorm",
+        {
+          input,
+          sourceText,
+          languageHint,
+          conversation:
+            brainV3Conversation.slice(-12),
+          files:
+            fileResults,
+          context:
+            qtrcContext(),
+          blocks:
+            blockNames.map(function(name,index){
+              return {
+                index,
+                name,
+                definition:
+                  blockInfo[index][1],
+                dependency:
+                  blockInfo[index][2]
+              };
+            })
+        }
+      );
+
+    brainV3HideProcessing();
+
+    brainV3AddMessage(
+      "qtrc",
+      data.analysis ||
+      "Baik. Saya sudah menelaah bahan yang Anda berikan."
+    );
+
+    brainV3RenderMap(
+      data.assessment || []
+    );
+
+    brainV3RenderProposal(
+      data.proposal || {blocks:[]}
+    );
+
+  }catch(error){
+
+    brainV3HideProcessing();
+
+    brainV3AddMessage(
+      "qtrc",
+      error.message ||
+      "Maaf, proses analisis belum dapat diselesaikan."
+    );
+
+  }finally{
+
+    brainV3HideProcessing();
+
+    brainThink.disabled = false;
+
+  }
+
+};
+
+function brainV3RenderMap(items){
+
+  if(!Array.isArray(items) || !items.length){
+    return;
+  }
+
+  const map =
+    document.createElement("div");
+
+  map.className =
+    "qtrc-map";
+
+  const found =
+    items.filter(function(item){
+      return String(item.status || "")
+        .toLowerCase()
+        .includes("found");
+    }).length;
+
+  const summary =
+    document.createElement("div");
+
+  summary.className =
+    "qtrc-map-summary";
+
+  summary.innerHTML = `
+    <strong>11-Block Research Map</strong>
+    <span>${found} block siap ditinjau</span>
+  `;
+
+  const body =
+    document.createElement("div");
+
+  body.className =
+    "qtrc-map-body";
+
+  items.forEach(function(item){
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "qtrc-map-item";
+
+    const status =
+      String(item.status || "")
+        .toLowerCase();
+
+    const statusClass =
+      status.includes("found")
+        ? "found"
+        : status.includes("partial")
+          ? "partial"
+          : status.includes("missing") ||
+            status.includes("unclear")
+            ? "missing"
+            : "";
+
+    row.innerHTML = `
+      <div class="qtrc-map-item-head">
+        <span class="qtrc-map-name">
+          ${esc(item.block || "Block")}
+        </span>
+        <span class="qtrc-map-status ${statusClass}">
+          ${esc(item.status || "Reviewed")}
+        </span>
+      </div>
+
+      <div class="qtrc-map-detail">
+        ${esc(item.explanation || "")}
+      </div>
+
+      ${
+        item.evidence
+          ? `
+            <div class="qtrc-map-detail">
+              <strong>Evidence:</strong>
+              ${esc(item.evidence)}
+            </div>
+          `
+          : ""
+      }
+    `;
+
+    body.appendChild(row);
+
+  });
+
+  summary.onclick = function(){
+    map.classList.toggle("open");
+  };
+
+  map.appendChild(summary);
+  map.appendChild(body);
+
+  brainMessages.appendChild(map);
+
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
+}
+
+function brainV3RenderProposal(proposal){
+
+  const blocks =
+    Array.isArray(proposal.blocks)
+      ? proposal.blocks
+      : [];
+
+  if(!blocks.length){
+    return;
+  }
+
+  const box =
+    document.createElement("div");
+
+  box.className =
+    "qtrc-proposal";
+
+  const lang =
+    brainV3DetectLanguage(
+      brainInput.value ||
+      brainV3Conversation
+        .filter(function(item){
+          return item.role === "user";
+        })
+        .slice(-1)[0]?.content ||
+      ""
+    );
+
+  if(lang === "id"){
+
+    box.innerHTML = `
+      <h4>
+        Ada ${blocks.length} bagian yang cukup kuat untuk diajukan ke canvas.
+      </h4>
+
+      <p>
+        Saya belum memasukkannya secara otomatis. Silakan tinjau dulu, lalu Anda dapat memilih untuk memasukkannya sebagai Provisional.
+      </p>
+
+      <div class="qtrc-proposal-actions">
+        <button
+          class="btn primary"
+          id="qtrcApproveProposal"
+        >
+          Masukkan ke Canvas
+        </button>
+
+        <button
+          class="btn"
+          id="qtrcReviewProposal"
+        >
+          Tinjau dulu
+        </button>
+      </div>
+    `;
+
+  }else{
+
+    box.innerHTML = `
+      <h4>
+        I found ${blocks.length} parts that are strong enough to propose for the canvas.
+      </h4>
+
+      <p>
+        I haven’t added them automatically. Review them first, then you can add them as Provisional.
+      </p>
+
+      <div class="qtrc-proposal-actions">
+        <button
+          class="btn primary"
+          id="qtrcApproveProposal"
+        >
+          Add to Canvas
+        </button>
+
+        <button
+          class="btn"
+          id="qtrcReviewProposal"
+        >
+          Review first
+        </button>
+      </div>
+    `;
+
+  }
+
+  document.getElementById("brainMessages")
+    .appendChild(box);
+
+  document.getElementById(
+    "qtrcApproveProposal"
+  ).onclick = function(){
+
+    brainV3TransferBlocks(blocks);
+
+  };
+
+  document.getElementById(
+    "qtrcReviewProposal"
+  ).onclick = function(){
+
+    const msg =
+      lang === "id"
+        ? "Baik. Kita tinjau dulu satu per satu sebelum ada yang dimasukkan ke canvas."
+        : "Of course. Let’s review them first before anything goes into the canvas.";
+
+    brainV3AddMessage(
+      "qtrc",
+      msg
+    );
+
+  };
+
+}
+
+function brainV3TransferBlocks(blocks){
+
+  if(!current){
+
+    brainV3AddMessage(
+      "qtrc",
+      brainV3DetectLanguage(
+        brainV3Conversation
+          .filter(function(item){
+            return item.role === "user";
+          })
+          .slice(-1)[0]?.content ||
+        ""
+      ) === "id"
+        ? "Sebelum saya memasukkannya, Anda perlu membuka atau membuat canvas terlebih dahulu."
+        : "Before I add them, you’ll need to open or create a canvas first."
+    );
+
+    return;
+  }
+
+  let transferred = 0;
+
+  blocks.forEach(function(item){
+
+    const index =
+      Number(item.index);
+
+    if(
+      Number.isInteger(index) &&
+      current.blocks[index] &&
+      item.content
+    ){
+
+      current.blocks[index].content =
+        item.content;
+
+      current.blocks[index].status =
+        "Provisional";
+
+      transferred++;
+
+    }
+
+  });
+
+  if(transferred){
+
+    current.updatedAt =
+      new Date().toISOString();
+
+    current.validated = false;
+
+    saveAll();
+    renderCanvas();
+
+    brainV3AddMessage(
+      "qtrc",
+      brainV3DetectLanguage(
+        brainV3Conversation
+          .filter(function(item){
+            return item.role === "user";
+          })
+          .slice(-1)[0]?.content ||
+        ""
+      ) === "id"
+        ? `Baik. Saya memasukkan ${transferred} blok ke canvas sebagai Provisional. Bagian yang belum cukup didukung tetap saya biarkan di ruang brainstorming.`
+        : `I’ve added ${transferred} block${transferred === 1 ? "" : "s"} to the canvas as Provisional. I left the unsupported parts here rather than filling the gaps.`
+    );
+
+  }
+}
+
+window.qtrcBrainOpen = function(){
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
 };
 
 document.getElementById("arch").innerHTML=blockNames.map((x,i)=>`<div class="block-mini"><span>${String(i+1).padStart(2,"0")}</span>${x}<div style="font-size:11px;color:#999;margin-top:6px;line-height:1.4">${blockInfo[i][0]}</div></div>`).join("");
