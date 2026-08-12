@@ -2021,5 +2021,183 @@ renderRecent();
 })();
 </script>
 
+
+<!-- QTRC_BLOCK_MINI_LIQUID_GLASS_V2 -->
+
+<style>
+/* Architecture blocks: cursor-reactive liquid glass */
+
+.block-mini{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.60),
+      rgba(255,255,255,.32)
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.78) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 10px 28px rgba(31,41,55,.055) !important;
+
+  transform:
+    translate3d(
+      var(--mini-x,0px),
+      var(--mini-y,0px),
+      0
+    )
+    scale(var(--mini-scale,1));
+
+  transition:
+    transform .34s cubic-bezier(.16,1,.3,1),
+    box-shadow .34s cubic-bezier(.16,1,.3,1),
+    border-color .25s ease,
+    filter .30s ease;
+
+  backdrop-filter:blur(20px) saturate(155%);
+  -webkit-backdrop-filter:blur(20px) saturate(155%);
+}
+
+.block-mini::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      110px circle at var(--mini-mx,50%) var(--mini-my,50%),
+      rgba(255,255,255,.82),
+      rgba(255,255,255,.35) 28%,
+      rgba(255,255,255,.08) 52%,
+      transparent 72%
+    );
+
+  opacity:var(--mini-glow,0);
+  transition:opacity .22s ease;
+  mix-blend-mode:screen;
+}
+
+.block-mini::after{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.28),
+      transparent 42%,
+      rgba(255,255,255,.08)
+    );
+
+  opacity:var(--mini-glass,0);
+  transition:opacity .22s ease;
+}
+
+.block-mini > *{
+  position:relative;
+  z-index:2;
+}
+
+.block-mini.qtrc-mini-active{
+  --mini-scale:1.028;
+  --mini-y:-5px;
+  --mini-glow:1;
+  --mini-glass:1;
+
+  border-color:rgba(255,255,255,.96)!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.98),
+    0 20px 44px rgba(31,41,55,.12),
+    0 4px 18px rgba(255,255,255,.16) !important;
+
+  filter:
+    saturate(1.08)
+    brightness(1.035);
+}
+</style>
+
+<script>
+(function(){
+
+  function clearMini(block){
+    if(!block) return;
+
+    block.classList.remove("qtrc-mini-active");
+
+    block.style.removeProperty("--mini-x");
+    block.style.removeProperty("--mini-y");
+    block.style.removeProperty("--mini-mx");
+    block.style.removeProperty("--mini-my");
+  }
+
+  document.addEventListener("pointermove", function(e){
+
+    if(e.pointerType === "touch") return;
+
+    const block = e.target.closest(".block-mini");
+
+    if(!block){
+      return;
+    }
+
+    const rect = block.getBoundingClientRect();
+
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const dx = (x - 50) / 50;
+    const dy = (y - 50) / 50;
+
+    block.style.setProperty(
+      "--mini-mx",
+      x.toFixed(1) + "%"
+    );
+
+    block.style.setProperty(
+      "--mini-my",
+      y.toFixed(1) + "%"
+    );
+
+    block.style.setProperty(
+      "--mini-x",
+      (-dx * 2.5).toFixed(2) + "px"
+    );
+
+    block.style.setProperty(
+      "--mini-y",
+      (-4 - dy * 1.8).toFixed(2) + "px"
+    );
+
+    block.classList.add("qtrc-mini-active");
+
+  }, {passive:true});
+
+  document.addEventListener("pointerout", function(e){
+
+    const block = e.target.closest(".block-mini");
+
+    if(!block) return;
+
+    const next = e.relatedTarget;
+
+    if(next && block.contains(next)) return;
+
+    clearMini(block);
+
+  }, {passive:true});
+
+})();
+</script>
+
 </body>
 </html>
