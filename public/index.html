@@ -506,6 +506,7 @@ function saveCurrentBlock(){
  saveAll();
  renderCanvas();
  updateModalStatus();
+ document.getElementById("modal").classList.add("hidden");
 
  document.getElementById("aiResponse").innerHTML=
    '<div class="response">Block berhasil disimpan. Status: '+esc(b.status)+'.</div>';
