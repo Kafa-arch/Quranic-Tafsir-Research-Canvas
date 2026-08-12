@@ -270,13 +270,49 @@ Do not wrap JSON in code fences.
         }
       ]);
 
-    let result;
+    let result = null;
 
+    /*
+     * Groq can occasionally return valid JSON wrapped in
+     * markdown fences or with a little extra text around it.
+     * Normalize that before parsing.
+     */
     try {
       result = JSON.parse(raw);
-    } catch (parseError) {
+    } catch (firstError) {
+
+      try {
+        const cleaned = String(raw)
+          .replace(/^```(?:json)?\\s*/i, "")
+          .replace(/\\s*```$/i, "")
+          .trim();
+
+        result = JSON.parse(cleaned);
+
+      } catch (secondError) {
+
+        try {
+          const start = raw.indexOf("{");
+          const end = raw.lastIndexOf("}");
+
+          if(start !== -1 && end > start){
+            result = JSON.parse(
+              raw.slice(start, end + 1)
+            );
+          }
+        } catch (thirdError) {
+          result = null;
+        }
+      }
+    }
+
+    /*
+     * Never show raw JSON to the researcher.
+     */
+    if(!result || typeof result !== "object"){
       return res.status(200).json({
-        analysis: raw,
+        analysis:
+          "I’ve gone through what you sent, but I couldn’t structure the findings cleanly yet. Let’s try that again.",
         assessment: [],
         proposal: {
           blocks: []
@@ -284,7 +320,19 @@ Do not wrap JSON in code fences.
       });
     }
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+      analysis:
+        String(result.analysis || "").trim(),
+      assessment:
+        Array.isArray(result.assessment)
+          ? result.assessment
+          : [],
+      proposal:
+        result.proposal &&
+        typeof result.proposal === "object"
+          ? result.proposal
+          : {blocks:[]}
+    });
 
   } catch (e) {
 
