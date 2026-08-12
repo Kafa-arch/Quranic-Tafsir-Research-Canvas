@@ -900,5 +900,208 @@ renderRecent();
 })();
 </script>
 
+
+<style id="QTRC_GENIE_CLOSE_V3">
+#qtrc-genie-clone{
+  position:fixed;
+  margin:0!important;
+  pointer-events:none!important;
+  z-index:100000!important;
+  transform-origin:center center!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+  will-change:transform,opacity,border-radius,filter;
+}
+</style>
+
+<script id="QTRC_GENIE_CLOSE_V3_SCRIPT">
+(function(){
+
+  function getOrigin(){
+
+    if(typeof currentBlock !== "number"){
+      return null;
+    }
+
+    return document.querySelector(
+      '.visual-block[data-index="' +
+      currentBlock +
+      '"]'
+    );
+  }
+
+  window.qtrcGenieClose = function(){
+
+    const modal =
+      document.getElementById("modal");
+
+    const card =
+      modal?.querySelector(".modal-card");
+
+    const origin =
+      getOrigin();
+
+    if(!modal || !card || !origin){
+      modal?.classList.add("hidden");
+      return;
+    }
+
+    const cardRect =
+      card.getBoundingClientRect();
+
+    const originRect =
+      origin.getBoundingClientRect();
+
+    /*
+     * Clone the actual modal.
+     * This guarantees the animation is visible even though
+     * the real modal is hidden at the end.
+     */
+    const clone =
+      card.cloneNode(true);
+
+    clone.id = "qtrc-genie-clone";
+
+    clone.style.top =
+      cardRect.top + "px";
+
+    clone.style.left =
+      cardRect.left + "px";
+
+    clone.style.width =
+      cardRect.width + "px";
+
+    clone.style.height =
+      cardRect.height + "px";
+
+    clone.style.opacity = "1";
+
+    clone.style.background =
+      getComputedStyle(card).background;
+
+    clone.style.border =
+      getComputedStyle(card).border;
+
+    clone.style.boxShadow =
+      getComputedStyle(card).boxShadow;
+
+    clone.style.borderRadius =
+      getComputedStyle(card).borderRadius;
+
+    document.body.appendChild(clone);
+
+    /*
+     * Hide the original card immediately.
+     * The clone becomes the visible animated surface.
+     */
+    card.style.visibility = "hidden";
+
+    /*
+     * Fade the dark backdrop at the same time.
+     */
+    modal.animate(
+      [
+        { opacity:1 },
+        { opacity:0 }
+      ],
+      {
+        duration:480,
+        easing:"cubic-bezier(.4,0,.8,.3)",
+        fill:"forwards"
+      }
+    );
+
+    /*
+     * Calculate the movement from modal center
+     * to the originating block center.
+     */
+    const fromCX =
+      cardRect.left + cardRect.width / 2;
+
+    const fromCY =
+      cardRect.top + cardRect.height / 2;
+
+    const toCX =
+      originRect.left + originRect.width / 2;
+
+    const toCY =
+      originRect.top + originRect.height / 2;
+
+    const dx = toCX - fromCX;
+    const dy = toCY - fromCY;
+
+    const sx =
+      Math.max(.02, originRect.width / cardRect.width);
+
+    const sy =
+      Math.max(.02, originRect.height / cardRect.height);
+
+    const animation =
+      clone.animate(
+        [
+          {
+            transform:
+              "translate3d(0,0,0) scale(1,1) skewX(0deg)",
+            opacity:1,
+            borderRadius:"16px",
+            filter:"blur(0px)"
+          },
+
+          {
+            transform:
+              `translate3d(${dx * .12}px,${dy * .12}px,0)
+               scale(.76,.84)
+               skewX(-4deg)`,
+            opacity:.98,
+            borderRadius:"32px 24px 26px 18px",
+            filter:"blur(.2px)",
+            offset:.42
+          },
+
+          {
+            transform:
+              `translate3d(${dx * .60}px,${dy * .60}px,0)
+               scale(.34,.48)
+               skewX(5deg)`,
+            opacity:.88,
+            borderRadius:"42% 58% 46% 54%",
+            filter:"blur(.7px)",
+            offset:.72
+          },
+
+          {
+            transform:
+              `translate3d(${dx}px,${dy}px,0)
+               scale(${sx},${sy})
+               skewX(0deg)`,
+            opacity:0,
+            borderRadius:"11px",
+            filter:"blur(1px)",
+            offset:1
+          }
+        ],
+        {
+          duration:560,
+          easing:"cubic-bezier(.16,1,.3,1)",
+          fill:"forwards"
+        }
+      );
+
+    animation.onfinish = function(){
+
+      clone.remove();
+
+      card.style.visibility = "";
+
+      modal.classList.add("hidden");
+      modal.style.opacity = "";
+
+    };
+
+  };
+
+})();
+</script>
+
 </body>
 </html>
