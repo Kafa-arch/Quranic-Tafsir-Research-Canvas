@@ -1663,5 +1663,183 @@ renderRecent();
 </script>
 
 
+
+<style id="QTRC_CURSOR_EFFECTS_HARD_DISABLED_V2">
+/* =========================================================
+   HARD DISABLE ALL CURSOR-REACTIVE EFFECTS
+   ========================================================= */
+
+#qtrc-liquid-lens,
+.qtrc-liquid-ripple{
+  display:none!important;
+}
+
+.visual-block,
+.visual-block:hover,
+.block-mini,
+.block-mini:hover,
+.block,
+.block:hover,
+.card,
+.card:hover,
+.canvas-card,
+.canvas-card:hover,
+.panel,
+.panel:hover,
+.option,
+.option:hover,
+.brain-card,
+.brain-card:hover,
+.brain-thread,
+.brain-thread:hover{
+  transform:none!important;
+  translate:none!important;
+  scale:none!important;
+  rotate:none!important;
+  filter:none!important;
+}
+
+.block-mini::before,
+.block-mini::after,
+.visual-block::before,
+.visual-block::after{
+  opacity:0!important;
+  transform:none!important;
+  filter:none!important;
+  display:none!important;
+}
+
+.qtrc-liquid-target,
+.qtrc-target-card,
+.qtrc-target-text,
+.qtrc-liquid-hot,
+.qtrc-mini-active,
+.qtrc-glass-hot{
+  transform:none!important;
+  filter:none!important;
+  scale:none!important;
+  translate:none!important;
+}
+
+.block-mini *,
+.visual-block *,
+.card *,
+.canvas-card *{
+  transform:none!important;
+  translate:none!important;
+  scale:none!important;
+  rotate:none!important;
+  text-shadow:none!important;
+}
+</style>
+
+<script>
+/* QTRC_CURSOR_EFFECTS_HARD_DISABLED_V2 */
+
+(function(){
+
+  const blockedClasses = [
+    "qtrc-liquid-target",
+    "qtrc-target-card",
+    "qtrc-target-text",
+    "qtrc-liquid-hot",
+    "qtrc-mini-active",
+    "qtrc-glass-hot",
+    "qtrc-active",
+    "qtrc-targeting"
+  ];
+
+  function clean(){
+
+    document.querySelectorAll(
+      ".visual-block,.block-mini,.block,.card,.canvas-card,.panel,.option,.brain-card,.brain-thread"
+    ).forEach(el => {
+
+      blockedClasses.forEach(cls =>
+        el.classList.remove(cls)
+      );
+
+      [
+        "--mx",
+        "--my",
+        "--mx",
+        "--my",
+        "--mini-x",
+        "--mini-y",
+        "--mini-mx",
+        "--mini-my",
+        "--mini-scale",
+        "--mini-lift-x",
+        "--mini-lift-y",
+        "--blob-left",
+        "--blob-top",
+        "--blob-scale",
+        "--qtrc-shift-x",
+        "--qtrc-shift-y",
+        "--target-x",
+        "--target-y"
+      ].forEach(name => {
+        el.style.removeProperty(name);
+      });
+    });
+  }
+
+  /*
+   * Kill pointermove handlers registered by previous
+   * Liquid Glass scripts.
+   *
+   * Capture phase + stopImmediatePropagation prevents
+   * those old handlers from receiving the event.
+   */
+  document.addEventListener(
+    "pointermove",
+    function(e){
+      e.stopImmediatePropagation();
+      clean();
+    },
+    true
+  );
+
+  document.addEventListener(
+    "pointerover",
+    function(){
+      clean();
+    },
+    true
+  );
+
+  document.addEventListener(
+    "pointerout",
+    function(){
+      clean();
+    },
+    true
+  );
+
+  document.addEventListener(
+    "pointerdown",
+    function(e){
+      e.stopImmediatePropagation();
+
+      document
+        .querySelectorAll(".qtrc-liquid-ripple")
+        .forEach(el => el.remove());
+
+      clean();
+    },
+    true
+  );
+
+  /*
+   * Clean once on startup and keep old inline styles
+   * from surviving navigation/rerendering.
+   */
+  clean();
+
+  setInterval(clean, 500);
+
+})();
+</script>
+
 </body>
 </html>
