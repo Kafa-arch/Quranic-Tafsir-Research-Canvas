@@ -1563,5 +1563,497 @@ renderRecent();
 })();
 </script>
 
+
+<!-- QTRC_GLOBAL_LIQUID_LENS_V1 -->
+
+<style>
+/* =========================================================
+   GLOBAL LIQUID GLASS CURSOR
+   ========================================================= */
+
+#qtrc-liquid-lens{
+  position:fixed;
+  left:0;
+  top:0;
+  width:118px;
+  height:118px;
+  border-radius:30px;
+
+  pointer-events:none;
+  z-index:99999;
+
+  opacity:0;
+  transform:
+    translate3d(-1000px,-1000px,0)
+    scale(.82);
+
+  background:
+    radial-gradient(
+      circle at 30% 24%,
+      rgba(255,255,255,.78),
+      rgba(255,255,255,.28) 30%,
+      rgba(255,255,255,.08) 58%,
+      transparent 74%
+    );
+
+  border:
+    1px solid rgba(255,255,255,.78);
+
+  box-shadow:
+    0 18px 45px rgba(31,41,55,.12),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -1px 0 rgba(255,255,255,.18);
+
+  backdrop-filter:
+    blur(7px)
+    saturate(180%)
+    brightness(1.08);
+
+  -webkit-backdrop-filter:
+    blur(7px)
+    saturate(180%)
+    brightness(1.08);
+
+  transition:
+    opacity .18s ease,
+    transform .24s cubic-bezier(.16,1,.3,1),
+    width .28s cubic-bezier(.16,1,.3,1),
+    height .28s cubic-bezier(.16,1,.3,1),
+    border-radius .28s ease,
+    box-shadow .28s ease;
+}
+
+#qtrc-liquid-lens::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+
+  background:
+    radial-gradient(
+      60px circle at var(--lens-x,50%) var(--lens-y,50%),
+      rgba(255,255,255,.72),
+      rgba(255,255,255,.22) 34%,
+      transparent 72%
+    );
+
+  mix-blend-mode:screen;
+}
+
+#qtrc-liquid-lens::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+
+  border-radius:24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.30),
+      transparent 44%,
+      rgba(255,255,255,.08)
+    );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.30);
+
+  opacity:.7;
+}
+
+/* Active lens */
+
+#qtrc-liquid-lens.qtrc-active{
+  opacity:1;
+
+  width:132px;
+  height:132px;
+  border-radius:34px;
+
+  box-shadow:
+    0 24px 65px rgba(31,41,55,.16),
+    0 5px 20px rgba(255,255,255,.22),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -1px 0 rgba(255,255,255,.18);
+}
+
+/* =========================================================
+   TARGET UNDER THE GLASS
+   ========================================================= */
+
+.qtrc-liquid-target{
+  position:relative;
+  z-index:2;
+
+  transition:
+    transform .34s cubic-bezier(.16,1,.3,1),
+    filter .30s ease,
+    text-shadow .30s ease;
+}
+
+/* cards / blocks */
+
+.qtrc-liquid-target.qtrc-target-card{
+  transform:
+    translate3d(
+      var(--qtrc-shift-x,0px),
+      var(--qtrc-shift-y,-4px),
+      0
+    )
+    scale(1.025);
+
+  filter:
+    saturate(1.08)
+    brightness(1.035);
+
+  box-shadow:
+    0 22px 50px rgba(31,41,55,.13),
+    inset 0 1px 0 rgba(255,255,255,.94);
+}
+
+/* text */
+
+.qtrc-liquid-target.qtrc-target-text{
+  transform:
+    translate3d(
+      var(--qtrc-shift-x,0px),
+      var(--qtrc-shift-y,-2px),
+      0
+    )
+    scale(1.012);
+
+  transform-origin:center;
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.92),
+    0 5px 16px rgba(31,41,55,.08);
+}
+
+/* =========================================================
+   LIQUID RIPPLE
+   ========================================================= */
+
+.qtrc-liquid-ripple{
+  position:fixed;
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  pointer-events:none;
+  z-index:99998;
+
+  border:1px solid rgba(255,255,255,.86);
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.15),
+    0 8px 25px rgba(31,41,55,.08);
+
+  transform:
+    translate(-50%,-50%)
+    scale(.5);
+
+  opacity:.65;
+
+  animation:qtrcLiquidRipple .55s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+@keyframes qtrcLiquidRipple{
+  0%{
+    opacity:.72;
+    transform:translate(-50%,-50%) scale(.5);
+  }
+
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(7);
+  }
+}
+
+/* =========================================================
+   EXTRA GLASS WHEN TARGET IS TOUCHED
+   ========================================================= */
+
+.qtrc-target-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  pointer-events:none;
+
+  border-radius:inherit;
+
+  background:
+    radial-gradient(
+      100px circle at var(--target-x,50%) var(--target-y,50%),
+      rgba(255,255,255,.55),
+      transparent 72%
+    );
+
+  opacity:.0;
+
+  transition:opacity .25s ease;
+
+  mix-blend-mode:screen;
+}
+
+.qtrc-target-card.qtrc-liquid-hot::after{
+  opacity:1;
+}
+
+/* no motion for accessibility */
+
+@media(prefers-reduced-motion:reduce){
+
+  #qtrc-liquid-lens,
+  .qtrc-liquid-target,
+  .qtrc-liquid-ripple{
+    transition:none!important;
+    animation:none!important;
+  }
+}
+</style>
+
+<div id="qtrc-liquid-lens" aria-hidden="true"></div>
+
+<script>
+(function(){
+
+  const lens = document.getElementById("qtrc-liquid-lens");
+
+  if(!lens) return;
+
+  let pointerX = 0;
+  let pointerY = 0;
+  let target = null;
+  let raf = null;
+
+  /*
+   * Elements that should react when the lens passes over them.
+   * The selector intentionally includes text-bearing UI as well.
+   */
+
+  const targetSelector = [
+    ".visual-block",
+    ".block",
+    ".card",
+    ".canvas-card",
+    ".panel",
+    ".option",
+    ".brain-card",
+    ".brain-thread",
+    ".hero h1",
+    ".hero p",
+    ".dashboard-head h1",
+    ".setup h1",
+    ".canvas-header h1",
+    ".canvas-page-head h1",
+    ".brain-head h1",
+    ".block-name",
+    ".visual-title",
+    ".visual-content",
+    ".card h3",
+    ".card p"
+  ].join(",");
+
+  function setTarget(next){
+
+    if(next === target) return;
+
+    if(target){
+      target.classList.remove(
+        "qtrc-liquid-target",
+        "qtrc-target-card",
+        "qtrc-target-text",
+        "qtrc-liquid-hot"
+      );
+
+      target.style.removeProperty("--qtrc-shift-x");
+      target.style.removeProperty("--qtrc-shift-y");
+      target.style.removeProperty("--target-x");
+      target.style.removeProperty("--target-y");
+    }
+
+    target = next;
+
+    if(!target) return;
+
+    target.classList.add("qtrc-liquid-target");
+
+    const isCard =
+      target.matches(
+        ".visual-block,.block,.card,.canvas-card,.panel,.option,.brain-card,.brain-thread"
+      );
+
+    target.classList.add(
+      isCard
+        ? "qtrc-target-card"
+        : "qtrc-target-text"
+    );
+  }
+
+  function render(){
+
+    raf = null;
+
+    lens.style.transform =
+      "translate3d(" +
+      (pointerX - 59) +
+      "px," +
+      (pointerY - 59) +
+      "px,0) scale(1)";
+
+    const element = document.elementFromPoint(pointerX,pointerY);
+
+    if(!element){
+      setTarget(null);
+      return;
+    }
+
+    const next = element.closest(targetSelector);
+
+    if(!next){
+      setTarget(null);
+      return;
+    }
+
+    setTarget(next);
+
+    const rect = next.getBoundingClientRect();
+
+    const localX =
+      ((pointerX - rect.left) / rect.width) * 100;
+
+    const localY =
+      ((pointerY - rect.top) / rect.height) * 100;
+
+    const normalizedX = (localX - 50) / 50;
+    const normalizedY = (localY - 50) / 50;
+
+    /*
+     * Slight physical displacement opposite to cursor.
+     */
+
+    const shiftX = -normalizedX * 3.5;
+    const shiftY = -normalizedY * 3.0;
+
+    next.style.setProperty(
+      "--qtrc-shift-x",
+      shiftX.toFixed(2) + "px"
+    );
+
+    next.style.setProperty(
+      "--qtrc-shift-y",
+      shiftY.toFixed(2) + "px"
+    );
+
+    next.style.setProperty(
+      "--target-x",
+      localX.toFixed(1) + "%"
+    );
+
+    next.style.setProperty(
+      "--target-y",
+      localY.toFixed(1) + "%"
+    );
+
+    const nearCenter =
+      Math.sqrt(
+        normalizedX * normalizedX +
+        normalizedY * normalizedY
+      ) < .48;
+
+    next.classList.toggle(
+      "qtrc-liquid-hot",
+      nearCenter
+    );
+  }
+
+  function moveLens(x,y){
+
+    pointerX = x;
+    pointerY = y;
+
+    lens.classList.add("qtrc-active");
+
+    /*
+     * Highlight follows cursor within the lens.
+     */
+
+    lens.style.setProperty(
+      "--lens-x",
+      "50%"
+    );
+
+    lens.style.setProperty(
+      "--lens-y",
+      "50%"
+    );
+
+    if(!raf){
+      raf = requestAnimationFrame(render);
+    }
+  }
+
+  document.addEventListener(
+    "pointermove",
+    function(e){
+
+      if(e.pointerType === "touch") return;
+
+      moveLens(
+        e.clientX,
+        e.clientY
+      );
+
+    },
+    {passive:true}
+  );
+
+  document.addEventListener(
+    "pointerleave",
+    function(){
+
+      lens.classList.remove("qtrc-active");
+      setTarget(null);
+
+    }
+  );
+
+  /*
+   * Small glass ripple on click.
+   */
+
+  document.addEventListener(
+    "pointerdown",
+    function(e){
+
+      if(e.pointerType === "touch") return;
+
+      const ripple =
+        document.createElement("div");
+
+      ripple.className =
+        "qtrc-liquid-ripple";
+
+      ripple.style.left =
+        e.clientX + "px";
+
+      ripple.style.top =
+        e.clientY + "px";
+
+      document.body.appendChild(ripple);
+
+      setTimeout(
+        () => ripple.remove(),
+        600
+      );
+    },
+    {passive:true}
+  );
+
+})();
+</script>
+
 </body>
 </html>
