@@ -973,526 +973,68 @@ select:focus-visible{
 
 
 
-<!-- QTRC_CURSOR_GLASS_SURFACE_V1 -->
 
-<style id="QTRC_CURSOR_GLASS_SURFACE_V1">
-/*
-  The UI itself does NOT move.
-  Only a glass surface appears inside the element under the cursor.
-*/
+<style id="QTRC_NAVIGATION_FIX_V2">
 
-.qtrc-glass-target{
+.sidebar{
   position:relative !important;
-  overflow:hidden !important;
+  z-index:100 !important;
+  pointer-events:auto !important;
 }
 
-/* glass surface */
-.qtrc-glass-target::after{
-  content:"";
-  position:absolute;
-
-  width:120px;
-  height:92px;
-
-  left:var(--qtrc-glass-x,50%);
-  top:var(--qtrc-glass-y,50%);
-
-  transform:translate(-50%,-50%);
-
-  border-radius:
-    48% 52% 45% 55%
-    / 52% 44% 56% 48%;
-
-  background:
-    radial-gradient(
-      circle at 29% 24%,
-      rgba(255,255,255,.72) 0%,
-      rgba(255,255,255,.28) 22%,
-      rgba(255,255,255,.10) 48%,
-      transparent 72%
-    );
-
-  border:
-    1px solid rgba(255,255,255,.56);
-
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.72),
-    inset 0 -1px 1px rgba(255,255,255,.08),
-    0 8px 24px rgba(31,41,55,.05);
-
-  backdrop-filter:
-    blur(7px)
-    saturate(145%)
-    brightness(1.04);
-
-  -webkit-backdrop-filter:
-    blur(7px)
-    saturate(145%)
-    brightness(1.04);
-
-  opacity:0;
-  pointer-events:none;
-
-  z-index:1;
-
-  transition:
-    opacity .18s ease,
-    left .12s linear,
-    top .12s linear;
-}
-
-/* tiny reflective highlight */
-.qtrc-glass-target::before{
-  content:"";
-
-  position:absolute;
-
-  width:52px;
-  height:10px;
-
-  left:var(--qtrc-glass-x,50%);
-  top:var(--qtrc-glass-y,50%);
-
-  transform:
-    translate(-75%,-210%)
-    rotate(-14deg);
-
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.62),
-      transparent
-    );
-
-  filter:blur(5px);
-
-  opacity:0;
-  pointer-events:none;
-
-  z-index:2;
-
-  transition:
-    opacity .18s ease,
-    left .12s linear,
-    top .12s linear;
-}
-
-/* activate glass only */
-.qtrc-glass-target.qtrc-glass-on::after{
-  opacity:.92;
-}
-
-.qtrc-glass-target.qtrc-glass-on::before{
-  opacity:.68;
-}
-
-/*
-  VERY IMPORTANT:
-  No transform, scale, translate, filter, or text-shadow
-  is applied to the actual content.
-*/
-.qtrc-glass-target,
-.qtrc-glass-target:hover,
-.qtrc-glass-target *{
-  transform:none !important;
-  translate:none !important;
-  scale:none !important;
-  rotate:none !important;
-}
-
-/* Disable old hover movement on these target cards */
-.block-mini:hover,
-.visual-block:hover,
-.card:hover,
-.canvas-card:hover,
-.panel:hover,
-.option:hover,
-.brain-card:hover,
-.brain-thread:hover{
-  transform:none !important;
+.sidebar button{
+  position:relative !important;
+  z-index:101 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
 }
 
 </style>
 
-<script>
+<script id="QTRC_NAVIGATION_FIX_V2">
 (function(){
 
-  const selector = [
-    ".block-mini",
-    ".visual-block",
-    ".card",
-    ".canvas-card",
-    ".panel",
-    ".option",
-    ".brain-card",
-    ".brain-thread"
-  ].join(",");
+  function navigate(viewId){
 
-  let activeTarget = null;
-
-  function clearTarget(target){
-    if(!target) return;
-
-    target.classList.remove("qtrc-glass-target");
-    target.classList.remove("qtrc-glass-on");
-
-    target.style.removeProperty("--qtrc-glass-x");
-    target.style.removeProperty("--qtrc-glass-y");
-  }
-
-  function setTarget(target, event){
+    const target = document.getElementById(viewId);
 
     if(!target) return;
 
-    if(!target.classList.contains("qtrc-glass-target")){
-      target.classList.add("qtrc-glass-target");
-    }
-
-    const rect = target.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const px = Math.max(
-      8,
-      Math.min(92, (x / rect.width) * 100)
-    );
-
-    const py = Math.max(
-      8,
-      Math.min(92, (y / rect.height) * 100)
-    );
-
-    target.style.setProperty(
-      "--qtrc-glass-x",
-      px.toFixed(2) + "%"
-    );
-
-    target.style.setProperty(
-      "--qtrc-glass-y",
-      py.toFixed(2) + "%"
-    );
-
-    target.classList.add("qtrc-glass-on");
-  }
-
-  /*
-    Event delegation:
-    works even when QTRC re-renders blocks dynamically.
-  */
-  document.addEventListener(
-    "pointermove",
-    function(event){
-
-      if(event.pointerType === "touch") return;
-
-      const target =
-        event.target.closest(selector);
-
-      if(!target){
-
-        if(activeTarget){
-          clearTarget(activeTarget);
-          activeTarget = null;
-        }
-
-        return;
-      }
-
-      if(activeTarget && activeTarget !== target){
-        clearTarget(activeTarget);
-      }
-
-      activeTarget = target;
-
-      setTarget(target,event);
-
-    },
-    {passive:true}
-  );
-
-  document.addEventListener(
-    "pointerout",
-    function(event){
-
-      const target =
-        event.target.closest(selector);
-
-      if(!target) return;
-
-      const next = event.relatedTarget;
-
-      if(next && target.contains(next)) return;
-
-      clearTarget(target);
-
-      if(activeTarget === target){
-        activeTarget = null;
-      }
-
-    },
-    {passive:true}
-  );
-
-})();
-</script>
-
-
-<!-- QTRC_TEXT_POP_V1 -->
-
-<style id="QTRC_TEXT_POP_V1">
-/* =========================================================
-   TEXT-ONLY LIQUID GLASS POP
-   ========================================================= */
-
-.qtrc-text-pop{
-  position:relative !important;
-  display:inline-block !important;
-
-  transform:
-    translateY(-2px)
-    scale(1.025) !important;
-
-  transform-origin:center !important;
-
-  color:#111 !important;
-
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.95),
-    0 3px 10px rgba(31,41,55,.10) !important;
-
-  filter:
-    brightness(1.035)
-    saturate(1.04) !important;
-
-  transition:
-    transform .22s cubic-bezier(.16,1,.3,1),
-    text-shadow .22s ease,
-    filter .22s ease !important;
-
-  z-index:5 !important;
-}
-
-/* Keep every surrounding block physically still */
-.block-mini,
-.visual-block,
-.block,
-.card,
-.canvas-card,
-.panel,
-.option,
-.brain-card,
-.brain-thread{
-  transform:none !important;
-}
-
-/* no old cursor pseudo-glass */
-#qtrc-liquid-lens,
-.qtrc-liquid-ripple{
-  display:none !important;
-}
-
-</style>
-
-<script>
-(function(){
-
-  const TEXT_SELECTORS = [
-    ".block-mini span",
-    ".block-mini",
-    ".visual-title",
-    ".visual-desc",
-    ".visual-content",
-    ".block-name",
-    ".card h3",
-    ".card p",
-    ".hero h1",
-    ".hero p",
-    ".dashboard-head h1",
-    ".setup h1",
-    ".canvas-header h1",
-    ".canvas-page-head h1",
-    ".brain-head h1",
-    ".section-label",
-    ".brand",
-    ".nav button",
-    ".recent button"
-  ];
-
-  const selector = TEXT_SELECTORS.join(",");
-
-  let active = null;
-
-  function removePop(){
-    if(!active) return;
-
-    active.classList.remove("qtrc-text-pop");
-    active = null;
-  }
-
-  function textElementFromPoint(x,y){
-
-    let el = document.elementFromPoint(x,y);
-
-    if(!el) return null;
-
-    const direct = el.closest(selector);
-
-    if(direct) return direct;
-
-    /*
-     * Safari can return a text node location through Range.
-     * This lets us detect actual text even when it isn't wrapped
-     * in a dedicated span.
-     */
-    if(document.caretRangeFromPoint){
-      const range = document.caretRangeFromPoint(x,y);
-
-      if(range && range.startContainer){
-
-        let node = range.startContainer;
-
-        if(node.nodeType === Node.TEXT_NODE){
-          node = node.parentElement;
-        }
-
-        if(node && node.closest){
-          const parent = node.closest(selector);
-          if(parent) return parent;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /*
-   * Capture phase prevents all of the older cursor-moving
-   * experiments from running.
-   */
-
-  document.addEventListener(
-    "pointermove",
-    function(e){
-
-      if(e.pointerType === "touch") return;
-
-      e.stopImmediatePropagation();
-
-      const next = textElementFromPoint(
-        e.clientX,
-        e.clientY
+    document.querySelectorAll(".view").forEach(function(view){
+      view.classList.toggle(
+        "hidden",
+        view.id !== viewId
       );
+    });
 
-      if(next === active) return;
+    document.querySelectorAll("[data-view]").forEach(function(button){
+      button.classList.toggle(
+        "active",
+        button.getAttribute("data-view") === viewId
+      );
+    });
 
-      removePop();
-
-      if(next){
-        active = next;
-        active.classList.add("qtrc-text-pop");
-      }
-
-    },
-    true
-  );
-
-  document.addEventListener(
-    "pointerout",
-    function(e){
-
-      e.stopImmediatePropagation();
-
-      const related = e.relatedTarget;
-
-      if(
-        active &&
-        related &&
-        active.contains(related)
-      ){
-        return;
-      }
-
-      removePop();
-
-    },
-    true
-  );
-
-})();
-</script>
-
-
-<!-- QTRC_NAVIGATION_FALLBACK_V1 -->
-
-<script>
-(function(){
+    window.scrollTo(0,0);
+  }
 
   /*
-   * Safe fallback for the QTRC navigation.
-   * Does NOT prevent clicks and does NOT interfere with
-   * existing application handlers.
+   * Direct navigation for sidebar and all data-view buttons.
+   * No pointer interception. No stopImmediatePropagation.
    */
-  document.addEventListener("click", function(event){
+  document.querySelectorAll("[data-view]").forEach(function(button){
 
-    const button = event.target.closest("[data-view]");
+    button.addEventListener("click", function(){
 
-    if(!button) return;
+      const viewId =
+        button.getAttribute("data-view");
 
-    const viewId = button.getAttribute("data-view");
-
-    if(!viewId) return;
-
-    /*
-     * Let the app's original click handler run first.
-     */
-    setTimeout(function(){
-
-      const target = document.getElementById(viewId);
-
-      if(!target) return;
-
-      /*
-       * If the original handler already opened the target,
-       * don't touch anything.
-       */
-      const visible =
-        document.querySelector(".view:not(.hidden)");
-
-      if(visible !== target){
-
-        document.querySelectorAll(".view").forEach(function(view){
-          view.classList.add("hidden");
-        });
-
-        target.classList.remove("hidden");
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
+      if(viewId){
+        navigate(viewId);
       }
 
-      /*
-       * Update active sidebar state.
-       */
-      document.querySelectorAll(
-        ".nav button[data-view], .recent button[data-view]"
-      ).forEach(function(item){
+    });
 
-        item.classList.toggle(
-          "active",
-          item.getAttribute("data-view") === viewId
-        );
-
-      });
-
-    }, 0);
-
-  }, false);
+  });
 
 })();
 </script>
