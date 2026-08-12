@@ -1458,89 +1458,101 @@ function brainV3DetectLanguage(text){
       .trim();
 
   const indoSignals = [
-    "saya",
-    "aku",
-    "ingin",
-    "mau",
-    "tentang",
-    "penelitian",
-    "penelitian tafsir",
-    "riset",
-    "tafsir",
-    "alquran",
-    "al quran",
-    "quran",
-    "surah",
-    "surat",
-    "ayat",
-    "mufasir",
-    "kitab",
-    "hadis",
-    "hadits",
-    "bagaimana",
-    "kenapa",
-    "mengapa",
-    "apa",
-    "apakah",
-    "untuk",
-    "dalam",
-    "dengan",
-    "yang",
-    "ini",
-    "itu",
-    "membahas",
-    "dibahas",
-    "meneliti",
-    "diteliti",
-    "mencari",
-    "jurnal",
-    "cari jurnal",
-    "ga",
-    "gak",
-    "nggak"
+    "saya","aku","kami","kita","mari","ingin","mau",
+    "tentang","penelitian","riset","tafsir","alquran",
+    "al quran","quran","surah","surat","ayat",
+    "mufasir","kitab","hadis","hadits","bagaimana",
+    "kenapa","mengapa","apa","apakah","untuk","dalam",
+    "dengan","yang","ini","itu","membahas","dibahas",
+    "meneliti","diteliti","mencari","jurnal","diskusi",
+    "lanjut","selanjutnya","jelaskan","jelas","tolong",
+    "bisa","boleh","ga","gak","nggak","dong"
   ];
 
   const englishSignals = [
-    "i",
-    "i want",
-    "i am",
-    "i'm",
-    "research",
-    "researching",
-    "quran",
-    "tafsir",
-    "verse",
-    "verses",
-    "surah",
-    "journal",
-    "how",
-    "why",
-    "what",
-    "which",
-    "can",
-    "could",
-    "would",
-    "about",
-    "with",
-    "from",
-    "into",
-    "the"
+    "i","i want","i am","i'm","we","let's",
+    "research","researching","verse","verses","journal",
+    "how","why","what","which","can","could","would",
+    "about","with","from","into","discuss","discussion",
+    "continue","next","explain","please"
   ];
 
   let idScore = 0;
   let enScore = 0;
 
   indoSignals.forEach(function(word){
-    if(value.includes(word)){
+    if(
+      value.includes(" " + word + " ") ||
+      value.startsWith(word + " ") ||
+      value.endsWith(" " + word) ||
+      value === word
+    ){
       idScore++;
     }
   });
 
   englishSignals.forEach(function(word){
-    if(value.includes(word)){
+    if(
+      value.includes(" " + word + " ") ||
+      value.startsWith(word + " ") ||
+      value.endsWith(" " + word) ||
+      value === word
+    ){
       enScore++;
     }
   });
+
+  /*
+   * Short follow-up messages should inherit the
+   * established language of the conversation.
+   */
+  const userMessages =
+    brainV3Conversation
+      .filter(function(item){
+        return item.role === "user";
+      });
+
+  if(
+    value.split(/\s+/).filter(Boolean).length <= 5 &&
+    userMessages.length
+  ){
+
+    const previousText =
+      userMessages
+        .slice(-3)
+        .map(function(item){
+          return item.content || "";
+        })
+        .join(" ");
+
+    const previous =
+      previousText
+        .toLowerCase()
+        .replace(/[^\p{L}\s]/gu, " ");
+
+    let previousId = 0;
+    let previousEn = 0;
+
+    indoSignals.forEach(function(word){
+      if(previous.includes(word)){
+        previousId++;
+      }
+    });
+
+    englishSignals.forEach(function(word){
+      if(previous.includes(word)){
+        previousEn++;
+      }
+    });
+
+    if(previousId > previousEn){
+      return "id";
+    }
+
+    if(previousEn > previousId){
+      return "en";
+    }
+  }
 
   if(idScore > enScore){
     return "id";
@@ -1548,6 +1560,44 @@ function brainV3DetectLanguage(text){
 
   if(enScore > idScore){
     return "en";
+  }
+
+  /*
+   * When the message is ambiguous, preserve the
+   * established conversation language.
+   */
+  if(userMessages.length){
+
+    const previousText =
+      userMessages
+        .slice(-3)
+        .map(function(item){
+          return item.content || "";
+        })
+        .join(" ");
+
+    const previous =
+      previousText
+        .toLowerCase()
+        .replace(/[^\p{L}\s]/gu, " ");
+
+    const previousId =
+      indoSignals.filter(function(word){
+        return previous.includes(word);
+      }).length;
+
+    const previousEn =
+      englishSignals.filter(function(word){
+        return previous.includes(word);
+      }).length;
+
+    if(previousId > previousEn){
+      return "id";
+    }
+
+    if(previousEn > previousId){
+      return "en";
+    }
   }
 
   return (
