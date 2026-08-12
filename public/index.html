@@ -364,10 +364,19 @@ button{cursor:pointer}
 
 <div id="modal" class="modal hidden">
   <div class="modal-card">
-    <div class="modal-head"><h2 id="modalTitle">Ask QTRC</h2><button class="close" id="closeModal">×</button></div>
+    <div class="modal-head">
+      <h2 id="modalTitle">QTRC Block</h2>
+      <button class="close" id="closeModal">×</button>
+    </div>
     <p class="muted" id="modalHint"></p>
-    <textarea id="aiInput" placeholder="Describe what you want to examine..."></textarea>
-    <button class="btn primary" id="runAI">Analyze with QTRC</button>
+    <div class="canvas-meta-strip" style="margin:12px 0">
+      <div><span>Status</span><strong id="modalStatus">Exploratory</strong></div>
+    </div>
+    <textarea id="aiInput" placeholder="Masukkan isi riset yang diberikan peneliti..."></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="saveBlock">Save Block</button>
+      <button class="btn primary" id="analyzeBlock">Analyze with QTRC</button>
+    </div>
     <div id="aiResponse" style="margin-top:14px"></div>
   </div>
 </div>
@@ -465,53 +474,99 @@ function renderCanvas(){
  });
  updateStats(); dependencyCheck();
 }
+function updateModalStatus(){
+ const b=current.blocks[currentBlock];
+ const el=document.getElementById("modalStatus");
+ if(el) el.textContent=b.status||"Exploratory";
+}
+
 function openBlockEditor(i){
  currentBlock=i;
  const b=current.blocks[i];
+
  document.getElementById("modalTitle").textContent="QTRC Block — "+b.name;
  document.getElementById("modalHint").textContent=blockInfo[i][1]+" "+blockInfo[i][2];
  document.getElementById("aiInput").value=b.content;
- document.getElementById("aiResponse").innerHTML='<div class="response">Edit the researcher-provided content here. QTRC+ will not silently fill missing information.</div>';
- document.getElementById("runAI").textContent="Save Block";
+ document.getElementById("aiResponse").innerHTML=
+   '<div class="response">Masukkan atau edit konten yang diberikan peneliti. QTRC+ tidak akan mengisi informasi yang belum diberikan secara diam-diam.</div>';
+
+ updateModalStatus();
  document.getElementById("modal").classList.remove("hidden");
 }
-function updateStats(){
- const counts={Valid:0,Provisional:0,Exploratory:0,"Belum Valid":0};current.blocks.forEach(b=>counts[b.status]++);
- ["Valid","Provisional","Exploratory","Belum Valid"].forEach((x,i)=>document.getElementById(["validCount","provCount","exploreCount","badCount"][i]).textContent=counts[x]);
- document.getElementById("progressBar").style.width=((counts.Valid/11)*100)+"%";
- document.getElementById("finalText").textContent=counts.Valid===11?"All blocks are currently marked Valid. You can run final validation.":"Complete and review all 11 blocks before final validation.";
-}
-function dependencyCheck(){
- const warnings=[];
- Object.entries(deps).forEach(([idx,arr])=>{const b=current.blocks[+idx];arr.forEach(d=>{if(current.blocks[d].status==="Exploratory" && b.content.trim()) warnings.push(`${b.name} may need review because ${current.blocks[d].name} is still exploratory.`)})});
- document.getElementById("dependencyBox").textContent=warnings.length?warnings.slice(0,3).join(" "):"No immediate dependency warnings.";
-}
-document.getElementById("saveBtn").onclick=()=>{if(current){saveAll();document.getElementById("saveState").textContent="Saved";current.updatedAt=new Date().toISOString();renderRecent()}};
 
-document.getElementById("validateBtn").onclick=()=>{
- const empty=current.blocks.filter(b=>!b.content.trim());
- if(empty.length){current.blocks.forEach(b=>{if(!b.content.trim())b.status="Belum Valid"});current.validated=false;saveAll();renderCanvas();alert("Belum Valid – Secara Epistemik\\n\\nMissing blocks: "+empty.map(b=>b.name).join(", "));return}
- current.blocks.forEach(b=>b.status="Valid");current.validated=true;saveAll();renderCanvas();alert("QTRC Validation Passed\\n\\nThe research design is structurally complete based on the information provided. This does not constitute proof of scientific validity.");
-};
+function saveCurrentBlock(){
+ const b=current.blocks[currentBlock];
+ const q=document.getElementById("aiInput").value.trim();
+
+ b.content=q;
+ b.status=q ? "Provisional" : "Exploratory";
+ current.updatedAt=new Date().toISOString();
+ current.validated=false;
+
+ saveAll();
+ renderCanvas();
+ updateModalStatus();
+
+ document.getElementById("aiResponse").innerHTML=
+   '<div class="response">Block berhasil disimpan. Status: '+esc(b.status)+'.</div>';
+}
 
 function openAI(i){
- currentBlock=i;document.getElementById("modalTitle").textContent="Ask QTRC — "+current.blocks[i].name;document.getElementById("modalHint").textContent=`Context: ${current.blocks[i].name} · ${current.mode} · ${current.level}`;document.getElementById("aiInput").value="";document.getElementById("aiResponse").innerHTML="";document.getElementById("runAI").textContent="Analyze with QTRC";document.getElementById("modal").classList.remove("hidden");
+ currentBlock=i;
+ const b=current.blocks[i];
+
+ document.getElementById("modalTitle").textContent="QTRC Analysis — "+b.name;
+ document.getElementById("modalHint").textContent=
+   `Context: ${b.name} · ${current.mode} · ${current.level}`;
+ document.getElementById("aiInput").value=b.content;
+ document.getElementById("aiResponse").innerHTML="";
+ updateModalStatus();
+
+ document.getElementById("modal").classList.remove("hidden");
 }
-document.getElementById("closeModal").onclick=()=>{document.getElementById("modal").classList.add("hidden");document.getElementById("runAI").textContent="Analyze with QTRC"};
-document.getElementById("runAI").onclick=async()=>{
- const b=current.blocks[currentBlock], q=document.getElementById("aiInput").value.trim();
- if(document.getElementById("runAI").textContent==="Save Block"){
-   b.content=q;b.status=q?"Provisional":"Exploratory";current.updatedAt=new Date().toISOString();current.validated=false;
-   saveAll();document.getElementById("modal").classList.add("hidden");document.getElementById("runAI").textContent="Analyze with QTRC";renderCanvas();return;
+
+document.getElementById("closeModal").onclick=()=>{
+ document.getElementById("modal").classList.add("hidden");
+};
+
+document.getElementById("saveBlock").onclick=()=>{
+ saveCurrentBlock();
+};
+
+document.getElementById("analyzeBlock").onclick=async()=>{
+ const b=current.blocks[currentBlock];
+ const q=document.getElementById("aiInput").value.trim();
+
+ if(!q){
+   document.getElementById("aiResponse").innerHTML=
+     '<div class="response">Isi konten atau pertanyaan terlebih dahulu sebelum menjalankan analisis.</div>';
+   return;
  }
- if(!q){document.getElementById("aiResponse").innerHTML='<div class="response">Please describe what you want QTRC to examine.</div>';return}
- const btn=document.getElementById("runAI");btn.disabled=true;btn.textContent="Analyzing...";
+
+ const btn=document.getElementById("analyzeBlock");
+ btn.disabled=true;
+ btn.textContent="Analyzing...";
+
  try{
-   const data=await qtrcApi("/api/analyze",{question:q,blockIndex:currentBlock,block:b,context:qtrcContext()});
-   document.getElementById("aiResponse").innerHTML='<div class="response">'+esc(data.analysis||"No analysis returned.")+'</div>';
+   const data=await qtrcApi("/api/analyze",{
+     question:q,
+     blockIndex:currentBlock,
+     block:b,
+     context:qtrcContext()
+   });
+
+   document.getElementById("aiResponse").innerHTML=
+     '<div class="response">'+esc(data.analysis||"No analysis returned.")+'</div>';
  }catch(err){
-   document.getElementById("aiResponse").innerHTML='<div class="response">'+esc(err.message)+"\n\nCheck the API Base URL in Settings and make sure the backend is deployed."+'</div>';
- }finally{btn.disabled=false;btn.textContent="Analyze with QTRC";}
+   document.getElementById("aiResponse").innerHTML=
+     '<div class="response">'+
+     esc(err.message)+
+     "\\n\\nCheck the API Base URL in Settings and make sure the backend is deployed."+
+     '</div>';
+ }finally{
+   btn.disabled=false;
+   btn.textContent="Analyze with QTRC";
+ }
 };
 
 document.getElementById("copyCitation").onclick=async()=>{await navigator.clipboard.writeText(document.getElementById("citation").textContent.trim());alert("Citation copied.")};
