@@ -1902,6 +1902,28 @@ brainThink.onclick = async function(){
       data.assessment || []
     );
 
+    const sourceQuery =
+      input ||
+      brainV3Conversation
+        .filter(function(item){
+          return item.role === "user";
+        })
+        .slice(-1)[0]?.content ||
+      "";
+
+    if(sourceQuery){
+
+      const sourceResults =
+        await brainV3SearchSources(
+          sourceQuery
+        );
+
+      brainV3RenderSources(
+        sourceResults.sources || []
+      );
+
+    }
+
     brainV3RenderProposal(
       data.proposal || {blocks:[]}
     );
@@ -2834,6 +2856,43 @@ async function brainV2ReadFile(file){
   };
 }
 
+
+/* QTRC_BRAIN_SOURCE_SEARCH_FUNCTION */
+
+async function brainV3SearchSources(query){
+
+  const value =
+    String(query || "").trim();
+
+  if(!value){
+    return {
+      sources:[]
+    };
+  }
+
+  try{
+
+    return await qtrcApi(
+      "/api/research-sources",
+      {
+        query:value.slice(0,500)
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Research source lookup failed:",
+      error
+    );
+
+    return {
+      sources:[]
+    };
+
+  }
+}
+
 brainThinkV2.onclick = async function(){
 
   const input =
@@ -3255,5 +3314,123 @@ brainThinkV2.onclick = async function(){
 
 })();
 </script>
-\n</body>
+\n
+<style id="QTRC_BRAIN_SOURCES_V1">
+.qtrc-source-link{
+  display:inline-block;
+  margin-top:4px;
+  font-size:9px;
+  color:#555;
+  text-decoration:none;
+}
+
+.qtrc-source-link:hover{
+  text-decoration:underline;
+}
+
+.qtrc-source-provider{
+  display:inline-block;
+  margin-top:4px;
+  font-size:8px;
+  color:#999;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+</style>
+
+<script id="QTRC_BRAIN_SOURCES_V1_SCRIPT">
+(function(){
+
+  window.brainV3RenderSources = function(sources){
+
+    const card =
+      document.getElementById("brainSourcesCard");
+
+    const box =
+      document.getElementById("brainSources");
+
+    if(!card || !box){
+      return;
+    }
+
+    const items =
+      Array.isArray(sources)
+        ? sources
+        : [];
+
+    if(!items.length){
+      card.style.display = "none";
+      box.innerHTML = "";
+      return;
+    }
+
+    card.style.display = "block";
+    box.innerHTML = "";
+
+    items.slice(0,10).forEach(function(source){
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "qtrc-source";
+
+      const authors =
+        Array.isArray(source.authors)
+          ? source.authors.join(", ")
+          : "";
+
+      const metaParts = [];
+
+      if(authors){
+        metaParts.push(authors);
+      }
+
+      if(source.journal){
+        metaParts.push(source.journal);
+      }
+
+      if(source.year){
+        metaParts.push(String(source.year));
+      }
+
+      row.innerHTML = `
+        <div class="qtrc-source-title">
+          ${esc(source.title || "Untitled source")}
+        </div>
+
+        <div class="qtrc-source-meta">
+          ${esc(metaParts.join(" · "))}
+        </div>
+
+        <div class="qtrc-source-provider">
+          ${esc(source.provider || "Research source")}
+        </div>
+
+        ${
+          source.url
+            ? `
+              <a
+                class="qtrc-source-link"
+                href="${esc(source.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open source
+              </a>
+            `
+            : ""
+        }
+      `;
+
+      box.appendChild(row);
+
+    });
+
+  };
+
+})();
+</script>
+
+</body>
 </html>

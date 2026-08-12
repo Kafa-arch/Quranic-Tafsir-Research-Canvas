@@ -1,344 +1,364 @@
 const { cors, callGroq } = require("./_lib");
 
 const BLOCKS = [
-  {
-    index: 0,
-    name: "Topic",
-    definition: "Area kajian umum yang mengarahkan bangunan metodologi, analisis, dan hasil.",
-    dependency: "Terutama terhubung dengan Research Question, Context, dan Corpus Qur’aniyyah."
-  },
-  {
-    index: 1,
-    name: "Research Question",
-    definition: "Pertanyaan kritis yang akan dijawab melalui riset; menjadi pengarah fokus dan karakter penelitian.",
-    dependency: "Selaraskan dengan Objective, Method of Tafsir, dan Contribution & Novelty."
-  },
-  {
-    index: 2,
-    name: "Objective",
-    definition: "Rumusan Research Question dalam bentuk deklaratif; menjelaskan arah dan capaian riset.",
-    dependency: "Pastikan tujuan tidak melampaui pertanyaan penelitian."
-  },
-  {
-    index: 3,
-    name: "Corpus Qur’aniyyah",
-    definition: "Kumpulan ayat yang menjadi objek analisis; pemilihannya perlu justifikasi metodologis.",
-    dependency: "Tentukan ayat, surah, atau tema dan alasan pemilihannya secara transparan."
-  },
-  {
-    index: 4,
-    name: "Context",
-    definition: "Dunia teks dan dunia peneliti; konteks historis serta sosial-kontemporer yang relevan.",
-    dependency: "Bedakan konteks masa lalu, mikro/makro, dan konteks masa kini."
-  },
-  {
-    index: 5,
-    name: "Data & Sources",
-    definition: "Sumber primer dan sekunder yang digunakan dalam proses analisis.",
-    dependency: "Sumber perlu ditelusuri, diverifikasi, dan dikelola secara bertanggung jawab."
-  },
-  {
-    index: 6,
-    name: "Theoretical Framework",
-    definition: "Teori atau lensa konseptual yang digunakan untuk membaca dan menjelaskan data.",
-    dependency: "Harus benar-benar bekerja dalam analisis, bukan sekadar disebut."
-  },
-  {
-    index: 7,
-    name: "Method of Tafsir",
-    definition: "Cara atau metode penafsiran yang digunakan untuk membangun pembacaan.",
-    dependency: "Harus selaras dengan Research Question dan objek kajian."
-  },
-  {
-    index: 8,
-    name: "Analysis Strategy",
-    definition: "Strategi konkret untuk menganalisis data dan menghubungkan teori, corpus, dan metode.",
-    dependency: "Tidak boleh melompat melampaui data dan method yang tersedia."
-  },
-  {
-    index: 9,
-    name: "Contribution & Novelty",
-    definition: "Kontribusi dan kebaruan yang ditawarkan penelitian.",
-    dependency: "Harus dapat ditelusuri kembali ke masalah, question, dan analysis."
-  },
-  {
-    index: 10,
-    name: "Title",
-    definition: "Sintesis ringkas dari arsitektur penelitian.",
-    dependency: "Title sebaiknya mencerminkan Topic, Question, Corpus, dan fokus analisis."
-  }
+  ["Topic","Area kajian umum yang mengarahkan bangunan metodologi, analisis, dan hasil.","Terhubung terutama dengan Research Question, Context, dan Corpus Qur’aniyyah."],
+  ["Research Question","Pertanyaan kritis yang akan dijawab melalui riset.","Selaraskan dengan Objective, Method of Tafsir, dan Contribution & Novelty."],
+  ["Objective","Rumusan Research Question dalam bentuk deklaratif.","Pastikan tujuan tidak melampaui pertanyaan penelitian."],
+  ["Corpus Qur’aniyyah","Kumpulan ayat yang menjadi objek analisis.","Tentukan ayat, surah, atau tema dan alasan pemilihannya secara transparan."],
+  ["Context","Konteks historis serta sosial-kontemporer yang relevan.","Bedakan konteks masa lalu dan konteks masa kini."],
+  ["Data & Sources","Sumber primer dan sekunder yang digunakan.","Sumber perlu ditelusuri dan diverifikasi."],
+  ["Theoretical Framework","Teori atau lensa konseptual yang digunakan.","Harus benar-benar bekerja dalam analisis."],
+  ["Method of Tafsir","Cara atau metode penafsiran yang digunakan.","Harus selaras dengan Research Question dan objek kajian."],
+  ["Analysis Strategy","Strategi konkret untuk menganalisis data.","Harus menjembatani question, data, theory, dan method."],
+  ["Contribution & Novelty","Kontribusi dan kebaruan penelitian.","Harus dapat ditelusuri kembali ke masalah dan analisis."],
+  ["Title","Sintesis ringkas arsitektur penelitian.","Harus mencerminkan fokus penelitian."]
 ];
+
+function safeText(value, max = 6000){
+  return String(value || "")
+    .replace(/\u0000/g, "")
+    .slice(0, max)
+    .trim();
+}
+
+function detectLanguage(text){
+  const value = String(text || "").toLowerCase();
+
+  const idSignals = [
+    "saya","aku","ingin","mau","penelitian","riset",
+    "tentang","bagaimana","kenapa","apa","untuk",
+    "dalam","yang","ini","itu","dengan"
+  ];
+
+  const score = idSignals.reduce(
+    (count, word) =>
+      count + (
+        value.includes(" " + word + " ") ||
+        value.startsWith(word + " ") ||
+        value.endsWith(" " + word)
+          ? 1
+          : 0
+      ),
+    0
+  );
+
+  return score >= 2 ? "id" : "en";
+}
+
+function buildConversationSummary(conversation){
+  if(!Array.isArray(conversation) || !conversation.length){
+    return "";
+  }
+
+  return conversation
+    .slice(-6)
+    .map(item => {
+      const role = item?.role === "user"
+        ? "Researcher"
+        : "QTRC";
+
+      return `${role}: ${safeText(item?.content, 1200)}`;
+    })
+    .join("\n");
+}
+
+function blockSchema(){
+  return BLOCKS.map((block, index) => ({
+    index,
+    name:block[0],
+    definition:block[1],
+    dependency:block[2]
+  }));
+}
 
 module.exports = async (req, res) => {
 
   cors(req, res);
 
-  if (req.method === "OPTIONS") {
+  if(req.method === "OPTIONS"){
     return res.status(204).end();
   }
 
-  if (req.method !== "POST") {
+  if(req.method !== "POST"){
     return res.status(405).json({
-      error: "Method not allowed"
+      error:"Method not allowed"
     });
   }
 
-  try {
-
-    const body = req.body || {};
+  try{
 
     const basePrompt =
       process.env.QTRC_SYSTEM_PROMPT;
 
-    if (!basePrompt) {
+    if(!basePrompt){
       return res.status(500).json({
-        error:
-          "QTRC_SYSTEM_PROMPT is not configured on the backend."
+        error:"QTRC_SYSTEM_PROMPT is not configured on the backend."
       });
     }
 
+    const body =
+      req.body || {};
+
     const input =
-      String(body.input || "").slice(0, 16000);
+      safeText(body.input, 5000);
 
     const sourceText =
-      String(body.sourceText || "").slice(0, 30000);
-
-    const sourceFiles =
-      Array.isArray(body.files)
-        ? body.files.slice(0, 10)
-        : [];
-
-    const conversation =
-      Array.isArray(body.conversation)
-        ? body.conversation.slice(-12)
-        : [];
+      safeText(body.sourceText, 16000);
 
     const context =
       body.context || {};
 
-    const languageHint =
-      String(body.languageHint || "").trim();
+    const conversation =
+      buildConversationSummary(
+        body.conversation
+      );
 
+    const language =
+      safeText(
+        body.languageHint ||
+        detectLanguage(input),
+        10
+      );
+
+    /*
+     * Keep the prompt intentionally compact.
+     * Detailed block descriptions are supplied only once.
+     * We do not send the entire conversation or giant file payload.
+     */
     const instruction = `
-You are QTRC's conversational research partner.
+You are QTRC, an academic research supervisor for Qur'anic tafsir research.
 
-Your job is to have an actual conversation with the researcher, not write a report about them.
-
-LANGUAGE:
-Always reply in the same language as the researcher's latest meaningful message.
-
-If the researcher writes Indonesian, reply in natural Indonesian.
-If the researcher writes English, reply in casual-professional American English.
-If the researcher mixes languages, follow the dominant language of the latest message.
-
-Never switch to English just because QTRC's interface or internal terminology is English.
+ROLE:
+Guide a researcher like a careful university professor during a supervision session.
 
 VOICE:
-Sound like a smart research partner who happens to know tafsir research really well.
+Professional, calm, conversational, Socratic, precise, and respectful.
+Do not sound like a chatbot.
+Do not sound like Reddit, marketing copy, or a corporate assistant.
+Do not use slang.
+Do not describe the researcher in third person.
 
-For English:
-- casual-professional
-- natural American conversational tone
-- relaxed, direct, warm
-- California / Reddit-like conversational feel
-- contractions are fine
-- never corporate, academic, robotic, or overly polished
+LANGUAGE:
+Reply in the language of the latest researcher message.
+Indonesian -> Indonesian.
+English -> English.
+Do not announce the language choice.
+Do not say "continuing in Indonesian" or similar meta-commentary.
 
-For Indonesian:
-- natural Indonesian
-- casual-professional
-- clear and conversational
-- not bureaucratic
-- not overly formal
-- sound like a thoughtful research partner
+ACADEMIC CONDUCT:
+Never invent Qur'anic references, scholars, quotations, books, journal articles, page numbers, theories, or methodological facts.
+Do not treat a possibility as established evidence.
+When material is insufficient, explicitly say so.
+Do not silently fill missing QTRC blocks.
 
-IMPORTANT CONVERSATION RULE:
-Never describe the researcher in third person.
+RESEARCH GUIDANCE:
+Ask a clarifying question when the research direction is still unclear.
+Challenge overly broad or unsupported ideas politely.
+Explain why a particular clarification matters methodologically.
+Do not rush to finalize the research design.
 
-Do NOT say:
-"The user has expressed interest in..."
-"The researcher has provided..."
-"The user wants to..."
+IMPORTANT:
+The conversational answer must remain a normal paragraph-based supervision response.
+Do not include the 11-block table inside the conversational answer.
+Do not output JSON in the conversational answer.
 
-Instead say:
-"Kalau kamu mau meneliti ekologi, kita bisa mulai dari..."
-"Topiknya sudah kelihatan, tapi masih cukup luas."
-"I found something interesting here..."
+LATEST MESSAGE:
+${input || "(none)"}
 
-Respond directly to the researcher.
+LANGUAGE:
+${language}
 
-Don't repeat their message just to acknowledge it.
-Don't produce generic filler.
-Move the conversation forward.
-
-If the researcher gives a broad idea, help narrow it naturally.
-Ask a useful follow-up question when clarification is actually needed.
-
-QTRC EPISTEMIC RULE:
-Do not invent research information.
-Do not fabricate Qur'anic references, sources, quotations, theories, scholars, or methodological details.
-Do not silently finalize missing information.
-Clearly distinguish what is found in the supplied material from what is only a possibility.
-
-QTRC MODE:
-${context.mode || "Thinking Mode"}
-
-QTRC LEVEL:
-${context.level || "Basic"}
+RECENT CONTEXT:
+${conversation || "(no prior conversation)"}
 
 CURRENT CANVAS:
-${context.canvasName || "(none)"}
+${safeText(context.canvasName, 120)}
+Mode: ${safeText(context.mode, 80)}
+Level: ${safeText(context.level, 80)}
 
-LANGUAGE HINT:
-${languageHint || "(infer from the user's latest message)"}
+UPLOADED MATERIAL:
+${sourceText || "(none)"}
 
-CONVERSATION SO FAR:
-${JSON.stringify(conversation, null, 2)}
-
-CURRENT USER MESSAGE:
-${input || "(no new text message)"}
-
-UPLOADED FILES:
-${JSON.stringify(sourceFiles, null, 2)}
-
-EXTRACTED SOURCE TEXT:
-${sourceText || "(no readable uploaded text)"}
-
-11 QTRC BLOCKS:
-${JSON.stringify(BLOCKS, null, 2)}
+QTRC BLOCKS:
+${JSON.stringify(blockSchema())}
 
 TASK:
-First, respond conversationally to the researcher's latest message.
+1. Respond naturally to the latest researcher message.
+2. Assess the supplied material against all 11 QTRC blocks.
+3. Identify which blocks are actually supported.
+4. Identify which blocks remain incomplete.
+5. Propose only blocks that are genuinely supported by the supplied material.
+6. Do not add unsupported information.
+7. Keep the conversational response concise enough for an ongoing supervision dialogue.
 
-Then assess the supplied material against all 11 QTRC blocks.
-
-For each block determine:
-- Found
-- Partial
-- Missing
-- Needs Clarification
-
-For each block provide:
-- evidence
-- explanation
-
-Only propose a block when the supplied material actually supports it.
-
-The proposal is NOT an automatic transfer.
-The user must explicitly approve it first.
-
-Return ONLY valid JSON:
+Return ONLY this JSON object:
 
 {
-  "analysis": "Natural conversational reply to the researcher in the same language as their latest message.",
+  "analysis": "A natural professor-style response in the researcher's language.",
   "assessment": [
     {
       "index": 0,
       "block": "Topic",
-      "status": "Found",
-      "evidence": "Evidence from supplied material or empty string.",
-      "explanation": "Why this status applies."
+      "status": "Found|Partial|Missing|Needs Clarification",
+      "evidence": "Directly supported evidence or empty string.",
+      "explanation": "Brief methodological explanation."
     }
   ],
   "proposal": {
     "blocks": [
       {
         "index": 0,
-        "content": "Content derived only from supplied material.",
-        "reason": "Why this block is ready to propose."
+        "content": "Proposed content supported by the supplied material.",
+        "reason": "Why this is sufficiently supported."
       }
     ]
   }
 }
 
-Keep "analysis" conversational and reasonably short.
-The detailed 11-block assessment belongs in "assessment", not in the conversational message.
-
-Do not return markdown.
-Do not wrap JSON in code fences.
+No markdown fences.
+No extra text outside the JSON.
 `;
 
-    const raw =
-      await callGroq([
-        {
-          role: "system",
-          content: basePrompt
-        },
-        {
-          role: "user",
-          content: instruction
-        }
-      ]);
+    let raw;
+
+    try{
+
+      raw =
+        await callGroq([
+          {
+            role:"system",
+            content:basePrompt
+          },
+          {
+            role:"user",
+            content:instruction
+          }
+        ]);
+
+    }catch(error){
+
+      const message =
+        String(
+          error?.message ||
+          ""
+        );
+
+      const isRateLimit =
+        /rate limit|too many requests|tpm|tokens per minute/i
+          .test(message);
+
+      if(isRateLimit){
+
+        return res.status(429).json({
+          error:
+            language === "id"
+              ? "Model sedang mencapai batas pemrosesan. Tunggu sebentar, lalu kirim kembali pertanyaan terakhir Anda."
+              : "The model is temporarily at its processing limit. Please wait a moment and send the last question again."
+        });
+
+      }
+
+      throw error;
+    }
 
     let result = null;
 
-    /*
-     * Groq can occasionally return valid JSON wrapped in
-     * markdown fences or with a little extra text around it.
-     * Normalize that before parsing.
-     */
-    try {
-      result = JSON.parse(raw);
-    } catch (firstError) {
+    try{
+      result =
+        JSON.parse(
+          String(raw)
+            .replace(/^```json\s*/i, "")
+            .replace(/\s*```$/i, "")
+            .trim()
+        );
+    }catch{
 
-      try {
-        const cleaned = String(raw)
-          .replace(/^```(?:json)?\\s*/i, "")
-          .replace(/\\s*```$/i, "")
-          .trim();
+      const text =
+        String(raw || "");
 
-        result = JSON.parse(cleaned);
+      const start =
+        text.indexOf("{");
 
-      } catch (secondError) {
+      const end =
+        text.lastIndexOf("}");
 
-        try {
-          const start = raw.indexOf("{");
-          const end = raw.lastIndexOf("}");
+      if(start >= 0 && end > start){
 
-          if(start !== -1 && end > start){
-            result = JSON.parse(
-              raw.slice(start, end + 1)
+        try{
+          result =
+            JSON.parse(
+              text.slice(
+                start,
+                end + 1
+              )
             );
-          }
-        } catch (thirdError) {
+        }catch{
           result = null;
         }
+
       }
+
     }
 
-    /*
-     * Never show raw JSON to the researcher.
-     */
-    if(!result || typeof result !== "object"){
+    if(!result){
+
       return res.status(200).json({
         analysis:
-          "I’ve gone through what you sent, but I couldn’t structure the findings cleanly yet. Let’s try that again.",
-        assessment: [],
-        proposal: {
-          blocks: []
+          language === "id"
+            ? "Saya belum dapat menyusun hasil analisis ini dengan baik. Mari kita coba lagi dengan bahan yang sama."
+            : "I wasn't able to structure the analysis cleanly. Let's try again with the same material.",
+        assessment:[],
+        proposal:{
+          blocks:[]
+        },
+        sources:{
+          academic:[],
+          shamela:[]
         }
       });
+
     }
 
     return res.status(200).json({
+
       analysis:
-        String(result.analysis || "").trim(),
+        safeText(
+          result.analysis,
+          5000
+        ),
+
       assessment:
         Array.isArray(result.assessment)
-          ? result.assessment
+          ? result.assessment.slice(0,11)
           : [],
+
       proposal:
         result.proposal &&
         typeof result.proposal === "object"
-          ? result.proposal
-          : {blocks:[]}
+          ? {
+              blocks:
+                Array.isArray(
+                  result.proposal.blocks
+                )
+                  ? result.proposal.blocks.slice(0,11)
+                  : []
+            }
+          : {
+              blocks:[]
+            },
+
+      sources:{
+        academic:[],
+        shamela:[]
+      }
+
     });
 
-  } catch (e) {
+  }catch(error){
 
     return res.status(500).json({
       error:
-        e.message ||
+        error?.message ||
         "Unexpected server error."
     });
 
