@@ -4,5 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vercel dev"
+  },
+  "dependencies": {
+    "officeparser": "^7.5.0"
   }
 }

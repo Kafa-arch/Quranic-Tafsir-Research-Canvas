@@ -1,4 +1,5 @@
-const { cors, callGroq } = require("./_lib");
+const { cors, callModel } = require("./_lib");
+const { readCloudFiles } = require("./_cloud-files");
 
 const BLOCKS = [
   ["Topic","Area kajian umum yang mengarahkan bangunan metodologi, analisis, dan hasil.","Terhubung terutama dengan Research Question, Context, dan Corpus Qur’aniyyah."],
@@ -131,8 +132,32 @@ module.exports = async (req, res) => {
     const input =
       safeText(body.input, 5000);
 
-    const sourceText =
-      safeText(body.sourceText, 16000);
+    let sourceText =
+      safeText(body.sourceText, 4000);
+
+    const fileReferences =
+      Array.isArray(body.fileReferences)
+        ? body.fileReferences.slice(0, 6)
+        : [];
+
+    if (fileReferences.length) {
+      const authHeader =
+        req.headers.authorization || "";
+
+      const accessToken =
+        authHeader.startsWith("Bearer ")
+          ? authHeader.slice(7).trim()
+          : "";
+
+      const cloudMaterial =
+        await readCloudFiles(fileReferences, accessToken);
+
+      sourceText =
+        [sourceText, cloudMaterial.text]
+          .filter(Boolean)
+          .join("\n")
+          .slice(0, 20000);
+    }
 
     const context =
       body.context || {};
@@ -560,7 +585,7 @@ No extra text outside the JSON.
     try{
 
       raw =
-        await callGroq([
+        await callModel([
           {
             role:"system",
             content:basePrompt
@@ -569,7 +594,10 @@ No extra text outside the JSON.
             role:"user",
             content:instruction
           }
-        ]);
+        ], {
+          temperature: 0.15,
+          response_format: { type: "json_object" }
+        });
 
     }catch(error){
 

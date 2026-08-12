@@ -1195,6 +1195,117 @@ button{cursor:pointer}
   </div>
 </div>
 
+<script id="QTRC_SUPABASE_ANON_AUTH_V1_LOAD">
+(function(){
+
+  window.qtrcSupabaseReady =
+    new Promise(async function(resolve,reject){
+
+      if(window.supabase){
+        resolve(window.supabase);
+        return;
+      }
+
+      const script =
+        document.createElement("script");
+
+      script.src =
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+      script.onload = async function(){
+
+        try{
+
+          const base =
+            (localStorage.getItem("qtrc_api_base_url") || "")
+              .replace(/\\/$/,"");
+
+          const response =
+            await fetch(
+              base + "/api/config"
+            );
+
+          if(!response.ok){
+            throw new Error(
+              "Supabase configuration could not be loaded."
+            );
+          }
+
+          const config =
+            await response.json();
+
+          if(
+            !config.supabaseUrl ||
+            !config.supabaseAnonKey
+          ){
+            throw new Error(
+              "Supabase public configuration is incomplete."
+            );
+          }
+
+          window.qtrcSupabase =
+            window.supabase.createClient(
+              config.supabaseUrl,
+              config.supabaseAnonKey,
+              {
+                auth:{
+                  persistSession:true,
+                  autoRefreshToken:true,
+                  detectSessionInUrl:false
+                }
+              }
+            );
+
+          /*
+           * Anonymous identity keeps the upload private
+           * without forcing the researcher to create an account.
+           */
+          const existing =
+            await window.qtrcSupabase.auth.getSession();
+
+          if(!existing?.data?.session){
+
+            const anonymous =
+              await window.qtrcSupabase.auth.signInAnonymously();
+
+            if(anonymous.error){
+              throw anonymous.error;
+            }
+
+          }
+
+          resolve(
+            window.qtrcSupabase
+          );
+
+        }catch(error){
+
+          reject(error);
+
+        }
+
+      };
+
+      script.onerror =
+        function(){
+
+          reject(
+            new Error(
+              "Unable to load Supabase client."
+            )
+          );
+
+        };
+
+      document.head.appendChild(script);
+
+    });
+
+})();
+</script>
+
+<script id="QTRC_SUPABASE_ANON_AUTH_V1">
+
 <script>
 const QTRC_CONFIG = {
   // Set this to your deployed backend URL, e.g. https://your-qtrc-api.vercel.app
@@ -1813,43 +1924,73 @@ function brainV3RenderAttachments(){
     });
 }
 
-async function brainV3ExtractBrowserText(file){
+async function brainV3UploadFileToCloud(file){
 
-  const name =
-    file.name.toLowerCase();
+  const supabase =
+    await window.qtrcSupabaseReady;
 
-  const isText =
-    file.type.startsWith("text/") ||
-    name.endsWith(".txt") ||
-    name.endsWith(".md") ||
-    name.endsWith(".csv") ||
-    name.endsWith(".json") ||
-    name.endsWith(".xml") ||
-    name.endsWith(".html") ||
-    name.endsWith(".htm");
-
-  if(!isText){
-    return "";
+  if(!supabase){
+    throw new Error(
+      "Supabase client is not available."
+    );
   }
 
-  try{
-    return String(
-      await file.text()
-    ).slice(0,30000);
-  }catch{
-    return "";
+  const userResult =
+    await supabase.auth.getUser();
+
+  const user =
+    userResult?.data?.user;
+
+  if(!user?.id){
+    throw new Error(
+      "Cloud identity is not available."
+    );
   }
+
+  /*
+   * Keep every user's material inside their own folder.
+   * The Storage RLS policy checks auth.uid().
+   */
+  const safeName =
+    file.name
+      .replace(/[\/\\]+/g, "_")
+      .replace(/\.\.+/g, "_");
+
+  const path =
+    `${user.id}/${Date.now()}-${safeName}`;
+
+  const uploadResult =
+    await supabase
+      .storage
+      .from("qtrc-research")
+      .upload(
+        path,
+        file,
+        {
+          contentType:
+            file.type ||
+            "application/octet-stream",
+          upsert:false
+        }
+      );
+
+  if(uploadResult.error){
+    throw uploadResult.error;
+  }
+
+  return {
+    name:file.name,
+    type:file.type,
+    size:file.size,
+    storagePath:path,
+    bucket:"qtrc-research",
+    cloud:true
+  };
 }
-
-brainUploadBtn.onclick = function(){
-
-  brainFileInput.click();
-
-};
 
 brainFileInput.addEventListener(
   "change",
-  function(){
+  async function(){
 
     const selected =
       Array.from(
@@ -1860,21 +2001,51 @@ brainFileInput.addEventListener(
       return;
     }
 
-    brainV3Files =
-      brainV3Files.concat(selected);
+    for(const file of selected){
 
+      try{
+
+        brainV3ShowProcessing(
+          "reading"
+        );
+
+        const reference =
+          await brainV3UploadFileToCloud(
+            file
+          );
+
+        brainV3Files.push({
+          name:reference.name,
+          type:reference.type,
+          size:reference.size,
+          storagePath:reference.path,
+          uploadToken:reference.token,
+          cloud:true
+        });
+
+      }catch(error){
+
+        console.error(
+          "QTRC cloud upload failed:",
+          error
+        );
+
+        brainV3AddMessage(
+          "qtrc",
+          brainV3DetectLanguage(
+            file.name
+          ) === "id"
+            ? "File belum dapat diunggah ke penyimpanan cloud."
+            : "The file could not be uploaded to cloud storage."
+        );
+
+      }
+
+    }
+
+    brainV3HideProcessing();
     brainV3RenderAttachments();
-
     brainV3ClearEmptyState();
-
-    brainV3AddMessage(
-      "user",
-      selected.length === 1
-        ? "Saya mengunggah " + selected[0].name + "."
-        : "Saya mengunggah " +
-          selected.length +
-          " file."
-    );
 
     brainFileInput.value = "";
 
@@ -1932,40 +2103,24 @@ brainThink.onclick = async function(){
 
   try{
 
-    const fileResults = [];
+    const fileResults =
+      brainV3Files.map(function(file){
 
-    for(const file of brainV3Files){
+        return {
+          name:file.name,
+          type:file.type,
+          size:file.size,
+          bucket:file.bucket || "qtrc-research",
+          storagePath:file.storagePath || "",
+          cloud:Boolean(file.cloud)
+        };
 
-      const text =
-        await brainV3ExtractBrowserText(file);
-
-      fileResults.push({
-        name:file.name,
-        type:file.type,
-        size:file.size,
-        browserText:text,
-        browserReadable:Boolean(text)
       });
 
-    }
-
-    const sourceText =
-      fileResults
-        .filter(function(file){
-          return file.browserReadable;
-        })
-        .map(function(file){
-          return (
-            "\n===== FILE: " +
-            file.name +
-            " =====\n" +
-            file.browserText
-          );
-        })
-        .join("\n");
+    const sourceText = "";
 
     brainV3UpdateProcessing(
-      sourceText
+      fileResults.length
         ? "mapping"
         : "analyzing"
     );
@@ -1992,6 +2147,8 @@ brainThink.onclick = async function(){
           input,
           sourceText,
           languageHint,
+          fileReferences:
+            fileResults,
           conversation:
             brainV3Conversation.slice(-12),
           files:

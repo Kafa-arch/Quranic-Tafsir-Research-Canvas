@@ -1,0 +1,25 @@
+model_list:
+  - model_name: qtrc-supervisor
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+
+  - model_name: qtrc-supervisor-groq
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: qtrc-supervisor-openrouter
+    litellm_params:
+      model: openrouter/openai/gpt-oss-120b:free
+      api_key: os.environ/OPENROUTER_API_KEY
+
+router_settings:
+  fallbacks:
+    - qtrc-supervisor: [qtrc-supervisor-groq, qtrc-supervisor-openrouter]
+  num_retries: 1
+  timeout: 60
+
+litellm_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  json_mode: true

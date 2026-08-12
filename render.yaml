@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: qtrc-litellm
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.litellm
+    dockerCommand: python -m litellm --config /app/config.yaml --port 10000
+    autoDeployTrigger: commit
+    envVars:
+      - key: LITELLM_MASTER_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
