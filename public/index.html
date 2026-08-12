@@ -970,873 +970,272 @@ select:focus-visible{
   </div>
 </div>
 
-<script>
-const QTRC_CONFIG = {
-  // Set this to your deployed backend URL, e.g. https://your-qtrc-api.vercel.app
-  API_BASE_URL: localStorage.getItem("qtrc_api_base_url") || ""
-};
 
-async function qtrcApi(path, payload){
-  const url = (QTRC_CONFIG.API_BASE_URL || "").replace(/\/$/,"") + path;
-  const res = await fetch(url, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
-  });
-  if(!res.ok){
-    let msg="QTRC API request failed.";
-    try { const data=await res.json(); if(data.error) msg=data.error; } catch(e){}
-    throw new Error(msg);
-  }
-  return res.json();
+
+
+<!-- QTRC_CURSOR_GLASS_SURFACE_V1 -->
+
+<style id="QTRC_CURSOR_GLASS_SURFACE_V1">
+/*
+  The UI itself does NOT move.
+  Only a glass surface appears inside the element under the cursor.
+*/
+
+.qtrc-glass-target{
+  position:relative !important;
+  overflow:hidden !important;
 }
 
-function qtrcContext(){
-  return {
-    mode: current?.mode || "Thinking Mode",
-    level: current?.level || "Basic",
-    canvasName: current?.name || "",
-    blocks: current?.blocks || []
-  };
-}
-
-const blockNames=["Topic","Research Question","Objective","Corpus Qur’aniyyah","Context","Data & Sources","Theoretical Framework","Method of Tafsir","Analysis Strategy","Contribution & Novelty","Title"];
-const blockInfo=[
-["Pintu masuk penelitian","Area kajian umum yang mengarahkan bangunan metodologi, analisis, dan hasil.","Topic terutama terhubung dengan Research Question, Context, dan Corpus Qur’aniyyah."],
-["Kompas penelitian","Pertanyaan kritis yang akan dijawab melalui riset; menjadi pengarah fokus dan karakter penelitian.","Selaraskan dengan Objective, Method of Tafsir, dan Contribution & Novelty."],
-["Target pencapaian","Rumusan Research Question dalam bentuk deklaratif; menjelaskan arah dan capaian riset.","Pastikan tujuan tidak melampaui pertanyaan penelitian."],
-["Objek tekstual utama","Kumpulan ayat yang menjadi objek analisis; pemilihannya perlu justifikasi metodologis.","Tentukan ayat/surat/tema dan alasan pemilihannya secara transparan."],
-["Dunia teks dan dunia peneliti","Konteks historis serta sosial-kontemporer yang relevan untuk memahami teks dan problem yang dikaji.","Bedakan konteks masa lalu—mikro/makro—dan konteks masa kini."],
-["Basis referensi penelitian","Sumber primer dan sekunder yang digunakan dalam proses analisis.","Sumber perlu ditelusuri, diverifikasi, dan dikelola secara bertanggung jawab."],
-["Lensa analisis","Kerangka yang menentukan kedalaman dan arah interpretasi.","Basic: alat deskripsi; Intermediate: lensa kritis; Expert: objek konstruksi."],
-["Cara teks dibaca","Perangkat interpretatif seperti ijmâlî, tahlîlî, mawdhû'î, atau muqâran.","Method of Tafsir adalah perangkat interpretatif, bukan otomatis metode penelitian tafsir."],
-["Operasionalisasi analisis","Langkah konkret penerapan teori dan metode tafsir terhadap data.","Harus menjembatani pertanyaan penelitian, data, teori, dan metode."],
-["Jantung validasi riset","Sumbangan ilmiah dan unsur kebaruan yang membedakan penelitian dari kajian sebelumnya.","Dapat berupa pengayaan ilmu tafsir, keterlibatan sosial, atau inovasi metodologis."],
-["Sintesis akhir","Judul dirumuskan setelah elemen kanvas terisi dan terhubung secara konseptual.","Siapkan beberapa alternatif lalu pilih yang paling representatif."]
-];
-const deps={1:[0],2:[1],3:[1],4:[0,1],5:[3,4],6:[3,4],7:[1,6],8:[1,3,7],9:[7,8,6],10:[2,9],11:[0,1,2,9,10]};
-let canvases=JSON.parse(localStorage.getItem("qtrc_canvases")||"[]");
-let current=null, selectedMode="Thinking Mode", selectedLevel="Basic", currentBlock=0;
-
-function saveAll(){localStorage.setItem("qtrc_canvases",JSON.stringify(canvases));}
-function go(view){
-  document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));
-  document.getElementById(view).classList.remove("hidden");
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
-  if(view==="dashboard") renderDashboard();
-  if(view==="canvas" && current) renderCanvas();
-  if(view==="brainstorm") { renderBrainThreads(); document.getElementById("brainLevel").textContent=current?.level||"Basic"; }
-  document.getElementById("topTitle").textContent=view==="canvas"?(current?.name||"QTRC+"):"Qur’anic Tafsir Research Canvas+";
-}
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
-
-document.querySelectorAll("#modeOptions .option").forEach(b=>b.addEventListener("click",()=>{selectedMode=b.dataset.value;document.querySelectorAll("#modeOptions .option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected")}));
-document.querySelectorAll("#levelOptions .option").forEach(b=>b.addEventListener("click",()=>{selectedLevel=b.dataset.value;document.querySelectorAll("#levelOptions .option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected")}));
-
-function newCanvas(){
-  const c={id:Date.now(),name:document.getElementById("canvasName").value.trim()||"Untitled Tafsir Research",mode:selectedMode,level:selectedLevel,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),validated:false,blocks:blockNames.map((name,i)=>({name,content:"",status:"Exploratory",notes:"",requirement:""}))};
-  canvases.unshift(c); current=c; saveAll(); renderRecent(); go("canvas");
-}
-document.getElementById("createCanvas").onclick=newCanvas;
-
-function renderRecent(){
- const r=document.getElementById("recent"); r.innerHTML="";
- canvases.slice(0,5).forEach(c=>{const b=document.createElement("button");b.textContent=c.name;b.onclick=()=>{current=c;go("canvas")};r.appendChild(b)});
-}
-function renderDashboard(){
- const g=document.getElementById("canvasGrid");
- if(!canvases.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">No canvases yet.<br><br><button class="btn primary" data-view="setup">Create your first canvas</button></div>';return}
- g.innerHTML="";
- canvases.forEach(c=>{const el=document.createElement("div");el.className="canvas-card";el.innerHTML=`<h3>${esc(c.name)}</h3><div class="muted">${new Date(c.updatedAt).toLocaleDateString()}</div><div class="canvas-meta"><span class="pill">${c.mode}</span><span class="pill">${c.level}</span><span class="pill">${c.validated?"QTRC Validation Passed":"In Development"}</span></div><button class="btn primary open">Open Canvas</button> <button class="btn del">Delete</button>`;el.querySelector(".open").onclick=()=>{current=c;go("canvas")};el.querySelector(".del").onclick=()=>{if(confirm("Delete this canvas?")){canvases=canvases.filter(x=>x.id!==c.id);saveAll();renderDashboard();renderRecent()}};g.appendChild(el)});
-}
-function renderCanvas(){
- document.getElementById("canvasTitle").textContent=current.name;
- document.getElementById("modeBadge").textContent=current.mode;
- document.getElementById("levelBadge").textContent=current.level;
- document.querySelectorAll(".visual-block").forEach(el=>{
-   const i=+el.dataset.index, b=current.blocks[i];
-   el.innerHTML=`<div class="visual-head"><span class="visual-num">${String(i+1).padStart(2,"0")}</span><span class="visual-title">${b.name}</span></div>
-   <div class="visual-desc">${blockInfo[i][0]}</div>
-   <div class="visual-content ${b.content.trim()?'':'visual-empty'}">${b.content.trim()?esc(b.content):'Click to add research content'}</div>
-   <span class="visual-status ${b.status==="Valid"?"valid":b.status==="Belum Valid"?"bad":""}">${b.status}</span>`;
-   el.onclick=()=>openBlockEditor(i);
- });
- updateStats(); dependencyCheck();
-}
-function updateModalStatus(){
- const b=current.blocks[currentBlock];
- const el=document.getElementById("modalStatus");
- if(el) el.textContent=b.status||"Exploratory";
-}
-
-function openBlockEditor(i){
- currentBlock=i;
- const b=current.blocks[i];
-
- document.getElementById("modalTitle").textContent="QTRC Block — "+b.name;
- document.getElementById("modalHint").textContent=blockInfo[i][1]+" "+blockInfo[i][2];
- document.getElementById("aiInput").value=b.content;
- document.getElementById("aiResponse").innerHTML=
-   '<div class="response">Masukkan atau edit konten yang diberikan peneliti. QTRC+ tidak akan mengisi informasi yang belum diberikan secara diam-diam.</div>';
-
- updateModalStatus();
- document.getElementById("modal").classList.remove("hidden");
-}
-
-function saveCurrentBlock(){
- const b=current.blocks[currentBlock];
- const q=document.getElementById("aiInput").value.trim();
-
- b.content=q;
- b.status=q ? "Provisional" : "Exploratory";
- current.updatedAt=new Date().toISOString();
- current.validated=false;
-
- saveAll();
- renderCanvas();
- updateModalStatus();
-
- document.getElementById("aiResponse").innerHTML=
-   '<div class="response">Block berhasil disimpan. Status: '+esc(b.status)+'.</div>';
-}
-
-function openAI(i){
- currentBlock=i;
- const b=current.blocks[i];
-
- document.getElementById("modalTitle").textContent="QTRC Analysis — "+b.name;
- document.getElementById("modalHint").textContent=
-   `Context: ${b.name} · ${current.mode} · ${current.level}`;
- document.getElementById("aiInput").value=b.content;
- document.getElementById("aiResponse").innerHTML="";
- updateModalStatus();
-
- document.getElementById("modal").classList.remove("hidden");
-}
-
-document.getElementById("closeModal").onclick=()=>{
- document.getElementById("modal").classList.add("hidden");
-};
-
-document.getElementById("saveBlock").onclick=()=>{
- saveCurrentBlock();
-};
-
-document.getElementById("analyzeBlock").onclick=async()=>{
- const b=current.blocks[currentBlock];
- const q=document.getElementById("aiInput").value.trim();
-
- if(!q){
-   document.getElementById("aiResponse").innerHTML=
-     '<div class="response">Isi konten atau pertanyaan terlebih dahulu sebelum menjalankan analisis.</div>';
-   return;
- }
-
- const btn=document.getElementById("analyzeBlock");
- btn.disabled=true;
- btn.textContent="Analyzing...";
-
- try{
-   const data=await qtrcApi("/api/analyze",{
-     question:q,
-     blockIndex:currentBlock,
-     block:b,
-     context:qtrcContext()
-   });
-
-   document.getElementById("aiResponse").innerHTML=
-     '<div class="response">'+esc(data.analysis||"No analysis returned.")+'</div>';
- }catch(err){
-   document.getElementById("aiResponse").innerHTML=
-     '<div class="response">'+
-     esc(err.message)+
-     "\\n\\nCheck the API Base URL in Settings and make sure the backend is deployed."+
-     '</div>';
- }finally{
-   btn.disabled=false;
-   btn.textContent="Analyze with QTRC";
- }
-};
-
-document.getElementById("copyCitation").onclick=async()=>{await navigator.clipboard.writeText(document.getElementById("citation").textContent.trim());alert("Citation copied.")};
-const apiInput=document.getElementById("apiBaseUrl"); if(apiInput) apiInput.value=QTRC_CONFIG.API_BASE_URL;
-const saveApi=document.getElementById("saveApiUrl"); if(saveApi) saveApi.onclick=()=>{localStorage.setItem("qtrc_api_base_url",apiInput.value.trim().replace(/\/$/,""));QTRC_CONFIG.API_BASE_URL=apiInput.value.trim().replace(/\/$/,"");alert("QTRC API URL saved.");};
-document.getElementById("clearData").onclick=()=>{if(confirm("Clear all locally saved canvases?")){localStorage.removeItem("qtrc_canvases");canvases=[];current=null;renderRecent();go("home")}};
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-
-let brainMode="explore";
-let brainThreads=JSON.parse(localStorage.getItem("qtrc_brain_threads")||"[]");
-
-document.querySelectorAll(".brain-chip").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".brain-chip").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    brainMode=btn.dataset.brainMode;
-    const prompts={
-      explore:"Tulis kegelisahan, ide topik, ayat yang menarik perhatian, teori yang sedang dipertimbangkan, atau pertanyaan yang masih mentah...",
-      question:"Tulis pertanyaan yang sedang kamu coba rumuskan. Belum perlu sempurna.",
-      theory:"Tulis teori, pendekatan, metode tafsir, atau kemungkinan lensa analisis yang sedang kamu pertimbangkan.",
-      novelty:"Tulis dugaan kontribusi, gap, atau hal yang menurutmu belum banyak dibahas."
-    };
-    document.getElementById("brainInput").placeholder=prompts[brainMode];
-  };
-});
-
-function renderBrainThreads(){
- const box=document.getElementById("brainThreads"); if(!box)return;
- box.innerHTML="";
- brainThreads.forEach((t,idx)=>{
-   const el=document.createElement("div");el.className="brain-thread";
-   el.innerHTML=`<div class="thread-head"><span class="thread-title">${esc(t.modeLabel)}</span><span class="thread-time">${esc(t.time)}</span></div>
-   <div class="thread-body">${esc(t.text)}</div>
-   <div class="thread-suggestion"><strong>QTRC exploratory note:</strong><br>${esc(t.note)}</div>
-   <div class="thread-transfer">
-     <button class="btn transfer">Move to Canvas</button>
-     <button class="btn delete-thread">Delete</button>
-   </div>`;
-   el.querySelector(".delete-thread").onclick=()=>{brainThreads.splice(idx,1);localStorage.setItem("qtrc_brain_threads",JSON.stringify(brainThreads));renderBrainThreads()};
-   el.querySelector(".transfer").onclick=()=>{
-     if(!current){alert("Open or create a canvas first.");go("setup");return}
-     const map={explore:0,question:1,theory:6,novelty:9};
-     const target=map[t.mode] ?? 0;
-     current.blocks[target].content=t.text;
-     current.blocks[target].status="Provisional";
-     current.updatedAt=new Date().toISOString();current.validated=false;saveAll();go("canvas");
-   };
-   box.appendChild(el);
- });
-}
-
-document.getElementById("brainThink").onclick=async()=>{
- const input=document.getElementById("brainInput").value.trim();
- if(!input){alert("Write an idea first.");return}
- const labels={explore:"Exploratory Idea",question:"Research Question Draft",theory:"Theory & Method Exploration",novelty:"Contribution & Novelty Exploration"};
- const btn=document.getElementById("brainThink");
- btn.disabled=true;btn.textContent="Thinking...";
- try{
-   const data=await qtrcApi("/api/brainstorm",{input,brainMode,context:qtrcContext()});
-   brainThreads.unshift({mode:brainMode,modeLabel:labels[brainMode],text:input,note:data.analysis||"No analysis returned.",time:new Date().toLocaleString()});
-   brainThreads=brainThreads.slice(0,30);
-   localStorage.setItem("qtrc_brain_threads",JSON.stringify(brainThreads));
-   document.getElementById("brainInput").value="";
-   renderBrainThreads();
- }catch(err){
-   alert(err.message+"\n\nSet QTRC API Base URL in Settings after deploying the backend.");
- }finally{btn.disabled=false;btn.textContent="Think with QTRC";}
-};
-
-document.getElementById("arch").innerHTML=blockNames.map((x,i)=>`<div class="block-mini"><span>${String(i+1).padStart(2,"0")}</span>${x}<div style="font-size:11px;color:#999;margin-top:6px;line-height:1.4">${blockInfo[i][0]}</div></div>`).join("");
-renderRecent();
-</script>
-
-<!-- QTRC_SUPABASE_AUTH -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(async function initQtrcSupabaseAuth() {
-  const AUTH_MARK = "QTRC_SUPABASE_AUTH";
-  const authMount = document.createElement("div");
-  authMount.id = "qtrcAuthMount";
-  authMount.className = "qtrc-auth";
-  const topActions = document.querySelector(".top-actions");
-  if (topActions) topActions.insertBefore(authMount, topActions.firstChild);
-
-  const style = document.createElement("style");
-  style.textContent = [
-    ".qtrc-auth{display:flex;align-items:center;gap:7px;margin-right:2px}",
-    ".qtrc-auth button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:12px}",
-    ".qtrc-auth .google{background:#171717;color:#fff;border-color:#171717}",
-    ".qtrc-user{display:flex;align-items:center;gap:7px;color:#555;font-size:12px}",
-    ".qtrc-user .avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#eee;color:#555;font-weight:650;overflow:hidden}",
-    ".qtrc-user img{width:100%;height:100%;object-fit:cover}",
-    ".qtrc-user .logout{background:#fff;color:#444}",
-    ".qtrc-auth-note{font-size:11px;color:#999;padding:7px 0}"
-  ].join("");
-  document.head.appendChild(style);
-
-  function escAuth(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function (m) {
-      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m];
-    });
-  }
-
-  let supabaseClient = null;
-  let currentUser = null;
-  let cloudReady = false;
-  let authInitializing = true;
-
-  async function getConfig() {
-    const res = await fetch("/api/config", { cache: "no-store" });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Supabase configuration could not be loaded.");
-    return data;
-  }
-
-  async function saveProfile(user) {
-    if (!supabaseClient || !user) return;
-    const meta = user.user_metadata || {};
-    const profile = {
-      id: user.id,
-      email: user.email || null,
-      full_name: meta.full_name || meta.name || null,
-      avatar_url: meta.avatar_url || meta.picture || null,
-      updated_at: new Date().toISOString()
-    };
-    const { error } = await supabaseClient
-      .from("profiles")
-      .upsert(profile, { onConflict: "id" });
-    if (error) console.warn("QTRC profile sync:", error.message);
-  }
-
-  function localKeyForUser(user) {
-    return user ? "qtrc_canvases_" + user.id : "qtrc_canvases";
-  }
-
-  async function loadCloudCanvases() {
-    if (!supabaseClient || !currentUser) return [];
-    const { data, error } = await supabaseClient
-      .from("qtrc_canvases")
-      .select("user_id,id,name,mode,level,data,updated_at,created_at")
-      .eq("user_id", currentUser.id)
-      .order("updated_at", { ascending: false });
-
-    if (error) throw error;
-    return (data || []).map(row => row.data).filter(Boolean);
-  }
-
-  function mergeCanvases(localItems, cloudItems) {
-    const map = new Map();
-    for (const c of localItems || []) map.set(String(c.id), c);
-    for (const c of cloudItems || []) {
-      const key = String(c.id);
-      const existing = map.get(key);
-      if (!existing) {
-        map.set(key, c);
-        continue;
-      }
-      const a = new Date(existing.updatedAt || 0).getTime();
-      const b = new Date(c.updatedAt || 0).getTime();
-      map.set(key, b >= a ? c : existing);
-    }
-    return [...map.values()].sort((a,b) =>
-      new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
-    );
-  }
-
-  async function syncCanvasesToCloud() {
-    if (!supabaseClient || !currentUser || !cloudReady) return;
-
-    const localIds = new Set(canvases.map(c => Number(c.id)));
-    const { data: existingRows, error: readError } = await supabaseClient
-      .from("qtrc_canvases")
-      .select("id")
-      .eq("user_id", currentUser.id);
-
-    if (readError) throw readError;
-
-    const staleIds = (existingRows || [])
-      .map(r => Number(r.id))
-      .filter(id => !localIds.has(id));
-
-    if (staleIds.length) {
-      const { error: deleteError } = await supabaseClient
-        .from("qtrc_canvases")
-        .delete()
-        .eq("user_id", currentUser.id)
-        .in("id", staleIds);
-      if (deleteError) throw deleteError;
-    }
-
-    if (!canvases.length) return;
-
-    const rows = canvases.map(c => ({
-      user_id: currentUser.id,
-      id: Number(c.id),
-      name: c.name || "Untitled Tafsir Research",
-      mode: c.mode || "Thinking Mode",
-      level: c.level || "Basic",
-      data: c,
-      updated_at: c.updatedAt || new Date().toISOString()
-    }));
-
-    const { error } = await supabaseClient
-      .from("qtrc_canvases")
-      .upsert(rows, { onConflict: "user_id,id" });
-
-    if (error) throw error;
-  }
-
-  async function hydrateUserCanvases(user) {
-    currentUser = user;
-    await saveProfile(user);
-
-    const guestCanvases = Array.isArray(canvases) ? canvases.slice() : [];
-    const cloudCanvases = await loadCloudCanvases();
-    canvases = mergeCanvases(guestCanvases, cloudCanvases);
-    current = current && canvases.find(c => String(c.id) === String(current.id)) || canvases[0] || null;
-
-    localStorage.setItem(localKeyForUser(user), JSON.stringify(canvases));
-    if (guestCanvases.length || !cloudCanvases.length) {
-      cloudReady = true;
-      await syncCanvasesToCloud();
-    } else {
-      cloudReady = true;
-    }
-
-    if (typeof renderRecent === "function") renderRecent();
-    if (typeof renderDashboard === "function") renderDashboard();
-    if (current && typeof renderCanvas === "function" && !document.getElementById("canvas").classList.contains("hidden")) {
-      renderCanvas();
-    }
-  }
-
-  function clearSignedOutState() {
-    cloudReady = false;
-    currentUser = null;
-    canvases = [];
-    current = null;
-    localStorage.removeItem("qtrc_canvases");
-    if (typeof renderRecent === "function") renderRecent();
-    if (typeof renderDashboard === "function") renderDashboard();
-    if (typeof go === "function") go("home");
-  }
-
-  function renderAuth() {
-    if (!authMount) return;
-
-    if (authInitializing) {
-      authMount.innerHTML = '<span class="qtrc-auth-note">Checking account…</span>';
-      return;
-    }
-
-    if (!currentUser) {
-      authMount.innerHTML = '<button class="google" id="qtrcGoogleLogin">Sign in with Google</button>';
-      document.getElementById("qtrcGoogleLogin").onclick = async function () {
-        this.disabled = true;
-        this.textContent = "Opening Google…";
-        const { error } = await supabaseClient.auth.signInWithOAuth({
-          provider: "google",
-          options: { redirectTo: window.location.origin }
-        });
-        if (error) {
-          alert(error.message);
-          this.disabled = false;
-          this.textContent = "Sign in with Google";
-        }
-      };
-      return;
-    }
-
-    const meta = currentUser.user_metadata || {};
-    const displayName = meta.full_name || meta.name || currentUser.email || "Signed in";
-    const avatar = meta.avatar_url || meta.picture || "";
-    authMount.innerHTML = [
-      '<div class="qtrc-user">',
-      '<span class="avatar">' + (avatar ? '<img alt="" src="' + escAuth(avatar) + '">' : escAuth(displayName.slice(0,1).toUpperCase())) + '</span>',
-      '<span>' + escAuth(displayName) + '</span>',
-      '<button class="logout" id="qtrcGoogleLogout">Sign out</button>',
-      '</div>'
-    ].join("");
-
-    document.getElementById("qtrcGoogleLogout").onclick = async function () {
-      const { error } = await supabaseClient.auth.signOut();
-      if (error) alert(error.message);
-    };
-  }
-
-  function installCloudAwareSave() {
-    const originalSaveAll = window.saveAll;
-    window.saveAll = function () {
-      localStorage.setItem(localKeyForUser(currentUser), JSON.stringify(canvases));
-      if (typeof originalSaveAll === "function" && !currentUser) {
-        originalSaveAll();
-      }
-      if (currentUser && cloudReady) {
-        syncCanvasesToCloud().catch(err => console.warn("QTRC cloud sync:", err.message));
-      }
-    };
-  }
-
-  try {
-    const config = await getConfig();
-    if (!window.supabase || !window.supabase.createClient) {
-      throw new Error("Supabase client library failed to load.");
-    }
-
-    supabaseClient = window.supabase.createClient(
-      config.supabaseUrl,
-      config.supabaseAnonKey
-    );
-    window.qtrcSupabase = supabaseClient;
-
-    installCloudAwareSave();
-
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    authInitializing = false;
-    if (session?.user) {
-      await hydrateUserCanvases(session.user);
-    } else {
-      cloudReady = false;
-    }
-    renderAuth();
-
-    supabaseClient.auth.onAuthStateChange(function (_event, sessionValue) {
-      setTimeout(async function () {
-        try {
-          if (sessionValue?.user) {
-            authInitializing = false;
-            await hydrateUserCanvases(sessionValue.user);
-          } else {
-            authInitializing = false;
-            clearSignedOutState();
-          }
-          renderAuth();
-        } catch (err) {
-          console.error("QTRC auth state:", err);
-          alert("QTRC account sync failed: " + err.message);
-          renderAuth();
-        }
-      }, 0);
-    });
-  } catch (err) {
-    authInitializing = false;
-    authMount.innerHTML = '<span class="qtrc-auth-note">Account login unavailable: ' + escAuth(err.message) + '</span>';
-    console.error("QTRC Supabase Auth:", err);
-  }
-})();
-</script>
-
-<style>
-/* QTRC_LIQUID_BLOCK_INTERACTION_V2 */
-
-.visual-block{
-  --mx:50%;
-  --my:50%;
-  --lift:0px;
-  --scale:1;
-
-  position:relative;
-  transform:
-    translate3d(0,var(--lift),0)
-    scale(var(--scale));
-  transform-origin:center;
-  will-change:transform,box-shadow,filter;
-  isolation:isolate;
-
-  transition:
-    transform .42s cubic-bezier(.16,1,.3,1),
-    box-shadow .42s cubic-bezier(.16,1,.3,1),
-    border-color .3s ease,
-    filter .42s ease;
-}
-
-/* Moving glass light */
-.visual-block::before{
+/* glass surface */
+.qtrc-glass-target::after{
   content:"";
   position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  z-index:0;
+
+  width:120px;
+  height:92px;
+
+  left:var(--qtrc-glass-x,50%);
+  top:var(--qtrc-glass-y,50%);
+
+  transform:translate(-50%,-50%);
+
+  border-radius:
+    48% 52% 45% 55%
+    / 52% 44% 56% 48%;
 
   background:
     radial-gradient(
-      150px circle at var(--mx) var(--my),
-      rgba(255,255,255,.82) 0%,
-      rgba(255,255,255,.42) 24%,
-      rgba(255,255,255,.12) 48%,
+      circle at 29% 24%,
+      rgba(255,255,255,.72) 0%,
+      rgba(255,255,255,.28) 22%,
+      rgba(255,255,255,.10) 48%,
       transparent 72%
     );
 
-  opacity:0;
-  transition:opacity .28s ease;
-  mix-blend-mode:screen;
-}
+  border:
+    1px solid rgba(255,255,255,.56);
 
-/* Refraction-like edge */
-.visual-block::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.72),
+    inset 0 -1px 1px rgba(255,255,255,.08),
+    0 8px 24px rgba(31,41,55,.05);
+
+  backdrop-filter:
+    blur(7px)
+    saturate(145%)
+    brightness(1.04);
+
+  -webkit-backdrop-filter:
+    blur(7px)
+    saturate(145%)
+    brightness(1.04);
+
+  opacity:0;
   pointer-events:none;
+
   z-index:1;
 
+  transition:
+    opacity .18s ease,
+    left .12s linear,
+    top .12s linear;
+}
+
+/* tiny reflective highlight */
+.qtrc-glass-target::before{
+  content:"";
+
+  position:absolute;
+
+  width:52px;
+  height:10px;
+
+  left:var(--qtrc-glass-x,50%);
+  top:var(--qtrc-glass-y,50%);
+
+  transform:
+    translate(-75%,-210%)
+    rotate(-14deg);
+
+  border-radius:999px;
+
   background:
-    radial-gradient(
-      100px circle at var(--mx) var(--my),
-      rgba(255,255,255,.48),
-      transparent 68%
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.62),
+      transparent
     );
 
-  border:1px solid rgba(255,255,255,.8);
+  filter:blur(5px);
+
   opacity:0;
-  filter:blur(.2px);
-  transition:
-    opacity .28s ease,
-    filter .28s ease;
-}
+  pointer-events:none;
 
-/* Keep actual content above glass layers */
-.visual-block > *{
-  position:relative;
   z-index:2;
+
+  transition:
+    opacity .18s ease,
+    left .12s linear,
+    top .12s linear;
 }
 
-.visual-block:hover{
-  --lift:-8px;
-  --scale:1.035;
-
-  border-color:rgba(255,255,255,.96)!important;
-
-  box-shadow:
-    0 24px 55px rgba(31,41,55,.16),
-    0 4px 18px rgba(255,255,255,.22),
-    inset 0 1px 0 rgba(255,255,255,.96),
-    inset 0 -1px 0 rgba(255,255,255,.22)!important;
-
-  filter:
-    saturate(1.08)
-    brightness(1.035);
+/* activate glass only */
+.qtrc-glass-target.qtrc-glass-on::after{
+  opacity:.92;
 }
 
-.visual-block:hover::before,
-.visual-block:hover::after{
-  opacity:1;
+.qtrc-glass-target.qtrc-glass-on::before{
+  opacity:.68;
 }
 
-/* Stronger glass when cursor is very close */
-.visual-block.qtrc-glass-hot{
-  --scale:1.045;
-  --lift:-10px;
-
-  box-shadow:
-    0 30px 70px rgba(31,41,55,.19),
-    0 5px 22px rgba(255,255,255,.28),
-    inset 0 1px 0 rgba(255,255,255,.98),
-    inset 0 -1px 0 rgba(255,255,255,.24)!important;
+/*
+  VERY IMPORTANT:
+  No transform, scale, translate, filter, or text-shadow
+  is applied to the actual content.
+*/
+.qtrc-glass-target,
+.qtrc-glass-target:hover,
+.qtrc-glass-target *{
+  transform:none !important;
+  translate:none !important;
+  scale:none !important;
+  rotate:none !important;
 }
 
-@media (prefers-reduced-motion:reduce){
-  .visual-block{
-    transition:none;
-  }
-}
-</style>
-
-<script>
-(function(){
-  const blocks = document.querySelectorAll(".visual-block");
-
-  blocks.forEach(function(block){
-    block.addEventListener("pointermove", function(e){
-      const rect = block.getBoundingClientRect();
-
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      block.style.setProperty("--mx", x + "%");
-      block.style.setProperty("--my", y + "%");
-
-      /*
-       * Hot zone = cursor is close to the center.
-       * This makes the block feel like it's reacting physically,
-       * rather than just using a static hover effect.
-       */
-      const dx = x - 50;
-      const dy = y - 50;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if(distance < 24){
-        block.classList.add("qtrc-glass-hot");
-      }else{
-        block.classList.remove("qtrc-glass-hot");
-      }
-    });
-
-    block.addEventListener("pointerleave", function(){
-      block.style.setProperty("--mx", "50%");
-      block.style.setProperty("--my", "50%");
-      block.classList.remove("qtrc-glass-hot");
-    });
-  });
-})();
-</script>
-
-
-
-<style id="QTRC_CURSOR_EFFECTS_HARD_DISABLED_V2">
-/* =========================================================
-   HARD DISABLE ALL CURSOR-REACTIVE EFFECTS
-   ========================================================= */
-
-#qtrc-liquid-lens,
-.qtrc-liquid-ripple{
-  display:none!important;
-}
-
-.visual-block,
-.visual-block:hover,
-.block-mini,
+/* Disable old hover movement on these target cards */
 .block-mini:hover,
-.block,
-.block:hover,
-.card,
+.visual-block:hover,
 .card:hover,
-.canvas-card,
 .canvas-card:hover,
-.panel,
 .panel:hover,
-.option,
 .option:hover,
-.brain-card,
 .brain-card:hover,
-.brain-thread,
 .brain-thread:hover{
-  transform:none!important;
-  translate:none!important;
-  scale:none!important;
-  rotate:none!important;
-  filter:none!important;
+  transform:none !important;
 }
 
-.block-mini::before,
-.block-mini::after,
-.visual-block::before,
-.visual-block::after{
-  opacity:0!important;
-  transform:none!important;
-  filter:none!important;
-  display:none!important;
-}
-
-.qtrc-liquid-target,
-.qtrc-target-card,
-.qtrc-target-text,
-.qtrc-liquid-hot,
-.qtrc-mini-active,
-.qtrc-glass-hot{
-  transform:none!important;
-  filter:none!important;
-  scale:none!important;
-  translate:none!important;
-}
-
-.block-mini *,
-.visual-block *,
-.card *,
-.canvas-card *{
-  transform:none!important;
-  translate:none!important;
-  scale:none!important;
-  rotate:none!important;
-  text-shadow:none!important;
-}
 </style>
 
 <script>
-/* QTRC_CURSOR_EFFECTS_HARD_DISABLED_V2 */
-
 (function(){
 
-  const blockedClasses = [
-    "qtrc-liquid-target",
-    "qtrc-target-card",
-    "qtrc-target-text",
-    "qtrc-liquid-hot",
-    "qtrc-mini-active",
-    "qtrc-glass-hot",
-    "qtrc-active",
-    "qtrc-targeting"
-  ];
+  const selector = [
+    ".block-mini",
+    ".visual-block",
+    ".card",
+    ".canvas-card",
+    ".panel",
+    ".option",
+    ".brain-card",
+    ".brain-thread"
+  ].join(",");
 
-  function clean(){
+  let activeTarget = null;
 
-    document.querySelectorAll(
-      ".visual-block,.block-mini,.block,.card,.canvas-card,.panel,.option,.brain-card,.brain-thread"
-    ).forEach(el => {
+  function clearTarget(target){
+    if(!target) return;
 
-      blockedClasses.forEach(cls =>
-        el.classList.remove(cls)
-      );
+    target.classList.remove("qtrc-glass-target");
+    target.classList.remove("qtrc-glass-on");
 
-      [
-        "--mx",
-        "--my",
-        "--mx",
-        "--my",
-        "--mini-x",
-        "--mini-y",
-        "--mini-mx",
-        "--mini-my",
-        "--mini-scale",
-        "--mini-lift-x",
-        "--mini-lift-y",
-        "--blob-left",
-        "--blob-top",
-        "--blob-scale",
-        "--qtrc-shift-x",
-        "--qtrc-shift-y",
-        "--target-x",
-        "--target-y"
-      ].forEach(name => {
-        el.style.removeProperty(name);
-      });
-    });
+    target.style.removeProperty("--qtrc-glass-x");
+    target.style.removeProperty("--qtrc-glass-y");
+  }
+
+  function setTarget(target, event){
+
+    if(!target) return;
+
+    if(!target.classList.contains("qtrc-glass-target")){
+      target.classList.add("qtrc-glass-target");
+    }
+
+    const rect = target.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const px = Math.max(
+      8,
+      Math.min(92, (x / rect.width) * 100)
+    );
+
+    const py = Math.max(
+      8,
+      Math.min(92, (y / rect.height) * 100)
+    );
+
+    target.style.setProperty(
+      "--qtrc-glass-x",
+      px.toFixed(2) + "%"
+    );
+
+    target.style.setProperty(
+      "--qtrc-glass-y",
+      py.toFixed(2) + "%"
+    );
+
+    target.classList.add("qtrc-glass-on");
   }
 
   /*
-   * Kill pointermove handlers registered by previous
-   * Liquid Glass scripts.
-   *
-   * Capture phase + stopImmediatePropagation prevents
-   * those old handlers from receiving the event.
-   */
+    Event delegation:
+    works even when QTRC re-renders blocks dynamically.
+  */
   document.addEventListener(
     "pointermove",
-    function(e){
-      e.stopImmediatePropagation();
-      clean();
-    },
-    true
-  );
+    function(event){
 
-  document.addEventListener(
-    "pointerover",
-    function(){
-      clean();
+      if(event.pointerType === "touch") return;
+
+      const target =
+        event.target.closest(selector);
+
+      if(!target){
+
+        if(activeTarget){
+          clearTarget(activeTarget);
+          activeTarget = null;
+        }
+
+        return;
+      }
+
+      if(activeTarget && activeTarget !== target){
+        clearTarget(activeTarget);
+      }
+
+      activeTarget = target;
+
+      setTarget(target,event);
+
     },
-    true
+    {passive:true}
   );
 
   document.addEventListener(
     "pointerout",
-    function(){
-      clean();
+    function(event){
+
+      const target =
+        event.target.closest(selector);
+
+      if(!target) return;
+
+      const next = event.relatedTarget;
+
+      if(next && target.contains(next)) return;
+
+      clearTarget(target);
+
+      if(activeTarget === target){
+        activeTarget = null;
+      }
+
     },
-    true
+    {passive:true}
   );
-
-  document.addEventListener(
-    "pointerdown",
-    function(e){
-      e.stopImmediatePropagation();
-
-      document
-        .querySelectorAll(".qtrc-liquid-ripple")
-        .forEach(el => el.remove());
-
-      clean();
-    },
-    true
-  );
-
-  /*
-   * Clean once on startup and keep old inline styles
-   * from surviving navigation/rerendering.
-   */
-  clean();
-
-  setInterval(clean, 500);
 
 })();
 </script>
