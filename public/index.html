@@ -607,6 +607,29 @@ select:focus-visible{
 }
 
 </style>
+
+<style id="QTRC_REMOVE_CURSOR_LENS">
+/* Remove cursor lens completely */
+#qtrc-liquid-lens,
+.qtrc-liquid-ripple{
+  display:none!important;
+}
+
+/* Keep sidebar content crisp */
+.sidebar,
+.sidebar *{
+  filter:none!important;
+}
+
+.sidebar .nav button,
+.sidebar .recent button,
+.sidebar .brand,
+.sidebar .section-label{
+  opacity:1!important;
+  transform:none!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
