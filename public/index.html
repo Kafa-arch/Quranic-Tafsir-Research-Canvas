@@ -1067,7 +1067,7 @@ button{cursor:pointer}
           <h3>Research Map</h3>
 
           <div class="qtrc-side-intro">
-            I’ll keep track of the 11 blocks here while we work through your research.
+            Options extracted from our discussion. Nothing here is treated as final until you decide to use it.
           </div>
 
           <div
@@ -2104,31 +2104,53 @@ function brainV3RenderMap(items){
 
   if(!Array.isArray(items) || !items.length){
 
-    map.innerHTML =
-      '<div class="qtrc-side-intro">Nothing mapped yet.</div>';
+    map.innerHTML = `
+      <div class="qtrc-side-intro">
+        Belum ada opsi yang cukup jelas dari diskusi.
+      </div>
+    `;
 
     return;
   }
 
-  const ordered =
-    items.slice().sort(function(a,b){
-      return Number(a.index) - Number(b.index);
+  /*
+   * The map is a research aid, not a diagnostic report.
+   * Show only information that has actually emerged
+   * from the conversation.
+   */
+  const candidates =
+    items.filter(function(item){
+
+      const status =
+        String(item.status || "")
+          .toLowerCase();
+
+      return (
+        status.includes("found") ||
+        status.includes("partial") ||
+        status.includes("clarification")
+      );
+
     });
 
-  const found =
-    ordered.filter(function(item){
-      return String(item.status || "")
-        .toLowerCase()
-        .includes("found");
-    }).length;
+  if(!candidates.length){
+
+    map.innerHTML = `
+      <div class="qtrc-side-intro">
+        Diskusi belum menghasilkan opsi yang cukup jelas untuk dipetakan.
+      </div>
+    `;
+
+    return;
+  }
 
   map.innerHTML = `
     <div class="qtrc-side-section-title">
-      ${found}/11 currently supported
+      Opsi yang mulai terbentuk
     </div>
   `;
 
-  ordered.forEach(function(item){
+  candidates.forEach(function(item){
 
     const row =
       document.createElement("div");
@@ -2140,37 +2162,46 @@ function brainV3RenderMap(items){
       String(item.status || "")
         .toLowerCase();
 
+    const label =
+      status.includes("found")
+        ? "Candidate"
+        : status.includes("partial")
+          ? "Needs refinement"
+          : "Open question";
+
     const statusClass =
       status.includes("found")
         ? "found"
         : status.includes("partial")
           ? "partial"
-          : status.includes("missing") ||
-            status.includes("unclear")
-            ? "missing"
-            : "";
+          : "missing";
 
     row.innerHTML = `
       <div class="qtrc-map-item-head">
         <span class="qtrc-map-name">
-          ${esc(item.block || "Block")}
+          ${esc(item.block || "Research element")}
         </span>
 
         <span class="qtrc-map-status ${statusClass}">
-          ${esc(item.status || "Reviewed")}
+          ${label}
         </span>
-      </div>
-
-      <div class="qtrc-map-detail">
-        ${esc(item.explanation || "")}
       </div>
 
       ${
         item.evidence
           ? `
             <div class="qtrc-map-detail">
-              <strong>Evidence:</strong>
               ${esc(item.evidence)}
+            </div>
+          `
+          : ""
+      }
+
+      ${
+        item.explanation
+          ? `
+            <div class="qtrc-map-detail">
+              ${esc(item.explanation)}
             </div>
           `
           : ""
