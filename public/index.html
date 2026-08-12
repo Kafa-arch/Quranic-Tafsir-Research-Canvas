@@ -630,6 +630,82 @@ select:focus-visible{
 }
 </style>
 
+
+<style id="QTRC_FINAL_NO_CURSOR_MOTION_V1">
+/* =========================================================
+   FINAL: NO CURSOR-REACTIVE MOTION
+   Keep Liquid Glass appearance, remove all movement.
+   ========================================================= */
+
+/* No cursor lens */
+#qtrc-liquid-lens,
+.qtrc-liquid-ripple{
+  display:none!important;
+}
+
+/* No cursor/hover transforms on UI elements */
+.visual-block,
+.visual-block:hover,
+.block-mini,
+.block-mini:hover,
+.block,
+.block:hover,
+.card,
+.card:hover,
+.canvas-card,
+.canvas-card:hover,
+.panel,
+.panel:hover,
+.option,
+.option:hover,
+.brain-card,
+.brain-card:hover,
+.brain-thread,
+.brain-thread:hover{
+  transform:none!important;
+}
+
+/* Remove classes that were used for cursor reactions */
+.qtrc-liquid-target,
+.qtrc-target-card,
+.qtrc-target-text,
+.qtrc-liquid-hot,
+.qtrc-mini-active,
+.qtrc-glass-hot{
+  transform:none!important;
+}
+
+/* Remove cursor-driven pseudo-element effects */
+.block-mini::before,
+.block-mini::after{
+  opacity:0!important;
+  transform:none!important;
+}
+
+.visual-block::before,
+.visual-block::after{
+  opacity:0!important;
+  transform:none!important;
+}
+
+/* Cursor cannot change text appearance */
+.block-mini,
+.block-mini *,
+.visual-block,
+.visual-block *{
+  text-shadow:none!important;
+}
+
+/* No pointer-following visual transitions */
+.block-mini,
+.visual-block{
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
