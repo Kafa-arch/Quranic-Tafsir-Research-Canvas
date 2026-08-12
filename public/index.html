@@ -491,7 +491,12 @@ function openBlockEditor(i){
    '<div class="response">Masukkan atau edit konten yang diberikan peneliti. QTRC+ tidak akan mengisi informasi yang belum diberikan secara diam-diam.</div>';
 
  updateModalStatus();
- document.getElementById("modal").classList.remove("hidden");
+
+ if(window.qtrcGenieOpen){
+   window.qtrcGenieOpen();
+ }else{
+   document.getElementById("modal").classList.remove("hidden");
+ }
 }
 
 function saveCurrentBlock(){
@@ -504,12 +509,19 @@ function saveCurrentBlock(){
  current.validated=false;
 
  saveAll();
+
+ /*
+  * Render first so the originating block contains the
+  * newly saved content before the genie returns to it.
+  */
  renderCanvas();
  updateModalStatus();
- document.getElementById("modal").classList.add("hidden");
 
- document.getElementById("aiResponse").innerHTML=
-   '<div class="response">Block berhasil disimpan. Status: '+esc(b.status)+'.</div>';
+ if(window.qtrcGenieClose){
+   window.qtrcGenieClose();
+ }else{
+   document.getElementById("modal").classList.add("hidden");
+ }
 }
 
 function openAI(i){
@@ -527,7 +539,11 @@ function openAI(i){
 }
 
 document.getElementById("closeModal").onclick=()=>{
- document.getElementById("modal").classList.add("hidden");
+ if(window.qtrcGenieClose){
+   window.qtrcGenieClose();
+ }else{
+   document.getElementById("modal").classList.add("hidden");
+ }
 };
 
 document.getElementById("saveBlock").onclick=()=>{
@@ -640,5 +656,249 @@ document.getElementById("brainThink").onclick=async()=>{
 document.getElementById("arch").innerHTML=blockNames.map((x,i)=>`<div class="block-mini"><span>${String(i+1).padStart(2,"0")}</span>${x}<div style="font-size:11px;color:#999;margin-top:6px;line-height:1.4">${blockInfo[i][0]}</div></div>`).join("");
 renderRecent();
 </script>
+
+<!-- QTRC_GENIE_TRANSITION_V2 -->
+
+<style id="QTRC_GENIE_TRANSITION_V2">
+
+#modal.qtrc-genie{
+  animation:none!important;
+}
+
+#modal.qtrc-genie .modal-card{
+  animation:none!important;
+  transition:none!important;
+  will-change:transform, opacity, filter, border-radius;
+  transform-origin:center center;
+}
+
+</style>
+
+<script id="QTRC_GENIE_TRANSITION_V2_SCRIPT">
+(function(){
+
+  const modal = document.getElementById("modal");
+
+  if(!modal) return;
+
+  function getOrigin(){
+
+    if(typeof currentBlock !== "number"){
+      return null;
+    }
+
+    return document.querySelector(
+      '.visual-block[data-index="' +
+      currentBlock +
+      '"]'
+    );
+  }
+
+  function geometry(){
+
+    const card =
+      modal.querySelector(".modal-card");
+
+    const origin = getOrigin();
+
+    if(!card || !origin){
+      return null;
+    }
+
+    const c =
+      card.getBoundingClientRect();
+
+    const o =
+      origin.getBoundingClientRect();
+
+    const cardCX =
+      c.left + c.width / 2;
+
+    const cardCY =
+      c.top + c.height / 2;
+
+    const originCX =
+      o.left + o.width / 2;
+
+    const originCY =
+      o.top + o.height / 2;
+
+    return {
+      dx: originCX - cardCX,
+      dy: originCY - cardCY,
+      sx: Math.max(.035, o.width / c.width),
+      sy: Math.max(.035, o.height / c.height)
+    };
+  }
+
+  window.qtrcGenieOpen = function(){
+
+    modal.classList.add("qtrc-genie");
+
+    modal.classList.remove("hidden");
+
+    modal.style.animation = "none";
+    modal.style.opacity = "1";
+
+    const card =
+      modal.querySelector(".modal-card");
+
+    if(!card) return;
+
+    requestAnimationFrame(function(){
+
+      const g = geometry();
+
+      if(!g){
+        return;
+      }
+
+      /*
+       * Start exactly where the clicked block is.
+       */
+
+      const animation =
+        card.animate(
+          [
+            {
+              opacity:0,
+              transform:
+                `translate(${g.dx}px,${g.dy}px)
+                 scale(${g.sx},${g.sy})
+                 skewX(4deg)`,
+              borderRadius:"11px",
+              filter:"blur(1px)"
+            },
+
+            {
+              opacity:1,
+              transform:
+                `translate(${g.dx * .18}px,${g.dy * .18}px)
+                 scale(.94,.96)
+                 skewX(-1deg)`,
+              borderRadius:"24px",
+              filter:"blur(.2px)",
+              offset:.60
+            },
+
+            {
+              opacity:1,
+              transform:"translate(0,0) scale(1,1) skewX(0)",
+              borderRadius:"16px",
+              filter:"blur(0)",
+              offset:1
+            }
+          ],
+          {
+            duration:480,
+            easing:"cubic-bezier(.16,1,.3,1)",
+            fill:"both"
+          }
+        );
+
+      animation.onfinish = function(){
+
+        card.style.transform =
+          "translate(0,0) scale(1)";
+
+        card.style.opacity = "1";
+        card.style.filter = "none";
+      };
+
+    });
+
+  };
+
+  window.qtrcGenieClose = function(){
+
+    const card =
+      modal.querySelector(".modal-card");
+
+    if(!card){
+      modal.classList.add("hidden");
+      return;
+    }
+
+    const g = geometry();
+
+    if(!g){
+      modal.classList.add("hidden");
+      return;
+    }
+
+    const animation =
+      card.animate(
+        [
+          {
+            opacity:1,
+            transform:
+              "translate(0,0) scale(1,1) skewX(0)",
+            borderRadius:"16px",
+            filter:"blur(0)"
+          },
+
+          {
+            opacity:1,
+            transform:
+              `translate(${g.dx * .18}px,${g.dy * .18}px)
+               scale(.72,.80)
+               skewX(4deg)`,
+            borderRadius:"28px 28px 18px 18px",
+            filter:"blur(.2px)",
+            offset:.52
+          },
+
+          {
+            opacity:0,
+            transform:
+              `translate(${g.dx}px,${g.dy}px)
+               scale(${g.sx},${g.sy})
+               skewX(-4deg)`,
+            borderRadius:"11px",
+            filter:"blur(1px)",
+            offset:1
+          }
+        ],
+        {
+          duration:430,
+          easing:"cubic-bezier(.55,0,.9,.35)",
+          fill:"both"
+        }
+      );
+
+    /*
+     * Fade the dark backdrop together with the genie.
+     */
+
+    const backdrop =
+      modal.animate(
+        [
+          { opacity:1 },
+          { opacity:0 }
+        ],
+        {
+          duration:430,
+          easing:"ease",
+          fill:"forwards"
+        }
+      );
+
+    animation.onfinish = function(){
+
+      modal.classList.add("hidden");
+      modal.style.opacity = "";
+      card.style.transform = "";
+      card.style.opacity = "";
+      card.style.filter = "";
+
+      backdrop.cancel();
+
+    };
+
+  };
+
+})();
+</script>
+
 </body>
 </html>
