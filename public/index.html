@@ -1204,6 +1204,31 @@ const brainProposal = document.getElementById("brainProposal");
 const brainInputV2 = document.getElementById("brainInput");
 const brainThinkV2 = document.getElementById("brainThink");
 
+let brainV2Conversation = [];
+
+function brainV2DetectLanguage(text){
+
+  const value = String(text || "").toLowerCase();
+
+  const indoWords = [
+    "saya","aku","ingin","mau","tentang","penelitian",
+    "riset","tolong","bisa","apa","bagaimana","kenapa",
+    "karena","dengan","untuk","yang","ini","itu","dalam"
+  ];
+
+  const score = indoWords.reduce(
+    (n, word) => n + (value.includes(word) ? 1 : 0),
+    0
+  );
+
+  if(score >= 2) return "id";
+
+  return navigator.language &&
+    navigator.language.toLowerCase().startsWith("id")
+      ? "id"
+      : "en";
+}
+
 function brainV2AddMessage(role, text){
 
   const el = document.createElement("div");
@@ -1215,6 +1240,17 @@ function brainV2AddMessage(role, text){
   el.innerHTML = esc(text);
 
   brainMessages.appendChild(el);
+
+  brainV2Conversation.push({
+    role:
+      role === "user"
+        ? "user"
+        : "assistant",
+    content:String(text)
+  });
+
+  brainV2Conversation =
+    brainV2Conversation.slice(-12);
 
   brainMessages.scrollTop =
     brainMessages.scrollHeight;
@@ -1548,8 +1584,32 @@ brainThinkV2.onclick = async function(){
         )
         .join("\n");
 
+    /*
+     * If the user only uploaded unsupported files,
+     * don't send an empty analysis request to the backend.
+     */
+    if(
+      !input &&
+      !supportedFiles.length &&
+      unsupportedFiles.length
+    ){
+
+      brainThinkV2.disabled = false;
+      brainThinkV2.textContent = "Send";
+      return;
+    }
+
     brainThinkV2.textContent =
       "Thinking...";
+
+    const languageHint =
+      brainV2DetectLanguage(
+        input ||
+        brainV2Conversation
+          .filter(item => item.role === "user")
+          .slice(-1)[0]?.content ||
+        ""
+      );
 
     const data =
       await qtrcApi(
@@ -1557,6 +1617,8 @@ brainThinkV2.onclick = async function(){
         {
           input,
           sourceText,
+          languageHint,
+          conversation:brainV2Conversation,
           files:
             brainV2Files.map(f => ({
               name:f.name,
