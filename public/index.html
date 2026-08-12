@@ -2199,5 +2199,216 @@ renderRecent();
 })();
 </script>
 
+
+<!-- QTRC_CLEAN_GLASS_CURSOR_V3 -->
+
+<style>
+/* =========================================================
+   CLEAN GLASS CURSOR
+   ========================================================= */
+
+#qtrc-liquid-lens{
+  position:fixed!important;
+
+  width:58px!important;
+  height:58px!important;
+
+  border-radius:50%!important;
+
+  pointer-events:none!important;
+  z-index:99999!important;
+
+  visibility:visible!important;
+  opacity:0!important;
+
+  background:
+    radial-gradient(
+      circle at 33% 28%,
+      rgba(255,255,255,.72) 0%,
+      rgba(255,255,255,.22) 18%,
+      rgba(255,255,255,.06) 42%,
+      transparent 70%
+    )!important;
+
+  border:
+    1px solid rgba(255,255,255,.62)!important;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.72),
+    inset 0 -1px 1px rgba(255,255,255,.12),
+    0 6px 22px rgba(31,41,55,.07)!important;
+
+  backdrop-filter:
+    blur(5px)
+    saturate(165%)
+    brightness(1.06)!important;
+
+  -webkit-backdrop-filter:
+    blur(5px)
+    saturate(165%)
+    brightness(1.06)!important;
+
+  transform-origin:center!important;
+
+  transition:
+    opacity .18s ease,
+    width .22s cubic-bezier(.16,1,.3,1),
+    height .22s cubic-bezier(.16,1,.3,1),
+    border-radius .22s ease,
+    box-shadow .22s ease!important;
+
+  overflow:hidden!important;
+}
+
+/* soft inner reflection */
+#qtrc-liquid-lens::before{
+  content:""!important;
+  position:absolute!important;
+  inset:1px!important;
+
+  border-radius:inherit!important;
+
+  background:
+    radial-gradient(
+      circle at 34% 26%,
+      rgba(255,255,255,.88) 0%,
+      rgba(255,255,255,.28) 12%,
+      transparent 34%
+    )!important;
+
+  opacity:.72!important;
+  pointer-events:none!important;
+}
+
+/* very subtle lower refraction */
+#qtrc-liquid-lens::after{
+  content:""!important;
+  position:absolute!important;
+  left:12%!important;
+  right:12%!important;
+  bottom:9%!important;
+  height:22%!important;
+
+  border-radius:50%!important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.14),
+      transparent
+    )!important;
+
+  filter:blur(5px)!important;
+  opacity:.42!important;
+}
+
+/* visible only while cursor is active */
+#qtrc-liquid-lens.qtrc-active{
+  opacity:.88!important;
+
+  width:60px!important;
+  height:60px!important;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.78),
+    inset 0 -1px 1px rgba(255,255,255,.10),
+    0 8px 24px rgba(31,41,55,.08)!important;
+}
+
+/* when cursor is over a real target */
+#qtrc-liquid-lens.qtrc-targeting{
+  width:66px!important;
+  height:66px!important;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.86),
+    inset 0 -1px 1px rgba(255,255,255,.10),
+    0 10px 30px rgba(31,41,55,.09)!important;
+}
+</style>
+
+<script>
+(function(){
+
+  const lens = document.getElementById("qtrc-liquid-lens");
+
+  if(!lens) return;
+
+  let x = 0;
+  let y = 0;
+  let tx = 0;
+  let ty = 0;
+  let running = false;
+
+  function animate(){
+
+    tx += (x - tx) * .18;
+    ty += (y - ty) * .18;
+
+    lens.style.transform =
+      "translate3d(" +
+      (tx - 29) +
+      "px," +
+      (ty - 29) +
+      "px,0)";
+
+    if(
+      Math.abs(x - tx) > .1 ||
+      Math.abs(y - ty) > .1
+    ){
+      requestAnimationFrame(animate);
+    }else{
+      running = false;
+    }
+  }
+
+  document.addEventListener(
+    "pointermove",
+    function(e){
+
+      if(e.pointerType === "touch") return;
+
+      x = e.clientX;
+      y = e.clientY;
+
+      lens.classList.add("qtrc-active");
+
+      const target = document.elementFromPoint(x,y);
+
+      const isTarget =
+        target &&
+        target.closest(
+          ".visual-block,.block-mini,.block,.card,.canvas-card,.panel,.option,.brain-card,.brain-thread"
+        );
+
+      lens.classList.toggle(
+        "qtrc-targeting",
+        !!isTarget
+      );
+
+      if(!running){
+        running = true;
+        requestAnimationFrame(animate);
+      }
+
+    },
+    {passive:true}
+  );
+
+  document.addEventListener(
+    "pointerleave",
+    function(){
+
+      lens.classList.remove(
+        "qtrc-active",
+        "qtrc-targeting"
+      );
+
+    }
+  );
+
+})();
+</script>
+
 </body>
 </html>
