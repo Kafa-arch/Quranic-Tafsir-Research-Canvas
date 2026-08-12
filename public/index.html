@@ -2433,5 +2433,251 @@ renderRecent();
 })();
 </script>
 
+
+<!-- QTRC_LIQUID_BLOB_V4 -->
+
+<style>
+/* =========================================================
+   LIQUID GLASS BLOB
+   Content stays crisp above the glass.
+   ========================================================= */
+
+.block-mini{
+  position:relative !important;
+  overflow:hidden !important;
+
+  transform:
+    translate3d(var(--mini-lift-x,0px),var(--mini-lift-y,0px),0)
+    scale(var(--mini-scale,1));
+
+  transition:
+    transform .38s cubic-bezier(.16,1,.3,1),
+    box-shadow .38s cubic-bezier(.16,1,.3,1),
+    border-color .25s ease;
+
+  background:rgba(255,255,255,.42) !important;
+
+  border:1px solid rgba(255,255,255,.72) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.86),
+    0 8px 24px rgba(31,41,55,.045) !important;
+}
+
+/*
+ * The actual liquid-glass shape.
+ * It sits BEHIND the text, so text never gets washed out.
+ */
+
+.block-mini::before{
+  content:"";
+  position:absolute;
+
+  left:var(--blob-left,50%);
+  top:var(--blob-top,50%);
+
+  width:120px;
+  height:88px;
+
+  transform:
+    translate(-50%,-50%)
+    scale(var(--blob-scale,.7));
+
+  border-radius:
+    46% 54% 61% 39%
+    / 55% 41% 59% 45%;
+
+  background:
+    radial-gradient(
+      circle at 31% 26%,
+      rgba(255,255,255,.82),
+      rgba(255,255,255,.30) 25%,
+      rgba(255,255,255,.10) 52%,
+      transparent 74%
+    );
+
+  border:
+    1px solid rgba(255,255,255,.72);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.92),
+    inset 0 -1px 1px rgba(255,255,255,.20),
+    0 8px 30px rgba(31,41,55,.07);
+
+  backdrop-filter:
+    blur(10px)
+    saturate(150%)
+    brightness(1.06);
+
+  -webkit-backdrop-filter:
+    blur(10px)
+    saturate(150%)
+    brightness(1.06);
+
+  opacity:0;
+  pointer-events:none;
+
+  z-index:0;
+
+  transition:
+    opacity .28s ease,
+    transform .38s cubic-bezier(.16,1,.3,1),
+    width .38s cubic-bezier(.16,1,.3,1),
+    height .38s cubic-bezier(.16,1,.3,1);
+}
+
+/* Small highlight on the glass edge */
+
+.block-mini::after{
+  content:"";
+  position:absolute;
+
+  left:var(--blob-left,50%);
+  top:var(--blob-top,50%);
+
+  width:76px;
+  height:18px;
+
+  transform:
+    translate(-65%,-120%)
+    rotate(-14deg);
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.72),
+      transparent
+    );
+
+  filter:blur(7px);
+
+  opacity:0;
+  pointer-events:none;
+  z-index:1;
+
+  transition:
+    opacity .25s ease,
+    left .16s ease,
+    top .16s ease;
+}
+
+/*
+ * Keep every piece of content crisp.
+ */
+
+.block-mini > *{
+  position:relative !important;
+  z-index:3 !important;
+}
+
+/* Active state */
+
+.block-mini.qtrc-mini-active{
+  --mini-scale:1.012;
+  --mini-lift-y:-3px;
+
+  border-color:rgba(255,255,255,.94) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 14px 32px rgba(31,41,55,.09) !important;
+}
+
+.block-mini.qtrc-mini-active::before{
+  opacity:.96;
+
+  width:145px;
+  height:105px;
+
+  --blob-scale:1;
+}
+
+.block-mini.qtrc-mini-active::after{
+  opacity:.72;
+}
+</style>
+
+<script>
+(function(){
+
+  function resetBlock(block){
+    block.classList.remove("qtrc-mini-active");
+
+    block.style.removeProperty("--blob-left");
+    block.style.removeProperty("--blob-top");
+    block.style.removeProperty("--blob-scale");
+    block.style.removeProperty("--mini-lift-y");
+  }
+
+  document.addEventListener("pointermove", function(e){
+
+    if(e.pointerType === "touch") return;
+
+    const block = e.target.closest(".block-mini");
+
+    if(!block){
+      return;
+    }
+
+    const rect = block.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const px = (x / rect.width) * 100;
+    const py = (y / rect.height) * 100;
+
+    /*
+     * Blob follows the cursor.
+     * We clamp it so it stays visually inside the block.
+     */
+
+    const clampedX = Math.max(12, Math.min(88, px));
+    const clampedY = Math.max(18, Math.min(82, py));
+
+    const dx = (px - 50) / 50;
+    const dy = (py - 50) / 50;
+
+    block.style.setProperty(
+      "--blob-left",
+      clampedX + "%"
+    );
+
+    block.style.setProperty(
+      "--blob-top",
+      clampedY + "%"
+    );
+
+    block.style.setProperty(
+      "--mini-lift-y",
+      (-2 - dy * 1.2).toFixed(2) + "px"
+    );
+
+    block.classList.add("qtrc-mini-active");
+
+  }, {passive:true});
+
+  document.addEventListener("pointerout", function(e){
+
+    const block = e.target.closest(".block-mini");
+
+    if(!block) return;
+
+    const next = e.relatedTarget;
+
+    if(next && block.contains(next)){
+      return;
+    }
+
+    resetBlock(block);
+
+  }, {passive:true});
+
+})();
+</script>
+
 </body>
 </html>
