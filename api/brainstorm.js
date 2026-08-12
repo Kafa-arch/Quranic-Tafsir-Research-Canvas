@@ -22,27 +22,56 @@ function safeText(value, max = 6000){
 }
 
 function detectLanguage(text){
-  const value = String(text || "").toLowerCase();
 
-  const idSignals = [
-    "saya","aku","ingin","mau","penelitian","riset",
-    "tentang","bagaimana","kenapa","apa","untuk",
-    "dalam","yang","ini","itu","dengan"
+  const value =
+    String(text || "")
+      .toLowerCase()
+      .replace(/[^\p{L}\s]/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const indoSignals = [
+    "saya","aku","ingin","mau","tentang",
+    "penelitian","riset","tafsir","alquran",
+    "al quran","quran","surah","surat","ayat",
+    "mufasir","kitab","hadis","hadits",
+    "bagaimana","kenapa","mengapa","apa","apakah",
+    "untuk","dalam","dengan","yang","ini","itu",
+    "membahas","dibahas","meneliti","diteliti",
+    "mencari","jurnal","ga","gak","nggak"
   ];
 
-  const score = idSignals.reduce(
-    (count, word) =>
-      count + (
-        value.includes(" " + word + " ") ||
-        value.startsWith(word + " ") ||
-        value.endsWith(" " + word)
-          ? 1
-          : 0
-      ),
-    0
-  );
+  const englishSignals = [
+    "i","i want","i am","i'm","research",
+    "researching","verse","verses","journal",
+    "how","why","what","which","can","could",
+    "would","about","with","from","into","the"
+  ];
 
-  return score >= 2 ? "id" : "en";
+  let idScore = 0;
+  let enScore = 0;
+
+  indoSignals.forEach(function(word){
+    if(value.includes(word)){
+      idScore++;
+    }
+  });
+
+  englishSignals.forEach(function(word){
+    if(value.includes(word)){
+      enScore++;
+    }
+  });
+
+  if(idScore > enScore){
+    return "id";
+  }
+
+  if(enScore > idScore){
+    return "en";
+  }
+
+  return "id";
 }
 
 function buildConversationSummary(conversation){

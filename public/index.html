@@ -1451,31 +1451,103 @@ function brainV3ClearEmptyState(){
 function brainV3DetectLanguage(text){
 
   const value =
-    String(text || "").toLowerCase();
+    String(text || "")
+      .toLowerCase()
+      .replace(/[^\p{L}\s]/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
 
   const indoSignals = [
-    "saya","aku","ingin","mau","tentang",
-    "penelitian","riset","tolong","bisa",
-    "apa","bagaimana","kenapa","dengan",
-    "untuk","yang","ini","itu","dalam"
+    "saya",
+    "aku",
+    "ingin",
+    "mau",
+    "tentang",
+    "penelitian",
+    "penelitian tafsir",
+    "riset",
+    "tafsir",
+    "alquran",
+    "al quran",
+    "quran",
+    "surah",
+    "surat",
+    "ayat",
+    "mufasir",
+    "kitab",
+    "hadis",
+    "hadits",
+    "bagaimana",
+    "kenapa",
+    "mengapa",
+    "apa",
+    "apakah",
+    "untuk",
+    "dalam",
+    "dengan",
+    "yang",
+    "ini",
+    "itu",
+    "membahas",
+    "dibahas",
+    "meneliti",
+    "diteliti",
+    "mencari",
+    "jurnal",
+    "cari jurnal",
+    "ga",
+    "gak",
+    "nggak"
   ];
 
-  let score = 0;
+  const englishSignals = [
+    "i",
+    "i want",
+    "i am",
+    "i'm",
+    "research",
+    "researching",
+    "quran",
+    "tafsir",
+    "verse",
+    "verses",
+    "surah",
+    "journal",
+    "how",
+    "why",
+    "what",
+    "which",
+    "can",
+    "could",
+    "would",
+    "about",
+    "with",
+    "from",
+    "into",
+    "the"
+  ];
+
+  let idScore = 0;
+  let enScore = 0;
 
   indoSignals.forEach(function(word){
-
-    if(
-      value.includes(" " + word + " ") ||
-      value.startsWith(word + " ") ||
-      value.endsWith(" " + word)
-    ){
-      score++;
+    if(value.includes(word)){
+      idScore++;
     }
-
   });
 
-  if(score >= 2){
+  englishSignals.forEach(function(word){
+    if(value.includes(word)){
+      enScore++;
+    }
+  });
+
+  if(idScore > enScore){
     return "id";
+  }
+
+  if(enScore > idScore){
+    return "en";
   }
 
   return (
@@ -1913,14 +1985,25 @@ brainThink.onclick = async function(){
 
     if(sourceQuery){
 
-      const sourceResults =
-        await brainV3SearchSources(
-          sourceQuery
+      try{
+
+        const sourceResults =
+          await brainV3SearchSources(
+            sourceQuery
+          );
+
+        brainV3RenderSources(
+          sourceResults.sources || []
         );
 
-      brainV3RenderSources(
-        sourceResults.sources || []
-      );
+      }catch(sourceError){
+
+        console.warn(
+          "QTRC source lookup skipped:",
+          sourceError
+        );
+
+      }
 
     }
 
@@ -1932,10 +2015,22 @@ brainThink.onclick = async function(){
 
     brainV3HideProcessing();
 
+    console.error(
+      "QTRC Brainstorming error:",
+      error
+    );
+
+    const lang =
+      brainV3DetectLanguage(
+        input ||
+        ""
+      );
+
     brainV3AddMessage(
       "qtrc",
-      error.message ||
-      "Maaf, proses analisis belum dapat diselesaikan."
+      lang === "id"
+        ? "Saya belum dapat menyelesaikan analisis ini. Silakan coba kirim kembali pertanyaan Anda."
+        : "I wasn't able to complete that analysis. Please send the question again."
     );
 
   }finally{
