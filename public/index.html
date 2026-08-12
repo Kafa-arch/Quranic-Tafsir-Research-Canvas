@@ -473,7 +473,7 @@ function openBlockEditor(i){
  document.getElementById("aiInput").value=b.content;
  document.getElementById("aiResponse").innerHTML='<div class="response">Edit the researcher-provided content here. QTRC+ will not silently fill missing information.</div>';
  document.getElementById("runAI").textContent="Save Block";
- document.getElementById("runAI").textContent="Analyze with QTRC";document.getElementById("modal").classList.remove("hidden");
+ document.getElementById("modal").classList.remove("hidden");
 }
 function updateStats(){
  const counts={Valid:0,Provisional:0,Exploratory:0,"Belum Valid":0};current.blocks.forEach(b=>counts[b.status]++);
