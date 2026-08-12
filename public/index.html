@@ -291,48 +291,328 @@ button{cursor:pointer}
   </div>
 </section>
 
-      <section id="brainstorm" class="view hidden">
-  <div class="brain-head">
-    <div>
+      <!-- QTRC_BRAINSTORM_V2_UI -->
+
+<style id="QTRC_BRAINSTORM_V2_UI">
+
+.brain-v2{
+  max-width:1080px;
+  margin:0 auto;
+}
+
+.brain-v2-head{
+  margin-bottom:20px;
+}
+
+.brain-v2-head h1{
+  margin:0 0 7px;
+  font-size:30px;
+  letter-spacing:-.035em;
+}
+
+.brain-v2-head p{
+  margin:0;
+  color:#737373;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.brain-v2-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  gap:16px;
+}
+
+.brain-chat{
+  background:rgba(255,255,255,.58);
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:16px;
+  box-shadow:
+    0 18px 50px rgba(31,41,55,.07),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(20px) saturate(145%);
+  -webkit-backdrop-filter:blur(20px) saturate(145%);
+  overflow:hidden;
+}
+
+.brain-messages{
+  min-height:500px;
+  max-height:620px;
+  overflow:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.brain-msg{
+  max-width:88%;
+  padding:13px 15px;
+  border-radius:14px;
+  font-size:13px;
+  line-height:1.65;
+}
+
+.brain-msg.qtrc{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+  align-self:flex-start;
+}
+
+.brain-msg.user{
+  background:#171717;
+  color:#fff;
+  align-self:flex-end;
+}
+
+.brain-msg strong{
+  font-weight:650;
+}
+
+.brain-msg .muted{
+  display:block;
+  margin-top:7px;
+}
+
+.brain-upload{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding:11px 14px;
+  border-top:1px solid rgba(255,255,255,.65);
+  background:rgba(255,255,255,.32);
+}
+
+.brain-file-input{
+  display:none;
+}
+
+.brain-file-name{
+  flex:1;
+  font-size:11px;
+  color:#777;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.brain-composer{
+  border-top:1px solid rgba(255,255,255,.65);
+  padding:12px;
+  display:flex;
+  gap:9px;
+  align-items:end;
+  background:rgba(255,255,255,.48);
+}
+
+.brain-composer textarea{
+  flex:1;
+  min-height:72px;
+  max-height:180px;
+  resize:vertical;
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:12px;
+  padding:11px 12px;
+  outline:none;
+  background:rgba(255,255,255,.72);
+}
+
+.brain-composer textarea:focus{
+  border-color:rgba(23,23,23,.22);
+}
+
+.brain-assessment{
+  background:rgba(255,255,255,.54);
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:
+    0 18px 50px rgba(31,41,55,.06),
+    inset 0 1px 0 rgba(255,255,255,.88);
+}
+
+.brain-assessment h3{
+  margin:0 0 5px;
+  font-size:14px;
+}
+
+.brain-assessment-intro{
+  color:#777;
+  font-size:11px;
+  line-height:1.55;
+  margin-bottom:12px;
+}
+
+.block-check{
+  border:1px solid rgba(255,255,255,.78);
+  background:rgba(255,255,255,.54);
+  border-radius:11px;
+  padding:11px;
+  margin-bottom:8px;
+}
+
+.block-check-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.block-check-name{
+  font-size:12px;
+  font-weight:650;
+}
+
+.block-check-status{
+  font-size:9px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#f1f1ef;
+  color:#666;
+}
+
+.block-check-status.found{
+  background:#eef6ef;
+  color:#2d6a3d;
+}
+
+.block-check-status.partial{
+  background:#fff6df;
+  color:#8a6a18;
+}
+
+.block-check-status.missing{
+  background:#fff0ee;
+  color:#9c2b21;
+}
+
+.block-check-detail{
+  margin-top:7px;
+  color:#666;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.block-check-action{
+  margin-top:8px;
+}
+
+.brain-proposal{
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.66);
+  border:1px solid rgba(255,255,255,.8);
+}
+
+.brain-proposal strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:12px;
+}
+
+.brain-proposal p{
+  margin:0;
+  color:#666;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.brain-proposal-actions{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+@media(max-width:900px){
+  .brain-v2-layout{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
+
+<section id="brainstorm" class="view hidden">
+  <div class="brain-v2">
+
+    <div class="brain-v2-head">
       <div class="eyebrow">QTRC THINKING SPACE</div>
       <h1>Brainstorming</h1>
-      <p>Explore ideas before deciding which parts belong in the research canvas.</p>
-    </div>
-    <div class="badges"><span class="pill">Exploratory – Belum Tervalidasi</span><span class="pill" id="brainLevel">Basic</span></div>
-  </div>
-
-  <div class="brain-layout">
-    <div>
-      <div class="brain-toolbar">
-        <button class="brain-chip active" data-brain-mode="explore">Explore</button>
-        <button class="brain-chip" data-brain-mode="question">Research Question</button>
-        <button class="brain-chip" data-brain-mode="theory">Theory & Method</button>
-        <button class="brain-chip" data-brain-mode="novelty">Contribution & Novelty</button>
-      </div>
-      <div class="brain-card">
-        <textarea id="brainInput" placeholder="Tulis kegelisahan, ide topik, ayat yang menarik perhatian, teori yang sedang dipertimbangkan, atau pertanyaan yang masih mentah..."></textarea>
-        <div class="brain-actions">
-          <span class="muted">Brainstorming does not finalize any QTRC block.</span>
-          <button class="btn primary" id="brainThink">Think with QTRC</button>
-        </div>
-      </div>
-      <div id="brainThreads" class="brain-threads"></div>
+      <p>
+        Talk through your research, drop in a file, and let QTRC help map what you already have across the 11-block canvas.
+      </p>
     </div>
 
-    <aside>
-      <div class="panel">
-        <h3>How this works</h3>
-        <div class="ai-box">
-          <strong>1. Explore</strong><br>Put unfinished ideas here without forcing them into a block.<br><br>
-          <strong>2. Examine</strong><br>QTRC can identify possible directions, ambiguities, and dependencies.<br><br>
-          <strong>3. Transfer</strong><br>Only when you're ready, move an idea into a specific canvas block.
+    <div class="brain-v2-layout">
+
+      <div class="brain-chat">
+
+        <div class="brain-messages" id="brainMessages">
+          <div class="brain-msg qtrc">
+            Hey — send me whatever you're working with. You can just talk through the idea, upload a file, or do both.
+            <span class="muted">
+              I’ll look at it across all 11 QTRC blocks and point out what’s clear, what’s partial, and what still needs work.
+            </span>
+          </div>
         </div>
+
+        <div class="brain-upload">
+          <input
+            id="brainFileInput"
+            class="brain-file-input"
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.txt,.md,.csv"
+          >
+
+          <button class="btn" id="brainUploadBtn">
+            📎 Upload file
+          </button>
+
+          <span class="brain-file-name" id="brainFileName">
+            No file attached
+          </span>
+        </div>
+
+        <div class="brain-composer">
+          <textarea
+            id="brainInput"
+            placeholder="Tell QTRC what you're working on..."
+          ></textarea>
+
+          <button class="btn primary" id="brainThink">
+            Send
+          </button>
+        </div>
+
       </div>
-      <div class="panel">
-        <h3>Epistemic guard</h3>
-        <div class="ai-box">Brainstorming is intentionally exploratory. Suggestions are not automatically treated as valid research claims, sources, Qur’anic references, or scholarly consensus.</div>
-      </div>
-    </aside>
+
+      <aside>
+
+        <div class="brain-assessment">
+
+          <h3>11-Block Check</h3>
+
+          <div class="brain-assessment-intro">
+            Once QTRC has enough material, you'll see how the conversation or uploaded file maps onto each block.
+          </div>
+
+          <div id="brainAssessment">
+            <div class="empty" style="padding:24px;font-size:11px">
+              Nothing checked yet.
+            </div>
+          </div>
+
+          <div id="brainProposal"></div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
   </div>
 </section>
 
@@ -907,6 +1187,431 @@ renderRecent();
   };
 
 })();
+</script>
+
+
+<script id="QTRC_BRAINSTORM_V2_LOGIC">
+/* QTRC_BRAINSTORM_V2_LOGIC */
+
+let brainV2Files = [];
+
+const brainFileInput = document.getElementById("brainFileInput");
+const brainUploadBtn = document.getElementById("brainUploadBtn");
+const brainFileName = document.getElementById("brainFileName");
+const brainMessages = document.getElementById("brainMessages");
+const brainAssessment = document.getElementById("brainAssessment");
+const brainProposal = document.getElementById("brainProposal");
+const brainInputV2 = document.getElementById("brainInput");
+const brainThinkV2 = document.getElementById("brainThink");
+
+function brainV2AddMessage(role, text){
+
+  const el = document.createElement("div");
+
+  el.className =
+    "brain-msg " +
+    (role === "user" ? "user" : "qtrc");
+
+  el.innerHTML = esc(text);
+
+  brainMessages.appendChild(el);
+
+  brainMessages.scrollTop =
+    brainMessages.scrollHeight;
+
+}
+
+function brainV2StatusClass(status){
+
+  const s =
+    String(status || "").toLowerCase();
+
+  if(s.includes("found") || s.includes("clear")){
+    return "found";
+  }
+
+  if(s.includes("partial") || s.includes("provisional")){
+    return "partial";
+  }
+
+  if(s.includes("missing") || s.includes("unclear")){
+    return "missing";
+  }
+
+  return "";
+}
+
+function brainV2RenderAssessment(items){
+
+  if(!Array.isArray(items) || !items.length){
+    brainAssessment.innerHTML =
+      '<div class="empty" style="padding:24px;font-size:11px">QTRC hasn’t mapped anything yet.</div>';
+    return;
+  }
+
+  brainAssessment.innerHTML = "";
+
+  items.forEach((item, index) => {
+
+    const el =
+      document.createElement("div");
+
+    el.className = "block-check";
+
+    const statusClass =
+      brainV2StatusClass(item.status);
+
+    el.innerHTML = `
+      <div class="block-check-head">
+        <span class="block-check-name">
+          ${esc(item.block || ("Block " + (index + 1)))}
+        </span>
+
+        <span class="block-check-status ${statusClass}">
+          ${esc(item.status || "Reviewed")}
+        </span>
+      </div>
+
+      <div class="block-check-detail">
+        ${esc(item.explanation || "No explanation provided.")}
+      </div>
+
+      ${
+        item.evidence
+          ? `<div class="block-check-detail"><strong>Evidence:</strong> ${esc(item.evidence)}</div>`
+          : ""
+      }
+    `;
+
+    brainAssessment.appendChild(el);
+
+  });
+
+}
+
+function brainV2RenderProposal(proposal){
+
+  if(!proposal){
+    brainProposal.innerHTML = "";
+    return;
+  }
+
+  const selected =
+    Array.isArray(proposal.blocks)
+      ? proposal.blocks
+      : [];
+
+  brainProposal.innerHTML = `
+    <div class="brain-proposal">
+
+      <strong>
+        ${selected.length}
+        block${selected.length === 1 ? "" : "s"}
+        could be added to your canvas.
+      </strong>
+
+      <p>
+        I’ll leave anything unclear or unsupported out rather than filling the gaps for you.
+      </p>
+
+      <div class="brain-proposal-actions">
+
+        <button
+          class="btn primary"
+          id="brainAcceptProposal"
+        >
+          Add selected blocks
+        </button>
+
+        <button
+          class="btn"
+          id="brainReviewProposal"
+        >
+          Review first
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById(
+    "brainAcceptProposal"
+  ).onclick = function(){
+
+    brainV2TransferBlocks(selected);
+
+  };
+
+  document.getElementById(
+    "brainReviewProposal"
+  ).onclick = function(){
+
+    brainV2AddMessage(
+      "qtrc",
+      "Sure. Let’s review them first. I’ll keep anything uncertain out of the canvas until you confirm it."
+    );
+
+  };
+
+}
+
+function brainV2TransferBlocks(items){
+
+  if(!current){
+    brainV2AddMessage(
+      "qtrc",
+      "You don’t have a canvas open yet. I can keep the findings here, or we can open a new canvas first."
+    );
+    return;
+  }
+
+  let transferred = 0;
+
+  items.forEach(item => {
+
+    const index =
+      Number(item.index);
+
+    if(
+      Number.isInteger(index) &&
+      current.blocks[index] &&
+      item.content
+    ){
+
+      current.blocks[index].content =
+        item.content;
+
+      current.blocks[index].status =
+        "Provisional";
+
+      transferred++;
+
+    }
+
+  });
+
+  if(transferred){
+
+    current.updatedAt =
+      new Date().toISOString();
+
+    current.validated = false;
+
+    saveAll();
+    renderCanvas();
+
+    brainV2AddMessage(
+      "qtrc",
+      `Cool. I added ${transferred} proposed block${transferred === 1 ? "" : "s"} to the canvas as Provisional.`
+    );
+
+    brainProposal.innerHTML = "";
+
+  }
+
+}
+
+brainUploadBtn.onclick = function(){
+  brainFileInput.click();
+};
+
+brainFileInput.addEventListener(
+  "change",
+  function(){
+
+    brainV2Files =
+      Array.from(brainFileInput.files || []);
+
+    if(!brainV2Files.length){
+
+      brainFileName.textContent =
+        "No file attached";
+
+      return;
+
+    }
+
+    brainFileName.textContent =
+      brainV2Files.map(f => f.name).join(", ");
+
+    brainV2AddMessage(
+      "user",
+      "I uploaded: " +
+      brainV2Files.map(f => f.name).join(", ")
+    );
+
+  }
+);
+
+async function brainV2ReadFile(file){
+
+  const allowed =
+    [
+      "text/plain",
+      "text/markdown"
+    ];
+
+  const lower =
+    file.name.toLowerCase();
+
+  const isSupported =
+    allowed.includes(file.type) ||
+    lower.endsWith(".txt") ||
+    lower.endsWith(".md");
+
+  if(!isSupported){
+    return {
+      name:file.name,
+      supported:false,
+      text:""
+    };
+  }
+
+  const text =
+    await file.text();
+
+  return {
+    name:file.name,
+    supported:true,
+    text:text.slice(0,30000)
+  };
+}
+
+brainThinkV2.onclick = async function(){
+
+  const input =
+    brainInputV2.value.trim();
+
+  if(!input && !brainV2Files.length){
+
+    brainV2AddMessage(
+      "qtrc",
+      "Give me an idea, a question, or a file to work with first."
+    );
+
+    return;
+
+  }
+
+  if(input){
+
+    brainV2AddMessage(
+      "user",
+      input
+    );
+
+  }
+
+  brainInputV2.value = "";
+
+  brainThinkV2.disabled = true;
+  brainThinkV2.textContent = "Reading...";
+
+  try{
+
+    const fileResults = [];
+
+    for(const file of brainV2Files){
+
+      fileResults.push(
+        await brainV2ReadFile(file)
+      );
+
+    }
+
+    const supportedFiles =
+      fileResults.filter(
+        item => item.supported
+      );
+
+    const unsupportedFiles =
+      fileResults.filter(
+        item => !item.supported
+      );
+
+    if(unsupportedFiles.length){
+
+      brainV2AddMessage(
+        "qtrc",
+        "I can see " +
+        unsupportedFiles.map(f => f.name).join(", ") +
+        ", but I can’t read that file format yet. For now, send me a TXT or Markdown version and I can work through the actual contents."
+      );
+
+    }
+
+    const sourceText =
+      supportedFiles
+        .map(item =>
+          `\n===== FILE: ${item.name} =====\n${item.text}`
+        )
+        .join("\n");
+
+    brainThinkV2.textContent =
+      "Thinking...";
+
+    const data =
+      await qtrcApi(
+        "/api/brainstorm",
+        {
+          input,
+          sourceText,
+          files:
+            brainV2Files.map(f => ({
+              name:f.name,
+              type:f.type,
+              size:f.size,
+              supported:
+                supportedFiles.some(
+                  x => x.name === f.name
+                )
+            })),
+          context:qtrcContext(),
+          blocks:blockNames.map((name,index)=>({
+            index,
+            name,
+            definition:blockInfo[index][1],
+            dependency:blockInfo[index][2]
+          }))
+        }
+      );
+
+    brainV2AddMessage(
+      "qtrc",
+      data.analysis ||
+      "I went through what you sent. I’m ready to map it across the 11 blocks."
+    );
+
+    if(data.assessment){
+      brainV2RenderAssessment(
+        data.assessment
+      );
+    }
+
+    if(data.proposal){
+      brainV2RenderProposal(
+        data.proposal
+      );
+    }
+
+  }catch(err){
+
+    brainV2AddMessage(
+      "qtrc",
+      err.message ||
+      "Something went wrong while checking this."
+    );
+
+  }finally{
+
+    brainThinkV2.disabled = false;
+    brainThinkV2.textContent = "Send";
+
+  }
+
+};
+
 </script>
 
 </body>
