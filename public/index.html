@@ -1425,5 +1425,77 @@ select:focus-visible{
 })();
 </script>
 
+
+<!-- QTRC_NAVIGATION_FALLBACK_V1 -->
+
+<script>
+(function(){
+
+  /*
+   * Safe fallback for the QTRC navigation.
+   * Does NOT prevent clicks and does NOT interfere with
+   * existing application handlers.
+   */
+  document.addEventListener("click", function(event){
+
+    const button = event.target.closest("[data-view]");
+
+    if(!button) return;
+
+    const viewId = button.getAttribute("data-view");
+
+    if(!viewId) return;
+
+    /*
+     * Let the app's original click handler run first.
+     */
+    setTimeout(function(){
+
+      const target = document.getElementById(viewId);
+
+      if(!target) return;
+
+      /*
+       * If the original handler already opened the target,
+       * don't touch anything.
+       */
+      const visible =
+        document.querySelector(".view:not(.hidden)");
+
+      if(visible !== target){
+
+        document.querySelectorAll(".view").forEach(function(view){
+          view.classList.add("hidden");
+        });
+
+        target.classList.remove("hidden");
+
+        window.scrollTo({
+          top:0,
+          behavior:"smooth"
+        });
+      }
+
+      /*
+       * Update active sidebar state.
+       */
+      document.querySelectorAll(
+        ".nav button[data-view], .recent button[data-view]"
+      ).forEach(function(item){
+
+        item.classList.toggle(
+          "active",
+          item.getAttribute("data-view") === viewId
+        );
+
+      });
+
+    }, 0);
+
+  }, false);
+
+})();
+</script>
+
 </body>
 </html>
