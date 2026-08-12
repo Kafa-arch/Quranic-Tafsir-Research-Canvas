@@ -639,5 +639,281 @@ document.getElementById("brainThink").onclick=async()=>{
 document.getElementById("arch").innerHTML=blockNames.map((x,i)=>`<div class="block-mini"><span>${String(i+1).padStart(2,"0")}</span>${x}<div style="font-size:11px;color:#999;margin-top:6px;line-height:1.4">${blockInfo[i][0]}</div></div>`).join("");
 renderRecent();
 </script>
+
+<!-- QTRC_SUPABASE_AUTH -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function initQtrcSupabaseAuth() {
+  const AUTH_MARK = "QTRC_SUPABASE_AUTH";
+  const authMount = document.createElement("div");
+  authMount.id = "qtrcAuthMount";
+  authMount.className = "qtrc-auth";
+  const topActions = document.querySelector(".top-actions");
+  if (topActions) topActions.insertBefore(authMount, topActions.firstChild);
+
+  const style = document.createElement("style");
+  style.textContent = [
+    ".qtrc-auth{display:flex;align-items:center;gap:7px;margin-right:2px}",
+    ".qtrc-auth button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:12px}",
+    ".qtrc-auth .google{background:#171717;color:#fff;border-color:#171717}",
+    ".qtrc-user{display:flex;align-items:center;gap:7px;color:#555;font-size:12px}",
+    ".qtrc-user .avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#eee;color:#555;font-weight:650;overflow:hidden}",
+    ".qtrc-user img{width:100%;height:100%;object-fit:cover}",
+    ".qtrc-user .logout{background:#fff;color:#444}",
+    ".qtrc-auth-note{font-size:11px;color:#999;padding:7px 0}"
+  ].join("");
+  document.head.appendChild(style);
+
+  function escAuth(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (m) {
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m];
+    });
+  }
+
+  let supabaseClient = null;
+  let currentUser = null;
+  let cloudReady = false;
+  let authInitializing = true;
+
+  async function getConfig() {
+    const res = await fetch("/api/config", { cache: "no-store" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Supabase configuration could not be loaded.");
+    return data;
+  }
+
+  async function saveProfile(user) {
+    if (!supabaseClient || !user) return;
+    const meta = user.user_metadata || {};
+    const profile = {
+      id: user.id,
+      email: user.email || null,
+      full_name: meta.full_name || meta.name || null,
+      avatar_url: meta.avatar_url || meta.picture || null,
+      updated_at: new Date().toISOString()
+    };
+    const { error } = await supabaseClient
+      .from("profiles")
+      .upsert(profile, { onConflict: "id" });
+    if (error) console.warn("QTRC profile sync:", error.message);
+  }
+
+  function localKeyForUser(user) {
+    return user ? "qtrc_canvases_" + user.id : "qtrc_canvases";
+  }
+
+  async function loadCloudCanvases() {
+    if (!supabaseClient || !currentUser) return [];
+    const { data, error } = await supabaseClient
+      .from("qtrc_canvases")
+      .select("user_id,id,name,mode,level,data,updated_at,created_at")
+      .eq("user_id", currentUser.id)
+      .order("updated_at", { ascending: false });
+
+    if (error) throw error;
+    return (data || []).map(row => row.data).filter(Boolean);
+  }
+
+  function mergeCanvases(localItems, cloudItems) {
+    const map = new Map();
+    for (const c of localItems || []) map.set(String(c.id), c);
+    for (const c of cloudItems || []) {
+      const key = String(c.id);
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, c);
+        continue;
+      }
+      const a = new Date(existing.updatedAt || 0).getTime();
+      const b = new Date(c.updatedAt || 0).getTime();
+      map.set(key, b >= a ? c : existing);
+    }
+    return [...map.values()].sort((a,b) =>
+      new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
+    );
+  }
+
+  async function syncCanvasesToCloud() {
+    if (!supabaseClient || !currentUser || !cloudReady) return;
+
+    const localIds = new Set(canvases.map(c => Number(c.id)));
+    const { data: existingRows, error: readError } = await supabaseClient
+      .from("qtrc_canvases")
+      .select("id")
+      .eq("user_id", currentUser.id);
+
+    if (readError) throw readError;
+
+    const staleIds = (existingRows || [])
+      .map(r => Number(r.id))
+      .filter(id => !localIds.has(id));
+
+    if (staleIds.length) {
+      const { error: deleteError } = await supabaseClient
+        .from("qtrc_canvases")
+        .delete()
+        .eq("user_id", currentUser.id)
+        .in("id", staleIds);
+      if (deleteError) throw deleteError;
+    }
+
+    if (!canvases.length) return;
+
+    const rows = canvases.map(c => ({
+      user_id: currentUser.id,
+      id: Number(c.id),
+      name: c.name || "Untitled Tafsir Research",
+      mode: c.mode || "Thinking Mode",
+      level: c.level || "Basic",
+      data: c,
+      updated_at: c.updatedAt || new Date().toISOString()
+    }));
+
+    const { error } = await supabaseClient
+      .from("qtrc_canvases")
+      .upsert(rows, { onConflict: "user_id,id" });
+
+    if (error) throw error;
+  }
+
+  async function hydrateUserCanvases(user) {
+    currentUser = user;
+    await saveProfile(user);
+
+    const guestCanvases = Array.isArray(canvases) ? canvases.slice() : [];
+    const cloudCanvases = await loadCloudCanvases();
+    canvases = mergeCanvases(guestCanvases, cloudCanvases);
+    current = current && canvases.find(c => String(c.id) === String(current.id)) || canvases[0] || null;
+
+    localStorage.setItem(localKeyForUser(user), JSON.stringify(canvases));
+    if (guestCanvases.length || !cloudCanvases.length) {
+      cloudReady = true;
+      await syncCanvasesToCloud();
+    } else {
+      cloudReady = true;
+    }
+
+    if (typeof renderRecent === "function") renderRecent();
+    if (typeof renderDashboard === "function") renderDashboard();
+    if (current && typeof renderCanvas === "function" && !document.getElementById("canvas").classList.contains("hidden")) {
+      renderCanvas();
+    }
+  }
+
+  function clearSignedOutState() {
+    cloudReady = false;
+    currentUser = null;
+    canvases = [];
+    current = null;
+    localStorage.removeItem("qtrc_canvases");
+    if (typeof renderRecent === "function") renderRecent();
+    if (typeof renderDashboard === "function") renderDashboard();
+    if (typeof go === "function") go("home");
+  }
+
+  function renderAuth() {
+    if (!authMount) return;
+
+    if (authInitializing) {
+      authMount.innerHTML = '<span class="qtrc-auth-note">Checking account…</span>';
+      return;
+    }
+
+    if (!currentUser) {
+      authMount.innerHTML = '<button class="google" id="qtrcGoogleLogin">Sign in with Google</button>';
+      document.getElementById("qtrcGoogleLogin").onclick = async function () {
+        this.disabled = true;
+        this.textContent = "Opening Google…";
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo: window.location.origin }
+        });
+        if (error) {
+          alert(error.message);
+          this.disabled = false;
+          this.textContent = "Sign in with Google";
+        }
+      };
+      return;
+    }
+
+    const meta = currentUser.user_metadata || {};
+    const displayName = meta.full_name || meta.name || currentUser.email || "Signed in";
+    const avatar = meta.avatar_url || meta.picture || "";
+    authMount.innerHTML = [
+      '<div class="qtrc-user">',
+      '<span class="avatar">' + (avatar ? '<img alt="" src="' + escAuth(avatar) + '">' : escAuth(displayName.slice(0,1).toUpperCase())) + '</span>',
+      '<span>' + escAuth(displayName) + '</span>',
+      '<button class="logout" id="qtrcGoogleLogout">Sign out</button>',
+      '</div>'
+    ].join("");
+
+    document.getElementById("qtrcGoogleLogout").onclick = async function () {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) alert(error.message);
+    };
+  }
+
+  function installCloudAwareSave() {
+    const originalSaveAll = window.saveAll;
+    window.saveAll = function () {
+      localStorage.setItem(localKeyForUser(currentUser), JSON.stringify(canvases));
+      if (typeof originalSaveAll === "function" && !currentUser) {
+        originalSaveAll();
+      }
+      if (currentUser && cloudReady) {
+        syncCanvasesToCloud().catch(err => console.warn("QTRC cloud sync:", err.message));
+      }
+    };
+  }
+
+  try {
+    const config = await getConfig();
+    if (!window.supabase || !window.supabase.createClient) {
+      throw new Error("Supabase client library failed to load.");
+    }
+
+    supabaseClient = window.supabase.createClient(
+      config.supabaseUrl,
+      config.supabaseAnonKey
+    );
+    window.qtrcSupabase = supabaseClient;
+
+    installCloudAwareSave();
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    authInitializing = false;
+    if (session?.user) {
+      await hydrateUserCanvases(session.user);
+    } else {
+      cloudReady = false;
+    }
+    renderAuth();
+
+    supabaseClient.auth.onAuthStateChange(function (_event, sessionValue) {
+      setTimeout(async function () {
+        try {
+          if (sessionValue?.user) {
+            authInitializing = false;
+            await hydrateUserCanvases(sessionValue.user);
+          } else {
+            authInitializing = false;
+            clearSignedOutState();
+          }
+          renderAuth();
+        } catch (err) {
+          console.error("QTRC auth state:", err);
+          alert("QTRC account sync failed: " + err.message);
+          renderAuth();
+        }
+      }, 0);
+    });
+  } catch (err) {
+    authInitializing = false;
+    authMount.innerHTML = '<span class="qtrc-auth-note">Account login unavailable: ' + escAuth(err.message) + '</span>';
+    console.error("QTRC Supabase Auth:", err);
+  }
+})();
+</script>
 </body>
 </html>
