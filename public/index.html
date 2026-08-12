@@ -537,17 +537,17 @@ button{cursor:pointer}
 <style id="QTRC_BRAINSTORM_V3_UI">
 
 .qtrc-brain-v3{
-  max-width:860px;
+  max-width:1180px;
   margin:0 auto;
 }
 
 .qtrc-brain-head{
   text-align:center;
-  padding:34px 20px 26px;
+  padding:30px 20px 22px;
 }
 
 .qtrc-brain-head .eyebrow{
-  margin-bottom:10px;
+  margin-bottom:9px;
 }
 
 .qtrc-brain-head h1{
@@ -558,27 +558,33 @@ button{cursor:pointer}
 }
 
 .qtrc-brain-head p{
-  max-width:620px;
-  margin:12px auto 0;
+  max-width:670px;
+  margin:11px auto 0;
   color:#737373;
   font-size:14px;
   line-height:1.7;
+}
+
+.qtrc-brain-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 350px;
+  gap:16px;
+  align-items:start;
 }
 
 .qtrc-chat{
   background:#fff;
   border:1px solid var(--line);
   border-radius:18px;
-  box-shadow:
-    0 12px 40px rgba(0,0,0,.045);
+  box-shadow:0 12px 40px rgba(0,0,0,.045);
   overflow:hidden;
 }
 
 .qtrc-chat-scroll{
-  min-height:500px;
-  max-height:calc(100vh - 330px);
+  height:calc(100vh - 320px);
+  min-height:520px;
   overflow-y:auto;
-  padding:28px 26px 16px;
+  padding:28px 26px 18px;
 }
 
 .qtrc-empty-state{
@@ -641,7 +647,6 @@ button{cursor:pointer}
 }
 
 .qtrc-message.qtrc .qtrc-message-bubble{
-  max-width:780px;
   color:#222;
 }
 
@@ -694,71 +699,73 @@ button{cursor:pointer}
   }
 }
 
-.qtrc-map{
-  margin-top:14px;
+.qtrc-sidebar{
+  position:sticky;
+  top:18px;
+  max-height:calc(100vh - 180px);
+  overflow-y:auto;
+}
+
+.qtrc-side-card{
+  background:#fff;
   border:1px solid var(--line);
-  border-radius:14px;
-  background:#fafafa;
-  overflow:hidden;
+  border-radius:16px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 8px 28px rgba(0,0,0,.035);
 }
 
-.qtrc-map-summary{
-  padding:14px 15px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  cursor:pointer;
+.qtrc-side-card h3{
+  margin:0;
+  font-size:13px;
+  letter-spacing:-.01em;
 }
 
-.qtrc-map-summary strong{
-  font-size:12px;
+.qtrc-side-intro{
+  margin-top:6px;
+  color:#777;
+  font-size:10px;
+  line-height:1.55;
 }
 
-.qtrc-map-summary span{
-  color:#888;
-  font-size:11px;
+.qtrc-side-section{
+  margin-top:14px;
 }
 
-.qtrc-map-body{
-  display:none;
-  border-top:1px solid var(--line);
-  padding:10px;
-}
-
-.qtrc-map.open .qtrc-map-body{
-  display:block;
+.qtrc-side-section-title{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#929292;
+  margin-bottom:8px;
 }
 
 .qtrc-map-item{
-  background:#fff;
+  background:#fafafa;
   border:1px solid #ececea;
   border-radius:10px;
-  padding:11px 12px;
-  margin-bottom:7px;
-}
-
-.qtrc-map-item:last-child{
-  margin-bottom:0;
+  padding:10px 11px;
+  margin-bottom:6px;
 }
 
 .qtrc-map-item-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
+  gap:8px;
 }
 
 .qtrc-map-name{
-  font-size:12px;
+  font-size:11px;
   font-weight:650;
 }
 
 .qtrc-map-status{
   font-size:9px;
-  padding:4px 7px;
+  padding:3px 6px;
   border-radius:999px;
-  background:#f1f1ef;
+  background:#f0f0ee;
+  color:#666;
 }
 
 .qtrc-map-status.found{
@@ -777,37 +784,74 @@ button{cursor:pointer}
 }
 
 .qtrc-map-detail{
-  margin-top:7px;
+  margin-top:6px;
   color:#666;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.qtrc-source{
+  padding:9px 0;
+  border-bottom:1px solid #eee;
+}
+
+.qtrc-source:last-child{
+  border-bottom:0;
+}
+
+.qtrc-source-title{
   font-size:11px;
-  line-height:1.55;
+  font-weight:650;
+  line-height:1.45;
+}
+
+.qtrc-source-meta{
+  margin-top:3px;
+  color:#888;
+  font-size:9px;
+  line-height:1.45;
 }
 
 .qtrc-proposal{
-  margin-top:15px;
-  padding:15px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:#fff;
+  margin-top:10px;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fafafa;
 }
 
 .qtrc-proposal h4{
   margin:0 0 6px;
-  font-size:13px;
+  font-size:12px;
 }
 
 .qtrc-proposal p{
   margin:0;
   color:#666;
-  font-size:11px;
-  line-height:1.6;
+  font-size:10px;
+  line-height:1.55;
+}
+
+.qtrc-proposal-list{
+  margin-top:8px;
+}
+
+.qtrc-proposal-item{
+  padding:6px 0;
+  border-bottom:1px solid #eee;
+  font-size:10px;
+}
+
+.qtrc-proposal-item:last-child{
+  border-bottom:0;
 }
 
 .qtrc-proposal-actions{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  margin-top:12px;
+  margin-top:11px;
+}
+
+.qtrc-proposal-actions .btn{
+  width:100%;
 }
 
 .qtrc-attachments{
@@ -816,7 +860,6 @@ button{cursor:pointer}
   display:flex;
   gap:7px;
   flex-wrap:wrap;
-  min-height:0;
 }
 
 .qtrc-attachment{
@@ -868,12 +911,6 @@ button{cursor:pointer}
   background:transparent;
 }
 
-.qtrc-composer-actions{
-  display:flex;
-  gap:6px;
-  align-items:center;
-}
-
 .qtrc-upload{
   width:38px;
   height:38px;
@@ -918,13 +955,19 @@ button{cursor:pointer}
   padding:9px 10px 0;
 }
 
-@media(max-width:760px){
-  .qtrc-brain-head h1{
-    font-size:29px;
+@media(max-width:950px){
+  .qtrc-brain-layout{
+    grid-template-columns:1fr;
+  }
+
+  .qtrc-sidebar{
+    position:static;
+    max-height:none;
+    order:2;
   }
 
   .qtrc-chat-scroll{
-    padding:20px 15px 12px;
+    height:540px;
   }
 }
 
@@ -935,98 +978,162 @@ button{cursor:pointer}
   <div class="qtrc-brain-v3">
 
     <div class="qtrc-brain-head">
-
-      <div class="eyebrow">
-        QTRC THINKING SPACE
-      </div>
-
-      <h1>
-        Brainstorming
-      </h1>
-
+      <div class="eyebrow">QTRC THINKING SPACE</div>
+      <h1>Brainstorming</h1>
       <p>
         Bring an idea, a draft, or your research material here. We can work through it together before anything is moved into the canvas.
       </p>
-
     </div>
 
-    <div class="qtrc-chat">
+    <div class="qtrc-brain-layout">
 
-      <div
-        class="qtrc-chat-scroll"
-        id="brainMessages"
-      >
+      <div class="qtrc-chat">
 
         <div
-          class="qtrc-empty-state"
-          id="brainEmptyState"
+          class="qtrc-chat-scroll"
+          id="brainMessages"
         >
 
-          <div class="qtrc-empty-mark">
-            ◇
+          <div
+            class="qtrc-empty-state"
+            id="brainEmptyState"
+          >
+            <div class="qtrc-empty-mark">◇</div>
+
+            <h2>What are you working on?</h2>
+
+            <p>
+              Start with a research question, an idea, or your research material. I’ll help you work through it before anything is committed to the canvas.
+            </p>
           </div>
 
-          <h2>
-            What are you working on?
-          </h2>
+        </div>
 
-          <p>
-            You can start with a question, describe an idea, or upload your research material. I’ll help you work through it and see how it connects to the 11 QTRC blocks.
-          </p>
+        <div
+          class="qtrc-attachments"
+          id="brainAttachments"
+          style="display:none"
+        ></div>
+
+        <div class="qtrc-composer">
+
+          <div class="qtrc-composer-inner">
+
+            <input
+              id="brainFileInput"
+              class="qtrc-file-input"
+              type="file"
+              multiple
+            >
+
+            <button
+              class="qtrc-upload"
+              id="brainUploadBtn"
+              type="button"
+              title="Upload files"
+            >
+              +
+            </button>
+
+            <textarea
+              id="brainInput"
+              rows="1"
+              placeholder="Discuss your research with QTRC…"
+            ></textarea>
+
+            <button
+              class="qtrc-send"
+              id="brainThink"
+              type="button"
+              aria-label="Send"
+            >
+              ↑
+            </button>
+
+          </div>
+
+          <div class="qtrc-note">
+            QTRC guides the research process; it does not make scholarly decisions on your behalf.
+          </div>
 
         </div>
 
       </div>
 
-      <div
-        class="qtrc-attachments"
-        id="brainAttachments"
-        style="display:none"
-      ></div>
+      <aside class="qtrc-sidebar">
 
-      <div class="qtrc-composer">
+        <div class="qtrc-side-card">
 
-        <div class="qtrc-composer-inner">
+          <h3>Research Map</h3>
 
-          <input
-            id="brainFileInput"
-            class="qtrc-file-input"
-            type="file"
-            multiple
+          <div class="qtrc-side-intro">
+            I’ll keep track of the 11 blocks here while we work through your research.
+          </div>
+
+          <div
+            class="qtrc-side-section"
+            id="brainResearchMap"
           >
-
-          <button
-            class="qtrc-upload"
-            id="brainUploadBtn"
-            type="button"
-            title="Upload files"
-            aria-label="Upload files"
-          >
-            +
-          </button>
-
-          <textarea
-            id="brainInput"
-            rows="1"
-            placeholder="Discuss your research with QTRC…"
-          ></textarea>
-
-          <button
-            class="qtrc-send"
-            id="brainThink"
-            type="button"
-            aria-label="Send"
-          >
-            ↑
-          </button>
+            <div class="qtrc-side-intro">
+              Nothing mapped yet.
+            </div>
+          </div>
 
         </div>
 
-        <div class="qtrc-note">
-          QTRC guides the research process; it does not make scholarly decisions on your behalf.
+        <div
+          class="qtrc-side-card"
+          id="brainSourcesCard"
+          style="display:none"
+        >
+
+          <h3>Sources</h3>
+
+          <div
+            class="qtrc-side-intro"
+          >
+            Sources consulted during the research discussion.
+          </div>
+
+          <div
+            class="qtrc-side-section"
+            id="brainSources"
+          ></div>
+
         </div>
 
-      </div>
+        <div
+          class="qtrc-side-card"
+          id="brainProposalCard"
+          style="display:none"
+        >
+
+          <h3>Proposed Canvas</h3>
+
+          <div
+            class="qtrc-side-intro"
+            id="brainProposalIntro"
+          ></div>
+
+          <div
+            class="qtrc-proposal-list"
+            id="brainProposalList"
+          ></div>
+
+          <div
+            class="qtrc-proposal-actions"
+          >
+            <button
+              class="btn primary"
+              id="qtrcApproveProposal"
+            >
+              Add to your canvas?
+            </button>
+          </div>
+
+        </div>
+
+      </aside>
 
     </div>
 
@@ -1821,41 +1928,40 @@ brainThink.onclick = async function(){
 
 function brainV3RenderMap(items){
 
-  if(!Array.isArray(items) || !items.length){
+  const map =
+    document.getElementById("brainResearchMap");
+
+  if(!map){
     return;
   }
 
-  const map =
-    document.createElement("div");
+  if(!Array.isArray(items) || !items.length){
 
-  map.className =
-    "qtrc-map";
+    map.innerHTML =
+      '<div class="qtrc-side-intro">Nothing mapped yet.</div>';
+
+    return;
+  }
+
+  const ordered =
+    items.slice().sort(function(a,b){
+      return Number(a.index) - Number(b.index);
+    });
 
   const found =
-    items.filter(function(item){
+    ordered.filter(function(item){
       return String(item.status || "")
         .toLowerCase()
         .includes("found");
     }).length;
 
-  const summary =
-    document.createElement("div");
-
-  summary.className =
-    "qtrc-map-summary";
-
-  summary.innerHTML = `
-    <strong>11-Block Research Map</strong>
-    <span>${found} block siap ditinjau</span>
+  map.innerHTML = `
+    <div class="qtrc-side-section-title">
+      ${found}/11 currently supported
+    </div>
   `;
 
-  const body =
-    document.createElement("div");
-
-  body.className =
-    "qtrc-map-body";
-
-  items.forEach(function(item){
+  ordered.forEach(function(item){
 
     const row =
       document.createElement("div");
@@ -1882,6 +1988,7 @@ function brainV3RenderMap(items){
         <span class="qtrc-map-name">
           ${esc(item.block || "Block")}
         </span>
+
         <span class="qtrc-map-status ${statusClass}">
           ${esc(item.status || "Reviewed")}
         </span>
@@ -1903,136 +2010,173 @@ function brainV3RenderMap(items){
       }
     `;
 
-    body.appendChild(row);
+    map.appendChild(row);
 
   });
 
-  summary.onclick = function(){
-    map.classList.toggle("open");
-  };
-
-  map.appendChild(summary);
-  map.appendChild(body);
-
-  brainMessages.appendChild(map);
-
-  brainMessages.scrollTop =
-    brainMessages.scrollHeight;
 }
 
 function brainV3RenderProposal(proposal){
 
+  const card =
+    document.getElementById("brainProposalCard");
+
+  const intro =
+    document.getElementById("brainProposalIntro");
+
+  const list =
+    document.getElementById("brainProposalList");
+
+  const approve =
+    document.getElementById("qtrcApproveProposal");
+
+  if(!card || !intro || !list || !approve){
+    return;
+  }
+
   const blocks =
-    Array.isArray(proposal.blocks)
+    Array.isArray(proposal?.blocks)
       ? proposal.blocks
       : [];
+
+  card.style.display =
+    blocks.length ? "block" : "none";
+
+  list.innerHTML = "";
 
   if(!blocks.length){
     return;
   }
 
-  const box =
-    document.createElement("div");
+  blocks.forEach(function(item){
 
-  box.className =
-    "qtrc-proposal";
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "qtrc-proposal-item";
+
+    row.innerHTML = `
+      <strong>
+        ${esc(blockNames[Number(item.index)] || item.index)}
+      </strong>
+      <div class="qtrc-map-detail">
+        ${esc(item.content || "")}
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
 
   const lang =
     brainV3DetectLanguage(
-      brainInput.value ||
       brainV3Conversation
         .filter(function(item){
           return item.role === "user";
         })
-        .slice(-1)[0]?.content ||
-      ""
+        .slice(-1)[0]?.content || ""
     );
 
-  if(lang === "id"){
+  intro.textContent =
+    lang === "id"
+      ? `Saya menemukan ${blocks.length} bagian yang sudah cukup kuat untuk diajukan ke canvas.`
+      : `I found ${blocks.length} parts that are strong enough to propose for the canvas.`;
 
-    box.innerHTML = `
-      <h4>
-        Ada ${blocks.length} bagian yang cukup kuat untuk diajukan ke canvas.
-      </h4>
+  approve.disabled = false;
 
-      <p>
-        Saya belum memasukkannya secara otomatis. Silakan tinjau dulu, lalu Anda dapat memilih untuk memasukkannya sebagai Provisional.
-      </p>
+  approve.onclick = function(){
 
-      <div class="qtrc-proposal-actions">
-        <button
-          class="btn primary"
-          id="qtrcApproveProposal"
-        >
-          Masukkan ke Canvas
-        </button>
+    approve.disabled = true;
+    brainV3CreateCanvasFromProposal(blocks);
 
-        <button
-          class="btn"
-          id="qtrcReviewProposal"
-        >
-          Tinjau dulu
-        </button>
-      </div>
-    `;
+  };
 
-  }else{
+}
 
-    box.innerHTML = `
-      <h4>
-        I found ${blocks.length} parts that are strong enough to propose for the canvas.
-      </h4>
+function brainV3CreateCanvasFromProposal(blocks){
 
-      <p>
-        I haven’t added them automatically. Review them first, then you can add them as Provisional.
-      </p>
+  const lang =
+    brainV3DetectLanguage(
+      brainV3Conversation
+        .filter(function(item){
+          return item.role === "user";
+        })
+        .slice(-1)[0]?.content || ""
+    );
 
-      <div class="qtrc-proposal-actions">
-        <button
-          class="btn primary"
-          id="qtrcApproveProposal"
-        >
-          Add to Canvas
-        </button>
+  const name =
+    blocks.find(function(item){
+      return Number(item.index) === 10;
+    })?.content ||
+    "Untitled Tafsir Research";
 
-        <button
-          class="btn"
-          id="qtrcReviewProposal"
-        >
-          Review first
-        </button>
-      </div>
-    `;
+  const canvas = {
+    id:Date.now(),
+    name:String(name).slice(0,120),
+    mode:"Thinking Mode",
+    level:"Basic",
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString(),
+    validated:false,
 
+    /*
+     * Keep the original proposed material attached
+     * to the canvas record for future source-aware work.
+     */
+    sources:
+      brainV3Files.map(function(file){
+        return {
+          name:file.name,
+          type:file.type,
+          size:file.size
+        };
+      }),
+
+    blocks:
+      blockNames.map(function(blockName,index){
+
+        const proposal =
+          blocks.find(function(item){
+            return Number(item.index) === index;
+          });
+
+        return {
+          name:blockName,
+          content:
+            proposal?.content || "",
+          status:
+            proposal
+              ? "Provisional"
+              : "Exploratory",
+          notes:"",
+          requirement:"",
+        };
+
+      })
+  };
+
+  canvases.unshift(canvas);
+  current = canvas;
+
+  saveAll();
+  renderRecent();
+
+  const card =
+    document.getElementById("brainProposalCard");
+
+  if(card){
+    card.style.display = "none";
   }
 
-  document.getElementById("brainMessages")
-    .appendChild(box);
+  brainV3AddMessage(
+    "qtrc",
+    lang === "id"
+      ? `Baik. Canvas sudah dibuat dengan ${blocks.length} blok Provisional dan disimpan di My Canvases. Bagian yang belum cukup didukung tetap saya biarkan terbuka.`
+      : `Done. I created the canvas with ${blocks.length} Provisional blocks and saved it to My Canvases. I left the unsupported parts open rather than filling the gaps.`
+  );
 
-  document.getElementById(
-    "qtrcApproveProposal"
-  ).onclick = function(){
-
-    brainV3TransferBlocks(blocks);
-
-  };
-
-  document.getElementById(
-    "qtrcReviewProposal"
-  ).onclick = function(){
-
-    const msg =
-      lang === "id"
-        ? "Baik. Kita tinjau dulu satu per satu sebelum ada yang dimasukkan ke canvas."
-        : "Of course. Let’s review them first before anything goes into the canvas.";
-
-    brainV3AddMessage(
-      "qtrc",
-      msg
-    );
-
-  };
-
+  go("canvas");
 }
 
 function brainV3TransferBlocks(blocks){
