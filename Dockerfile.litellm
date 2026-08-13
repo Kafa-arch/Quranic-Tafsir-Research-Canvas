@@ -1,7 +1,0 @@
-FROM docker.litellm.ai/berriai/litellm:main-latest
-
-COPY litellm/config.yaml /app/config.yaml
-
-EXPOSE 10000
-
-CMD ["python", "-m", "litellm", "--config", "/app/config.yaml", "--port", "10000"]

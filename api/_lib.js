@@ -1,94 +1,432 @@
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(s => s.trim()).filter(Boolean)
-  : ["*"];
+const ALLOWED_ORIGINS =
+  process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean)
+    : ["*"];
 
 function cors(req, res) {
-  const origin = req.headers.origin || "*";
-  const allowed = ALLOWED_ORIGINS.includes("*") || ALLOWED_ORIGINS.includes(origin);
+  const origin =
+    req.headers.origin || "*";
+
+  const allowed =
+    ALLOWED_ORIGINS.includes("*") ||
+    ALLOWED_ORIGINS.includes(origin);
+
   res.setHeader(
     "Access-Control-Allow-Origin",
     allowed
-      ? (ALLOWED_ORIGINS.includes("*") ? "*" : origin)
-      : ALLOWED_ORIGINS[0] || "*"
+      ? (
+          ALLOWED_ORIGINS.includes("*")
+            ? "*"
+            : origin
+        )
+      : (
+          ALLOWED_ORIGINS[0] || "*"
+        )
   );
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+
+  res.setHeader(
+    "Vary",
+    "Origin"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS"
+  );
 }
 
-function normalizeBaseUrl(value) {
-  return String(value || "").replace(/\/$/, "");
+function cleanBaseUrl(value) {
+  return String(value || "")
+    .replace(/\/+$/, "");
 }
 
-async function callModel(messages, options = {}) {
-  const baseUrl = normalizeBaseUrl(process.env.LITELLM_BASE_URL);
-  const model = options.model || process.env.LITELLM_MODEL || "qtrc-supervisor";
+function isRetryableStatus(status) {
+  return (
+    status === 408 ||
+    status === 409 ||
+    status === 425 ||
+    status === 429 ||
+    status >= 500
+  );
+}
 
-  if (baseUrl) {
-    const key = process.env.LITELLM_API_KEY;
-    if (!key) throw new Error("LITELLM_API_KEY is not configured on the backend.");
+async function fetchJson(
+  url,
+  options,
+  providerName
+) {
+  const response =
+    await fetch(url, options);
 
-    const body = {
-      model,
-      temperature: typeof options.temperature === "number" ? options.temperature : 0.2,
-      messages
-    };
+  let data = {};
 
-    if (options.response_format) body.response_format = options.response_format;
+  try {
+    data =
+      await response.json();
+  } catch (_) {}
 
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`
-      },
-      body: JSON.stringify(body)
-    });
+  if (!response.ok) {
+    const error =
+      new Error(
+        data?.error?.message ||
+        data?.error ||
+        data?.message ||
+        `${providerName} request failed (${response.status}).`
+      );
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data?.error?.message || data?.message || "LiteLLM request failed.");
-    }
+    error.status =
+      response.status;
 
-    return data?.choices?.[0]?.message?.content || "";
+    error.retryable =
+      isRetryableStatus(
+        response.status
+      );
+
+    throw error;
   }
 
-  // Temporary local/development fallback until LiteLLM is configured.
-  const groqKey = process.env.GROQ_API_KEY;
-  if (!groqKey) {
-    throw new Error(
-      "LITELLM_BASE_URL/LITELLM_API_KEY are not configured, and GROQ_API_KEY is also unavailable."
+  return data;
+}
+
+function buildOpenAICompatibleBody(
+  model,
+  messages,
+  options
+) {
+  const body = {
+    model,
+    messages,
+    temperature:
+      typeof options.temperature === "number"
+        ? options.temperature
+        : 0.2
+  };
+
+  if (options.response_format) {
+    body.response_format =
+      options.response_format;
+  }
+
+  if (options.max_tokens) {
+    body.max_tokens =
+      options.max_tokens;
+  }
+
+  if (options.reasoning_effort) {
+    body.reasoning_effort =
+      options.reasoning_effort;
+  }
+
+  if (options.extra_body) {
+    Object.assign(
+      body,
+      options.extra_body
     );
   }
 
-  const body = {
-    model: options.groqModel || process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
-    temperature: typeof options.temperature === "number" ? options.temperature : 0.2,
-    messages
-  };
+  return body;
+}
 
-  if (options.response_format) body.response_format = options.response_format;
+/*
+ * Provider 1:
+ * Google Gemini
+ *
+ * Gemini exposes an OpenAI-compatible
+ * chat completions endpoint, so QTRC
+ * can keep one common message format.
+ */
+async function callGemini(
+  messages,
+  options = {}
+) {
+  const key =
+    process.env.GEMINI_API_KEY;
 
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${groqKey}`
-    },
-    body: JSON.stringify(body)
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data?.error?.message || "Groq API request failed.");
+  if (!key) {
+    throw new Error(
+      "GEMINI_API_KEY is not configured."
+    );
   }
 
-  return data?.choices?.[0]?.message?.content || "";
+  const model =
+    options.geminiModel ||
+    process.env.GEMINI_MODEL ||
+    "gemini-2.5-flash";
+
+  const body =
+    buildOpenAICompatibleBody(
+      model,
+      messages,
+      options
+    );
+
+  const data =
+    await fetchJson(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${key}`
+        },
+        body:
+          JSON.stringify(body)
+      },
+      "Gemini"
+    );
+
+  return {
+    provider: "gemini",
+    model,
+    content:
+      data?.choices?.[0]?.message?.content ||
+      ""
+  };
 }
 
-// Backward compatibility for existing endpoints.
-async function callGroq(messages, options = {}) {
-  return callModel(messages, options);
+/*
+ * Provider 2:
+ * Groq
+ */
+async function callGroqProvider(
+  messages,
+  options = {}
+) {
+  const key =
+    process.env.GROQ_API_KEY;
+
+  if (!key) {
+    throw new Error(
+      "GROQ_API_KEY is not configured."
+    );
+  }
+
+  const model =
+    options.groqModel ||
+    process.env.GROQ_MODEL ||
+    "llama-3.3-70b-versatile";
+
+  const body =
+    buildOpenAICompatibleBody(
+      model,
+      messages,
+      options
+    );
+
+  const data =
+    await fetchJson(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${key}`
+        },
+        body:
+          JSON.stringify(body)
+      },
+      "Groq"
+    );
+
+  return {
+    provider: "groq",
+    model,
+    content:
+      data?.choices?.[0]?.message?.content ||
+      ""
+  };
 }
 
-module.exports = { cors, callModel, callGroq };
+/*
+ * Provider 3:
+ * OpenRouter free router.
+ *
+ * We deliberately use openrouter/free
+ * instead of pinning a single free model.
+ * OpenRouter automatically selects a
+ * currently available compatible free model.
+ */
+async function callOpenRouter(
+  messages,
+  options = {}
+) {
+  const key =
+    process.env.OPENROUTER_API_KEY;
+
+  if (!key) {
+    throw new Error(
+      "OPENROUTER_API_KEY is not configured."
+    );
+  }
+
+  const model =
+    options.openRouterModel ||
+    process.env.OPENROUTER_MODEL ||
+    "openrouter/free";
+
+  const body =
+    buildOpenAICompatibleBody(
+      model,
+      messages,
+      options
+    );
+
+  const data =
+    await fetchJson(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${key}`,
+          "HTTP-Referer":
+            process.env.OPENROUTER_HTTP_REFERER ||
+            "https://quranic-tafsir-research-canvas.vercel.app",
+          "X-Title":
+            process.env.OPENROUTER_X_TITLE ||
+            "QTRC — Qur'anic Tafsir Research Canvas"
+        },
+        body:
+          JSON.stringify(body)
+      },
+      "OpenRouter"
+    );
+
+  return {
+    provider: "openrouter",
+    model,
+    content:
+      data?.choices?.[0]?.message?.content ||
+      ""
+  };
+}
+
+/*
+ * Main QTRC router
+ *
+ * Order:
+ *   1. Gemini
+ *   2. Groq
+ *   3. OpenRouter free
+ *
+ * Only retryable/provider-availability
+ * errors move us to the next provider.
+ * Ordinary application errors are surfaced.
+ */
+async function callModel(
+  messages,
+  options = {}
+) {
+  const providers = [
+    {
+      name: "gemini",
+      fn: callGemini
+    },
+    {
+      name: "groq",
+      fn: callGroqProvider
+    },
+    {
+      name: "openrouter",
+      fn: callOpenRouter
+    }
+  ];
+
+  const errors = [];
+
+  for (
+    const provider of providers
+  ) {
+    try {
+
+      const result =
+        await provider.fn(
+          messages,
+          options
+        );
+
+      if (
+        !result ||
+        typeof result.content !== "string" ||
+        !result.content.trim()
+      ) {
+        throw new Error(
+          `${provider.name} returned an empty response.`
+        );
+      }
+
+      return result.content;
+
+    } catch (error) {
+
+      errors.push({
+        provider:
+          provider.name,
+        status:
+          error?.status || null,
+        message:
+          error?.message ||
+          "Unknown provider error.",
+        retryable:
+          error?.retryable !== false
+      });
+
+      /*
+       * Missing key or malformed request:
+       * try the next available provider.
+       *
+       * For ordinary 4xx application errors,
+       * we do not keep hammering the same provider,
+       * but we still allow fallback.
+       */
+      continue;
+    }
+  }
+
+  const summary =
+    errors
+      .map(
+        item =>
+          `${item.provider}: ${item.message}`
+      )
+      .join(" | ");
+
+  throw new Error(
+    `All QTRC AI providers failed. ${summary}`
+  );
+}
+
+/*
+ * Backward compatibility.
+ * Existing code that still calls callGroq()
+ * will use the same provider router.
+ */
+async function callGroq(
+  messages,
+  options = {}
+) {
+  return callModel(
+    messages,
+    options
+  );
+}
+
+module.exports = {
+  cors,
+  callModel,
+  callGroq
+};
