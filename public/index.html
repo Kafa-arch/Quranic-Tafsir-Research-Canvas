@@ -307,6 +307,33 @@ button{cursor:pointer}
   .profile-menu{width:calc(100vw - 34px);max-width:260px}
 }
 
+
+/* QTRC_QAF_TYPOGRAPHY_V1 */
+body{font-size:15px;line-height:1.55}
+.nav button{font-size:15px;padding:9px 10px}
+.section-label{font-size:10px}
+.recent button{font-size:13px}
+.top-title{font-size:16px}
+.btn{font-size:14px}
+.dashboard-head h1{font-size:30px}
+.muted{font-size:14px}
+.workspace-head h1,.qtrc-settings-head h1{font-size:36px}
+.workspace-head p,.qtrc-settings-head p{font-size:14px}
+.qtrc-setting-row strong{font-size:14px}
+.qtrc-setting-row span{font-size:12px}
+.qtrc-setting-row select{font-size:13px}
+.qtrc-info-column h1,.qtrc-about-column h1{font-size:42px}
+.qtrc-info-lead,.qtrc-about-lead{font-size:17px}
+.qtrc-info-section h2{font-size:21px}
+.qtrc-info-section p,.qtrc-info-note p{font-size:14px}
+.qtrc-guide-grid strong{font-size:13px}
+.qtrc-guide-grid span{font-size:12px}
+.citation-text{font-size:14px}
+.profile-copy strong{font-size:12px}
+.profile-copy small{font-size:9px}
+.profile-menu-item{font-size:14px}
+.appearance-submenu button{font-size:13px}
+
 </style>
 </head>
 <body>
@@ -320,8 +347,6 @@ button{cursor:pointer}
       <button data-view="connect">⌁ &nbsp; Connect</button>
       <button data-view="pinned">★ &nbsp; Pinned</button>
       <button data-view="dashboard">▦ &nbsp; My Canvases</button>
-      <button data-view="guide">◌ &nbsp; Research Guide</button>
-      <button data-view="cite">▤ &nbsp; How to Cite QTRC</button>
     </div>
     <div class="sep"></div>
     <div class="section-label">Recent</div>
@@ -1554,22 +1579,6 @@ button{cursor:pointer}
 
     <div class="qtrc-setting-group">
       <div class="qtrc-setting-group-title">RESEARCH WORKSPACE</div>
-
-      <div class="qtrc-setting-row">
-        <div>
-          <strong>Research Guide</strong>
-          <span>Learn how QTRC's modes, levels, and research architecture work.</span>
-        </div>
-        <button class="btn" data-view="guide" type="button">Open</button>
-      </div>
-
-      <div class="qtrc-setting-row">
-        <div>
-          <strong>How to Cite QTRC</strong>
-          <span>Guidance for describing QTRC's methodological role in your research.</span>
-        </div>
-        <button class="btn" data-view="cite" type="button">Open</button>
-      </div>
     </div>
 
     <div class="qtrc-setting-group">
@@ -1582,12 +1591,6 @@ button{cursor:pointer}
         </div>
         <button class="btn danger-btn" id="clearDataSettings" type="button">Clear Data</button>
       </div>
-    </div>
-
-    <div class="qtrc-settings-links">
-      <button data-view="guide" type="button">Research Guide <span>›</span></button>
-      <button data-view="cite" type="button">How to Cite QTRC <span>›</span></button>
-      <button data-view="about" type="button">About QTRC+ <span>›</span></button>
     </div>
 
   </div>
