@@ -169,6 +169,144 @@ button{cursor:pointer}
 .recent-session-menu button.danger{color:#a22}
 .recent-session-menu button.danger:hover{background:#fff1ef}
 .pinned-mini{font-size:9px;color:#8a6a18}
+
+.profile-wrap{position:relative}
+.profile-trigger{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;background:transparent;border-radius:11px;padding:9px 8px;text-align:left}
+.profile-trigger:hover{background:#ededeb}
+.profile-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#171717;color:#fff;font-size:9px;font-weight:700;flex:0 0 30px}
+.profile-copy{min-width:0;flex:1}
+.profile-copy strong{display:block;font-size:11px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-copy small{display:block;margin-top:2px;color:#999;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-chevron{font-size:11px;color:#888}
+.profile-menu{position:absolute;left:0;bottom:51px;width:236px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:7px;box-shadow:0 18px 50px rgba(0,0,0,.12);z-index:50}
+.profile-menu-item{width:100%;display:flex;align-items:center;gap:10px;border:0;background:transparent;border-radius:9px;padding:9px 10px;text-align:left;font-size:12px;color:#444}
+.profile-menu-item:hover{background:#f2f2f0;color:#111}
+.profile-menu-item .menu-arrow{margin-left:auto;color:#999}
+.profile-menu-divider{height:1px;background:#eee;margin:6px 4px}
+.appearance-submenu{padding:3px 4px 5px}
+.appearance-submenu button{display:block;width:100%;border:0;background:transparent;text-align:left;border-radius:8px;padding:7px 10px 7px 34px;color:#666;font-size:11px}
+.appearance-submenu button:hover{background:#f4f4f2;color:#111}
+.qtrc-info-page{max-width:980px;margin:0 auto;padding:48px 0 80px}
+.qtrc-info-column{max-width:760px;margin:0 auto}
+.qtrc-info-eyebrow{font-size:9px;letter-spacing:.16em;color:#999;font-weight:700;margin-bottom:13px}
+.qtrc-about-page{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:45px 20px 70px}
+.qtrc-about-column{width:min(760px,100%)}
+.qtrc-globe{position:fixed;top:23px;right:28px;color:#555;font-size:18px}
+.qtrc-about-column h1,.qtrc-info-column h1{font-size:40px;line-height:1.06;letter-spacing:-.05em;margin:0 0 17px}
+.qtrc-about-lead,.qtrc-info-lead{font-size:16px;line-height:1.7;color:#505050;max-width:700px}
+.qtrc-about-column p{font-size:14px;line-height:1.8;color:#404040;margin:20px 0 0;max-width:720px}
+.qtrc-about-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}
+.qtrc-about-pillars>div{padding:16px;background:#fafafa;border:1px solid #ededeb;border-radius:12px}
+.qtrc-about-pillars strong{display:block;font-size:12px;margin-bottom:6px}
+.qtrc-about-pillars span{font-size:10px;color:#777;line-height:1.5}
+.qtrc-about-credit{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-top:38px;padding-top:18px;border-top:1px solid #eee}
+.qtrc-about-credit span{font-size:10px;color:#999}
+.qtrc-about-credit strong{font-size:12px}
+.qtrc-about-credit small{font-size:9px;color:#999}
+.qtrc-info-section{margin-top:34px}
+.qtrc-info-section h2{font-size:19px;margin:0 0 8px;letter-spacing:-.03em}
+.qtrc-info-section p{margin:0;color:#666;font-size:13px;line-height:1.7}
+.qtrc-guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:25px}
+.qtrc-guide-grid>div{padding:15px;border:1px solid var(--line);background:#fff;border-radius:12px}
+.qtrc-guide-grid strong{display:block;font-size:12px;margin-bottom:5px}
+.qtrc-guide-grid span{display:block;color:#777;font-size:10px;line-height:1.5}
+.qtrc-info-note{border-left:3px solid #171717;padding:3px 0 3px 14px}
+.citation-card{margin-top:30px;border:1px solid var(--line);background:#fff;border-radius:15px;padding:22px;box-shadow:var(--shadow)}
+.citation-label{font-size:9px;letter-spacing:.13em;color:#999;font-weight:700;margin-bottom:12px}
+.citation-text{font-size:13px;line-height:1.8;color:#444;background:#fafafa;border:1px solid #eee;border-radius:10px;padding:16px}
+.citation-card .btn{margin-top:14px}
+.qtrc-settings-page{max-width:760px;margin:0 auto;padding:46px 0 80px}
+.qtrc-settings-head{margin-bottom:28px}
+.qtrc-settings-head h1{font-size:34px;letter-spacing:-.045em;margin:0 0 8px}
+.qtrc-settings-head p{font-size:13px;color:#777;margin:0}
+.qtrc-setting-group{border-top:1px solid #e7e7e5}
+.qtrc-setting-group-title{font-size:9px;letter-spacing:.15em;color:#999;font-weight:700;padding:20px 2px 8px}
+.qtrc-setting-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 2px;border-bottom:1px solid #efefed}
+.qtrc-setting-row>div{min-width:0}
+.qtrc-setting-row strong{display:block;font-size:12px;margin-bottom:4px}
+.qtrc-setting-row span{display:block;color:#777;font-size:10px;line-height:1.55;max-width:520px}
+.qtrc-setting-row select{min-width:145px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 10px;font-size:11px}
+.danger-btn{color:#a22}
+.qtrc-settings-links{margin-top:18px;border:1px solid var(--line);border-radius:13px;background:#fff;overflow:hidden}
+.qtrc-settings-links button{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid #eee;background:#fff;padding:14px 15px;text-align:left;font-size:12px;color:#444}
+.qtrc-settings-links button:last-child{border-bottom:0}
+.qtrc-settings-links button:hover{background:#fafafa;color:#111}
+.qtrc-settings-links span{color:#aaa;font-size:18px}
+@media(max-width:760px){.qtrc-about-page{display:block;padding-top:70px}.qtrc-about-column h1,.qtrc-info-column h1{font-size:34px}.qtrc-about-pillars,.qtrc-guide-grid{grid-template-columns:1fr}.qtrc-settings-page{padding:34px 6px 60px}.qtrc-setting-row{align-items:flex-start;flex-direction:column}.qtrc-setting-row select{width:100%}.profile-menu{width:calc(100vw - 34px);max-width:260px}}
+/* QTRC_INFO_SETTINGS_V1 */
+
+.profile-wrap{position:relative}
+.profile-trigger{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;background:transparent;border-radius:11px;padding:9px 8px;text-align:left}
+.profile-trigger:hover{background:#ededeb}
+.profile-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#171717;color:#fff;font-size:9px;font-weight:700;flex:0 0 30px}
+.profile-copy{min-width:0;flex:1}
+.profile-copy strong{display:block;font-size:11px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-copy small{display:block;margin-top:2px;color:#999;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-chevron{font-size:11px;color:#888}
+.profile-menu{position:absolute;left:0;bottom:51px;width:236px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:7px;box-shadow:0 18px 50px rgba(0,0,0,.12);z-index:50}
+.profile-menu-item{width:100%;display:flex;align-items:center;gap:10px;border:0;background:transparent;border-radius:9px;padding:9px 10px;text-align:left;font-size:12px;color:#444}
+.profile-menu-item:hover{background:#f2f2f0;color:#111}
+.profile-menu-item .menu-arrow{margin-left:auto;color:#999}
+.profile-menu-divider{height:1px;background:#eee;margin:6px 4px}
+.appearance-submenu{padding:3px 4px 5px}
+.appearance-submenu button{display:block;width:100%;border:0;background:transparent;text-align:left;border-radius:8px;padding:7px 10px 7px 34px;color:#666;font-size:11px}
+.appearance-submenu button:hover{background:#f4f4f2;color:#111}
+.qtrc-info-page{max-width:980px;margin:0 auto;padding:48px 0 80px}
+.qtrc-info-column{max-width:760px;margin:0 auto}
+.qtrc-info-eyebrow{font-size:9px;letter-spacing:.16em;color:#999;font-weight:700;margin-bottom:13px}
+.qtrc-about-page{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:45px 20px 70px}
+.qtrc-about-column{width:min(760px,100%)}
+.qtrc-globe{position:fixed;top:23px;right:28px;color:#555;font-size:18px}
+.qtrc-about-column h1,.qtrc-info-column h1{font-size:40px;line-height:1.06;letter-spacing:-.05em;margin:0 0 17px}
+.qtrc-about-lead,.qtrc-info-lead{font-size:16px;line-height:1.7;color:#505050;max-width:700px}
+.qtrc-about-column p{font-size:14px;line-height:1.8;color:#404040;margin:20px 0 0;max-width:720px}
+.qtrc-about-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}
+.qtrc-about-pillars>div{padding:16px;background:#fafafa;border:1px solid #ededeb;border-radius:12px}
+.qtrc-about-pillars strong{display:block;font-size:12px;margin-bottom:6px}
+.qtrc-about-pillars span{font-size:10px;color:#777;line-height:1.5}
+.qtrc-about-credit{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-top:38px;padding-top:18px;border-top:1px solid #eee}
+.qtrc-about-credit span{font-size:10px;color:#999}
+.qtrc-about-credit strong{font-size:12px}
+.qtrc-about-credit small{font-size:9px;color:#999}
+.qtrc-info-section{margin-top:34px}
+.qtrc-info-section h2{font-size:19px;margin:0 0 8px;letter-spacing:-.03em}
+.qtrc-info-section p,.qtrc-info-note p{margin:0;color:#666;font-size:13px;line-height:1.7}
+.qtrc-guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:25px}
+.qtrc-guide-grid>div{padding:15px;border:1px solid var(--line);background:#fff;border-radius:12px}
+.qtrc-guide-grid strong{display:block;font-size:12px;margin-bottom:5px}
+.qtrc-guide-grid span{display:block;color:#777;font-size:10px;line-height:1.5}
+.qtrc-info-note{margin-top:28px;border-left:3px solid #171717;padding:3px 0 3px 14px}
+.citation-card{margin-top:30px;border:1px solid var(--line);background:#fff;border-radius:15px;padding:22px;box-shadow:var(--shadow)}
+.citation-label{font-size:9px;letter-spacing:.13em;color:#999;font-weight:700;margin-bottom:12px}
+.citation-text{font-size:13px;line-height:1.8;color:#444;background:#fafafa;border:1px solid #eee;border-radius:10px;padding:16px}
+.citation-card .btn{margin-top:14px}
+.qtrc-settings-page{max-width:760px;margin:0 auto;padding:46px 0 80px}
+.qtrc-settings-head{margin-bottom:28px}
+.qtrc-settings-head h1{font-size:34px;letter-spacing:-.045em;margin:0 0 8px}
+.qtrc-settings-head p{font-size:13px;color:#777;margin:0}
+.qtrc-setting-group{border-top:1px solid #e7e7e5}
+.qtrc-setting-group-title{font-size:9px;letter-spacing:.15em;color:#999;font-weight:700;padding:20px 2px 8px}
+.qtrc-setting-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 2px;border-bottom:1px solid #efefed}
+.qtrc-setting-row>div{min-width:0}
+.qtrc-setting-row strong{display:block;font-size:12px;margin-bottom:4px}
+.qtrc-setting-row span{display:block;color:#777;font-size:10px;line-height:1.55;max-width:520px}
+.qtrc-setting-row select{min-width:145px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 10px;font-size:11px}
+.danger-btn{color:#a22}
+.qtrc-settings-links{margin-top:18px;border:1px solid var(--line);border-radius:13px;background:#fff;overflow:hidden}
+.qtrc-settings-links button{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid #eee;background:#fff;padding:14px 15px;text-align:left;font-size:12px;color:#444}
+.qtrc-settings-links button:last-child{border-bottom:0}
+.qtrc-settings-links button:hover{background:#fafafa;color:#111}
+.qtrc-settings-links span{color:#aaa;font-size:18px}
+@media(max-width:760px){
+  .qtrc-about-page{display:block;padding-top:70px}
+  .qtrc-about-column h1,.qtrc-info-column h1{font-size:34px}
+  .qtrc-about-pillars,.qtrc-guide-grid{grid-template-columns:1fr}
+  .qtrc-settings-page{padding:34px 6px 60px}
+  .qtrc-setting-row{align-items:flex-start;flex-direction:column}
+  .qtrc-setting-row select{width:100%}
+  .profile-menu{width:calc(100vw - 34px);max-width:260px}
+}
+
 </style>
 </head>
 <body>
@@ -189,12 +327,49 @@ button{cursor:pointer}
     <div class="section-label">Recent</div>
     <div class="recent" id="recent"></div>
     <div class="side-bottom">
-      <div class="sep"></div>
-      <div class="nav">
-        <button data-view="about">ⓘ &nbsp; About</button>
-        <button data-view="settings">⚙ &nbsp; Settings</button>
+  <div class="sep"></div>
+
+  <div class="profile-wrap" id="profileWrap">
+    <button class="profile-trigger" id="profileTrigger" type="button">
+      <span class="profile-avatar">AK</span>
+      <span class="profile-copy">
+        <strong>Abdullah Kafabihi</strong>
+        <small>QTRC+ Research Workspace</small>
+      </span>
+      <span class="profile-chevron">⌃</span>
+    </button>
+
+    <div class="profile-menu hidden" id="profileMenu">
+      <button class="profile-menu-item" data-view="settings" type="button">
+        <span>⚙</span><span>Settings</span>
+      </button>
+
+      <button class="profile-menu-item" id="appearanceMenuButton" type="button">
+        <span>☼</span><span>Appearance</span><span class="menu-arrow">›</span>
+      </button>
+
+      <div class="appearance-submenu hidden" id="appearanceSubmenu">
+        <button type="button" data-appearance="system">System</button>
+        <button type="button" data-appearance="light">Light</button>
+        <button type="button" data-appearance="dark">Dark</button>
       </div>
+
+      <div class="profile-menu-divider"></div>
+
+      <button class="profile-menu-item" data-view="guide" type="button">
+        <span>◌</span><span>Research Guide</span>
+      </button>
+
+      <button class="profile-menu-item" data-view="cite" type="button">
+        <span>▤</span><span>How to Cite QTRC</span>
+      </button>
+
+      <button class="profile-menu-item" data-view="about" type="button">
+        <span>ⓘ</span><span>About</span>
+      </button>
     </div>
+  </div>
+</div>
   </aside>
 
   <main class="main">
@@ -1195,35 +1370,228 @@ button{cursor:pointer}
 </section>
 
 <section id="guide" class="view hidden">
-        <div class="hero" style="padding-top:35px"><h1 style="font-size:30px">Research Guide</h1><p>QTRC+ is a methodological workspace, not a replacement for scholarly judgment.</p></div>
-        <div class="cards">
-          <div class="card"><h3>Structure</h3><p>The recommended learning order is sequential, but the canvas itself remains flexible and non-linear. A researcher can begin from another block when the research logic calls for it.</p></div>
-          <div class="card"><h3>Assess</h3><p>Check whether the corpus, context, sources, theory, tafsir method, and analysis strategy actually support the research question.</p></div>
-          <div class="card"><h3>Progress</h3><p>Move from descriptive work at Basic, to analytical and comparative work at Intermediate, then toward constructive work at Expert.</p></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>Scope</h3><p>QTRC is designed for interpretative Qur’anic tafsir research, especially thematic and comparative studies, with limited conditional use for tafsir-figure studies that analyze meaning construction. It is not designed as the primary framework for empirical Living Qur’an studies or purely technical ‘Ulūm al-Qur’ān research.</p></div>
-      </section>
+  <div class="qtrc-info-page">
+    <div class="qtrc-info-column">
 
-      <section id="cite" class="view hidden">
-        <div class="setup"><h1>How to Cite QTRC</h1><p>Use this statement when describing the conceptual use of QTRC in a research project.</p>
-          <div class="card" style="margin-top:22px;line-height:1.75;font-size:14px" id="citation">“Penelitian ini dirancang menggunakan Qur’anic Tafsir Research Canvas (QTRC) yang dikembangkan oleh Abdullah Kafabihi sebagai instrumen bantu konseptual untuk menata hubungan antara topik, pertanyaan penelitian, korpus ayat, metode tafsir, dan kontribusi penelitian. Proses pengisian dan evaluasi kanvas dilakukan melalui antarmuka digital berbasis AI (QTRC+), tanpa menjadikan sistem AI sebagai sumber data, penafsir, atau pengambil keputusan ilmiah.”</div>
-          <button class="btn primary" id="copyCitation" style="margin-top:12px">Copy Citation</button>
-        </div>
-      </section>
+      <div class="qtrc-info-eyebrow">RESEARCH GUIDE</div>
 
-      <section id="about" class="view hidden">
-        <div class="setup"><h1>Qur’anic Tafsir Research Canvas+</h1><p style="font-size:15px;line-height:1.7">QTRC+ is an epistemic orchestration system designed to help researchers structure, assess, and develop Qur’anic tafsir research designs.</p>
-          <div class="card" style="margin-top:24px"><h3>What QTRC+ does</h3><p>It makes relationships between research components visible, identifies epistemic and methodological gaps, and helps researchers move from exploratory ideas toward a coherent research architecture.</p></div>
-          <p class="muted" style="margin-top:24px">Developed by Abdullah Kafabihi.</p>
-        </div>
-      </section>
+      <h1>Use QTRC as a thinking space,<br>not a checklist.</h1>
 
-      <section id="settings" class="view hidden">
-        <div class="setup"><h1>Settings</h1>
-          <div class="card" style="margin-top:22px"><h3>Profile</h3><label class="muted">Full Name</label><input value="Abdullah Kafabihi" style="width:100%;margin:7px 0 15px;padding:11px;border:1px solid var(--line);border-radius:9px"><label class="muted">Language</label><select style="width:100%;margin-top:7px;padding:11px;border:1px solid var(--line);border-radius:9px"><option>Indonesian</option><option>English</option></select></div>
-<div class="card" style="margin-top:12px"><h3>Data</h3><button class="btn" id="clearData">Clear local canvas data</button></div>
+      <p class="qtrc-info-lead">
+        QTRC helps you structure, assess, and develop Qur’anic tafsir research
+        while keeping scholarly judgment with the researcher.
+      </p>
+
+      <div class="qtrc-info-section">
+        <h2>Start with the problem.</h2>
+        <p>
+          A topic is a starting point, not yet a research problem. Use the
+          research session to clarify what you actually want to understand,
+          explain, compare, or construct.
+        </p>
+      </div>
+
+      <div class="qtrc-info-section">
+        <h2>Keep the 11 blocks connected.</h2>
+        <p>
+          Topic, Research Question, Objective, Corpus Qur’aniyyah, Context,
+          Data &amp; Sources, Theoretical Framework, Method of Tafsir,
+          Analysis Strategy, Contribution &amp; Novelty, and Title are
+          interdependent. You do not have to complete them in a rigid order.
+        </p>
+      </div>
+
+      <div class="qtrc-guide-grid">
+        <div><strong>Thinking Mode</strong><span>Explore possibilities and develop provisional structures.</span></div>
+        <div><strong>Validation Mode</strong><span>Audit coherence and challenge unsupported assumptions.</span></div>
+        <div><strong>Basic</strong><span>Foundational clarity and descriptive research design.</span></div>
+        <div><strong>Intermediate</strong><span>Analytical distinctions and critical refinement.</span></div>
+        <div><strong>Expert</strong><span>Constructive, epistemological, and paradigmatic scrutiny.</span></div>
+      </div>
+
+      <div class="qtrc-info-note">
+        <strong>Core principle</strong>
+        <p>
+          QTRC is a methodological assistant. It should not silently invent
+          a corpus, theory, method, source, quotation, or scholarly conclusion
+          that the researcher has not established.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section><section id="cite" class="view hidden">
+  <div class="qtrc-info-page">
+    <div class="qtrc-info-column">
+
+      <div class="qtrc-info-eyebrow">HOW TO CITE QTRC</div>
+
+      <h1>Describe QTRC as a research-design instrument.</h1>
+
+      <p class="qtrc-info-lead">
+        Use this language when explaining the conceptual role of QTRC in your research.
+      </p>
+
+      <div class="citation-card">
+
+        <div class="citation-label">INDONESIAN</div>
+
+        <div id="citation" class="citation-text">
+          “Penelitian ini dirancang menggunakan Qur’anic Tafsir Research Canvas
+          (QTRC) yang dikembangkan oleh Abdullah Kafabihi sebagai instrumen bantu
+          konseptual untuk menata hubungan antara topik, pertanyaan penelitian,
+          korpus ayat, metode tafsir, dan kontribusi penelitian. Proses pengisian
+          dan evaluasi kanvas dilakukan melalui antarmuka digital berbasis AI
+          (QTRC+), tanpa menjadikan sistem AI sebagai sumber data, penafsir,
+          atau pengambil keputusan ilmiah.”
         </div>
-      </section>
+
+        <button class="btn primary" id="copyCitation" type="button">
+          Copy Citation
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</section><section id="about" class="view hidden">
+  <div class="qtrc-about-page">
+    <div class="qtrc-about-column">
+
+      <div class="qtrc-globe" aria-hidden="true">◎</div>
+
+      <div class="qtrc-info-eyebrow">ABOUT QTRC+</div>
+
+      <h1>Research thinking for<br>Qur’anic tafsir.</h1>
+
+      <p class="qtrc-about-lead">
+        QTRC+ is an epistemic research workspace designed to help researchers
+        structure, examine, and develop Qur’anic tafsir research designs.
+      </p>
+
+      <p>
+        QTRC makes relationships between research components visible. It helps
+        a researcher move from an initial intuition toward a coherent research
+        architecture without taking the scholarly decision away from the researcher.
+      </p>
+
+      <p>
+        The workspace is built around an 11-block research canvas and a
+        supervisor-style research session. Your selected working mode and
+        research depth determine how QTRC approaches the research.
+      </p>
+
+      <div class="qtrc-about-pillars">
+        <div>
+          <strong>Structure</strong>
+          <span>Make research dependencies visible.</span>
+        </div>
+        <div>
+          <strong>Assess</strong>
+          <span>Surface epistemic and methodological gaps.</span>
+        </div>
+        <div>
+          <strong>Orchestrate</strong>
+          <span>Keep the research architecture coherent as it develops.</span>
+        </div>
+      </div>
+
+      <div class="qtrc-about-credit">
+        <span>Developed by</span>
+        <strong>Abdullah Kafabihi</strong>
+        <small>Qur’anic Tafsir Research Canvas+</small>
+      </div>
+
+    </div>
+  </div>
+</section><section id="settings" class="view hidden">
+  <div class="qtrc-settings-page">
+
+    <div class="qtrc-settings-head">
+      <div class="qtrc-info-eyebrow">SETTINGS</div>
+      <h1>Workspace settings.</h1>
+      <p>Manage how QTRC looks and works for your research sessions.</p>
+    </div>
+
+    <div class="qtrc-setting-group">
+      <div class="qtrc-setting-group-title">ACCOUNT</div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>Researcher</strong>
+          <span>Abdullah Kafabihi</span>
+        </div>
+        <button class="btn" type="button">Edit</button>
+      </div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>Language</strong>
+          <span>Interface language.</span>
+        </div>
+        <select id="qtrcLanguageSelect">
+          <option selected>Indonesian</option>
+          <option>English</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="qtrc-setting-group">
+      <div class="qtrc-setting-group-title">APPEARANCE</div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>Theme</strong>
+          <span>Choose how QTRC appears on this device.</span>
+        </div>
+        <select id="qtrcAppearanceSelect">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="qtrc-setting-group">
+      <div class="qtrc-setting-group-title">RESEARCH WORKSPACE</div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>Research Guide</strong>
+          <span>Learn how QTRC's modes, levels, and research architecture work.</span>
+        </div>
+        <button class="btn" data-view="guide" type="button">Open</button>
+      </div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>How to Cite QTRC</strong>
+          <span>Guidance for describing QTRC's methodological role in your research.</span>
+        </div>
+        <button class="btn" data-view="cite" type="button">Open</button>
+      </div>
+    </div>
+
+    <div class="qtrc-setting-group">
+      <div class="qtrc-setting-group-title">DATA</div>
+
+      <div class="qtrc-setting-row">
+        <div>
+          <strong>Clear local canvas data</strong>
+          <span>Removes locally saved QTRC canvas records from this browser.</span>
+        </div>
+        <button class="btn danger-btn" id="clearDataSettings" type="button">Clear Data</button>
+      </div>
+    </div>
+
+    <div class="qtrc-settings-links">
+      <button data-view="guide" type="button">Research Guide <span>›</span></button>
+      <button data-view="cite" type="button">How to Cite QTRC <span>›</span></button>
+      <button data-view="about" type="button">About QTRC+ <span>›</span></button>
+    </div>
+
+  </div>
+</section>
     </div>
   </main>
 </div>
@@ -1597,7 +1965,18 @@ function go(view){
       window.qtrcBrainOpen();
     }
   }
-  document.getElementById("topTitle").textContent=view==="canvas"?(current?.name||"QTRC+"):"Qur’anic Tafsir Research Canvas+";
+  document.getElementById("topTitle").textContent =
+    view === "canvas"
+      ? (current?.name || "QTRC+")
+      : view === "settings"
+        ? "Settings"
+        : view === "guide"
+          ? "Research Guide"
+          : view === "cite"
+            ? "How to Cite QTRC"
+            : view === "about"
+              ? "About QTRC+"
+              : "Qur’anic Tafsir Research Canvas+";
 }
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
 
@@ -4112,84 +4491,198 @@ brainThinkV2.onclick = async function(){
   };
 
 })();
+</script>
 
-/* QTRC WORKSPACE: Library / Connect / Pinned */
-let libraryFiles = JSON.parse(localStorage.getItem("qtrc_library_files") || "[]");
-function saveLibrary(){localStorage.setItem("qtrc_library_files",JSON.stringify(libraryFiles));}
-function formatBytes(size){const n=Number(size||0);if(n<1024)return n+" B";if(n<1024*1024)return (n/1024).toFixed(1)+" KB";return (n/1024/1024).toFixed(1)+" MB";}
-function renderLibrary(){const grid=document.getElementById("libraryGrid");if(!grid)return;if(!libraryFiles.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><strong>Your research library is empty.</strong><br><br>Upload a document and QTRC will keep it available for future research sessions.</div>';return;}grid.innerHTML="";libraryFiles.forEach(function(file){const card=document.createElement("div");card.className="library-card";card.innerHTML=`<div class="library-card-head"><div style="display:flex;gap:11px;min-width:0"><div class="library-file-icon">▤</div><div style="min-width:0"><div class="library-file-name">${esc(file.name)}</div><div class="library-file-meta">${esc(file.type||"Unknown type")} · ${formatBytes(file.size)}</div></div></div><span class="library-file-status">${esc(file.status||"Ready")}</span></div><div class="library-card-actions"><button class="btn select-library-file">Use in research</button><button class="btn delete-library-file">Remove</button></div>`;card.querySelector(".select-library-file").onclick=function(){
-      if(typeof brainV3Files !== "undefined"){
-        brainV3Files=[{
-          name:file.name,
-          type:file.type,
-          size:file.size,
-          storagePath:file.storagePath||"",
-          bucket:file.bucket||"qtrc-research",
-          cloud:Boolean(file.cloud)
-        }];
+
+<script id="QTRC_INFO_SETTINGS_BEHAVIOR_V1">
+(function(){
+
+  const trigger =
+    document.getElementById("profileTrigger");
+
+  const menu =
+    document.getElementById("profileMenu");
+
+  const appearanceButton =
+    document.getElementById("appearanceMenuButton");
+
+  const appearanceMenu =
+    document.getElementById("appearanceSubmenu");
+
+  if(trigger && menu){
+    trigger.addEventListener(
+      "click",
+      function(event){
+        event.stopPropagation();
+        menu.classList.toggle("hidden");
       }
-      go("brainstorm");
-    };card.querySelector(".delete-library-file").onclick=function(){libraryFiles=libraryFiles.filter(function(x){return x.id!==file.id});saveLibrary();renderLibrary()};grid.appendChild(card)});}
-async function addLibraryFiles(files){
-  const selected=Array.from(files||[]);
-  for(const file of selected){
-    const exists=libraryFiles.some(function(x){return x.name===file.name&&x.size===file.size});
-    if(exists) continue;
-
-    try{
-      let reference=null;
-
-      if(typeof brainV3UploadFileToCloud === "function"){
-        reference=await brainV3UploadFileToCloud(file);
-      }
-
-      libraryFiles.unshift({
-        id:Date.now()+Math.random(),
-        name:file.name,
-        type:file.type||"application/octet-stream",
-        size:file.size||0,
-        status:reference?.cloud ? "Ready" : "Local only",
-        storagePath:reference?.storagePath || "",
-        bucket:reference?.bucket || "qtrc-research",
-        cloud:Boolean(reference?.cloud),
-        uploadedAt:new Date().toISOString()
-      });
-    }catch(error){
-      console.error("QTRC Library upload failed:",error);
-      libraryFiles.unshift({
-        id:Date.now()+Math.random(),
-        name:file.name,
-        type:file.type||"application/octet-stream",
-        size:file.size||0,
-        status:"Upload failed",
-        storagePath:"",
-        bucket:"qtrc-research",
-        cloud:false,
-        uploadedAt:new Date().toISOString()
-      });
-    }
+    );
   }
-  saveLibrary();
-  renderLibrary();
-}
-const libraryUploadButton=document.getElementById("libraryUploadButton");const libraryFileInput=document.getElementById("libraryFileInput");if(libraryUploadButton&&libraryFileInput){libraryUploadButton.onclick=function(){libraryFileInput.click()};libraryFileInput.addEventListener("change",async function(){await addLibraryFiles(libraryFileInput.files);libraryFileInput.value=""})}
-function togglePinned(canvas){if(!canvas)return;canvas.pinned=!canvas.pinned;canvas.updatedAt=new Date().toISOString();saveAll();renderRecent();renderPinned();if(current&&current.id===canvas.id)renderCanvas()}
-function renderPinned(){const grid=document.getElementById("pinnedGrid");if(!grid)return;const items=canvases.filter(function(c){return Boolean(c.pinned)});if(!items.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><strong>No pinned research yet.</strong><br><br>Open a canvas and pin it when it becomes an active line of work.</div>';return;}grid.innerHTML="";items.forEach(function(canvas){const el=document.createElement("div");el.className="canvas-card";el.innerHTML=`<h3>${esc(canvas.name)}</h3><div class="muted">${new Date(canvas.updatedAt).toLocaleDateString()}</div><div class="canvas-meta"><span class="pill">${esc(canvas.mode||"Thinking Mode")}</span><span class="pill">${esc(canvas.level||"Basic")}</span><span class="pill">★ Pinned</span></div><button class="btn primary open-pinned">Open Canvas</button> <button class="btn unpin-pinned">Unpin</button>`;el.querySelector(".open-pinned").onclick=function(){current=canvas;go("canvas")};el.querySelector(".unpin-pinned").onclick=function(){togglePinned(canvas)};grid.appendChild(el)})}
-const originalRenderDashboard=renderDashboard;renderDashboard=function(){originalRenderDashboard();const cards=document.querySelectorAll("#canvasGrid .canvas-card");canvases.forEach(function(canvas,index){const card=cards[index];if(!card||card.querySelector(".pin-canvas"))return;const b=document.createElement("button");b.className="btn pin-canvas";b.textContent=canvas.pinned?"★ Pinned":"☆ Pin";b.onclick=function(){togglePinned(canvas);renderDashboard()};card.appendChild(b)})};
-const originalRenderCanvas=renderCanvas;renderCanvas=function(){originalRenderCanvas();if(!current)return;const actions=document.querySelector(".canvas-actions");if(!actions)return;let b=document.getElementById("canvasPinBtn");if(!b){b=document.createElement("button");b.className="btn";b.id="canvasPinBtn";actions.insertBefore(b,actions.firstChild)}b.textContent=current.pinned?"★ Pinned":"☆ Pin";b.onclick=function(){togglePinned(current)}};
-const shamelaConnectButton=document.getElementById("shamelaConnectButton");if(shamelaConnectButton){shamelaConnectButton.onclick=function(){alert("Maktabah Shamela connector is ready for configuration. It will only be activated after an official access arrangement and API credentials are available.")}}
-const originalGo=go;go=function(view){originalGo(view);if(view==="library")renderLibrary();if(view==="pinned")renderPinned();if(view==="canvas"&&current&&window.qtrcBrainOpen){}if(view==="brainstorm"&&window.qtrcBrainOpen)window.qtrcBrainOpen()};
-renderLibrary();renderPinned();
 
+  if(appearanceButton && appearanceMenu){
+    appearanceButton.addEventListener(
+      "click",
+      function(event){
+        event.stopPropagation();
+        appearanceMenu.classList.toggle("hidden");
+      }
+    );
+  }
 
-/* Persist the live Research Session into Recent history. */
-if(typeof brainV3AddMessage === "function"){
-  const __qtrcOriginalBrainV3AddMessage = brainV3AddMessage;
-  brainV3AddMessage = function(role,text){
-    __qtrcOriginalBrainV3AddMessage(role,text);
-    persistCurrentSession();
-  };
-}
+  document.querySelectorAll(
+    "[data-appearance]"
+  ).forEach(
+    function(button){
+      button.addEventListener(
+        "click",
+        function(event){
+          event.stopPropagation();
+
+          const theme =
+            button.dataset.appearance ||
+            "system";
+
+          localStorage.setItem(
+            "qtrc_appearance",
+            theme
+          );
+
+          if(theme === "dark"){
+            document.documentElement.dataset.theme = "dark";
+          }else{
+            document.documentElement.dataset.theme = "light";
+          }
+
+          if(menu){
+            menu.classList.add("hidden");
+          }
+        }
+      );
+    }
+  );
+
+  const saved =
+    localStorage.getItem(
+      "qtrc_appearance"
+    ) || "light";
+
+  const appearanceSelect =
+    document.getElementById(
+      "qtrcAppearanceSelect"
+    );
+
+  if(appearanceSelect){
+    appearanceSelect.value = saved;
+
+    appearanceSelect.addEventListener(
+      "change",
+      function(){
+        const theme =
+          appearanceSelect.value;
+
+        localStorage.setItem(
+          "qtrc_appearance",
+          theme
+        );
+
+        document.documentElement.dataset.theme =
+          theme === "dark" ? "dark" : "light";
+      }
+    );
+  }
+
+  const copyButton =
+    document.getElementById(
+      "copyCitation"
+    );
+
+  const citation =
+    document.getElementById(
+      "citation"
+    );
+
+  if(copyButton && citation){
+    copyButton.addEventListener(
+      "click",
+      async function(){
+        try{
+          await navigator.clipboard.writeText(
+            citation.textContent.trim()
+          );
+
+          copyButton.textContent =
+            "Copied";
+
+          setTimeout(
+            function(){
+              copyButton.textContent =
+                "Copy Citation";
+            },
+            1400
+          );
+        }catch(error){
+          window.alert(
+            "Copy is not available in this browser."
+          );
+        }
+      }
+    );
+  }
+
+  const clearButton =
+    document.getElementById(
+      "clearDataSettings"
+    );
+
+  if(clearButton){
+    clearButton.addEventListener(
+      "click",
+      function(){
+        if(
+          !window.confirm(
+            "Clear all locally saved canvases?"
+          )
+        ){
+          return;
+        }
+
+        localStorage.removeItem(
+          "qtrc_canvases"
+        );
+
+        if(
+          Array.isArray(
+            window.canvases
+          )
+        ){
+          window.canvases = [];
+        }
+
+        window.location.reload();
+      }
+    );
+  }
+
+  document.addEventListener(
+    "click",
+    function(){
+      if(menu){
+        menu.classList.add("hidden");
+      }
+      if(appearanceMenu){
+        appearanceMenu.classList.add("hidden");
+      }
+    }
+  );
+
+  if(
+    typeof window.go ===
+    "function"
+  ){
+    /* no-op: legacy go() remains authoritative */
+  }
+
+})();
 </script>
 
 </body>
