@@ -162,10 +162,43 @@ module.exports = async (req, res) => {
     const context =
       body.context || {};
 
+    const previousConversation =
+      Array.isArray(body.conversation)
+        ? body.conversation
+        : [];
+
     const conversation =
       buildConversationSummary(
-        body.conversation
+        previousConversation
       );
+
+    const priorState =
+      body.researchState &&
+      typeof body.researchState === "object"
+        ? body.researchState
+        : (
+            context.researchState &&
+            typeof context.researchState === "object"
+          )
+          ? context.researchState
+          : {
+              topic:"",
+              focus:"",
+              researchQuestion:"",
+              objective:"",
+              corpus:"",
+              context:"",
+              dataSources:"",
+              theoreticalFramework:"",
+              methodOfTafsir:"",
+              analysisStrategy:"",
+              contributionNovelty:"",
+              title:"",
+              lastQuestion:"",
+              lastAnsweredQuestion:"",
+              pendingQuestion:"",
+              turn:0
+            };
 
     const language =
       safeText(
@@ -482,7 +515,7 @@ ${sourceText || "(none)"}
 
 RECENT CONVERSATION:
 
-${summarizeConversation(previousConversation) || "(none)"}
+${conversation || "(none)"}
 
 LATEST RESEARCHER MESSAGE:
 
@@ -595,8 +628,7 @@ No extra text outside the JSON.
             content:instruction
           }
         ], {
-          temperature: 0.15,
-          response_format: { type: "json_object" }
+          temperature: 0.15
         });
 
     }catch(error){
