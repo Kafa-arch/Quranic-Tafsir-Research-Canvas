@@ -6,6 +6,6 @@
     "dev": "vercel dev"
   },
   "dependencies": {
-    "officeparser": "^7.5.0"
+    "officeparser": "^7.5.1"
   }
 }
