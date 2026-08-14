@@ -154,6 +154,21 @@ button{cursor:pointer}
 .connector-future p{max-width:560px;margin:0 auto;color:#777;font-size:12px;line-height:1.6}
 .qtrc-session-description{max-width:680px;margin:8px auto 0;color:#8a8a8a;font-size:11px;line-height:1.55;text-align:center}
 @media(max-width:900px){.workspace-head{display:block}.workspace-head .btn{margin-top:15px}.library-grid{grid-template-columns:1fr}}
+
+.recent-session{position:relative;display:flex;align-items:center;gap:4px;width:100%}
+.recent-session-open{flex:1;min-width:0;border:0;background:transparent;text-align:left;padding:10px 9px;border-radius:9px;color:#444;overflow:hidden}
+.recent-session-open:hover{background:#ededeb;color:#111}
+.recent-session-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.recent-session-meta{display:flex;align-items:center;gap:5px;margin-top:3px;color:#a0a0a0;font-size:9px}
+.recent-session-actions{position:relative}
+.recent-session-menu-button{width:30px;height:30px;border:0;background:transparent;border-radius:8px;color:#888;font-size:17px;line-height:1}
+.recent-session-menu-button:hover{background:#ededeb;color:#222}
+.recent-session-menu{position:absolute;top:32px;right:0;z-index:40;width:150px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:5px;box-shadow:0 14px 35px rgba(0,0,0,.10)}
+.recent-session-menu button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:8px 9px;border-radius:8px;font-size:11px;color:#444}
+.recent-session-menu button:hover{background:#f4f4f2;color:#111}
+.recent-session-menu button.danger{color:#a22}
+.recent-session-menu button.danger:hover{background:#fff1ef}
+.pinned-mini{font-size:9px;color:#8a6a18}
 </style>
 </head>
 <body>
@@ -1445,7 +1460,129 @@ const blockInfo=[
 ["Sintesis akhir","Judul dirumuskan setelah elemen kanvas terisi dan terhubung secara konseptual.","Siapkan beberapa alternatif lalu pilih yang paling representatif."]
 ];
 const deps={1:[0],2:[1],3:[1],4:[0,1],5:[3,4],6:[3,4],7:[1,6],8:[1,3,7],9:[7,8,6],10:[2,9],11:[0,1,2,9,10]};
+
 let canvases=JSON.parse(localStorage.getItem("qtrc_canvases")||"[]");
+let recentSessions = JSON.parse(localStorage.getItem("qtrc_recent_sessions") || "[]");
+
+function saveRecentSessions(){
+  localStorage.setItem("qtrc_recent_sessions", JSON.stringify(recentSessions));
+}
+
+function findCanvasForSession(session){
+  return canvases.find(function(canvas){ return canvas.id === session.canvasId; }) || null;
+}
+
+function deriveSessionTitle(text){
+  const value = String(text || "").replace(/\s+/g," ").trim();
+  if(!value) return "New Research";
+  if(value.length <= 56) return value;
+  return value.slice(0,53).trimEnd() + "…";
+}
+
+function getSession(){
+  if(!current) return null;
+  return recentSessions.find(function(session){ return session.canvasId === current.id; }) || null;
+}
+
+function persistCurrentSession(){
+  if(!current) return;
+
+  let session = getSession();
+  if(!session){
+    session = {
+      id:Date.now() + Math.random(),
+      canvasId:current.id,
+      name:current.name || "New Research",
+      mode:current.mode || selectedMode || "Thinking Mode",
+      level:current.level || selectedLevel || "Basic",
+      conversation:[],
+      pinned:false,
+      createdAt:new Date().toISOString(),
+      updatedAt:new Date().toISOString()
+    };
+    recentSessions.unshift(session);
+  }
+
+  if(typeof brainV3Conversation !== "undefined"){
+    session.conversation = brainV3Conversation.slice(-40).map(function(item){
+      return {role:item.role, content:String(item.content || "")};
+    });
+  }
+
+  session.updatedAt = new Date().toISOString();
+  session.mode = current.mode || session.mode || selectedMode || "Thinking Mode";
+  session.level = current.level || session.level || selectedLevel || "Basic";
+
+  if((!session.name || session.name === "New Research" || session.name === "Untitled Tafsir Research") && Array.isArray(session.conversation)){
+    const firstUser = session.conversation.find(function(item){ return item.role === "user" && item.content; });
+    if(firstUser) session.name = deriveSessionTitle(firstUser.content);
+  }
+
+  current.name = session.name;
+  current.updatedAt = session.updatedAt;
+  saveAll();
+  saveRecentSessions();
+  renderRecent();
+}
+
+function qtrcRestoreSession(session){
+  const canvas = findCanvasForSession(session);
+  if(!canvas){
+    recentSessions = recentSessions.filter(function(item){ return item.canvasId !== session.canvasId; });
+    saveRecentSessions();
+    renderRecent();
+    return;
+  }
+
+  current = canvas;
+  selectedMode = session.mode || canvas.mode || "Thinking Mode";
+  selectedLevel = session.level || canvas.level || "Basic";
+
+  if(typeof brainV3Conversation !== "undefined"){
+    brainV3Conversation = Array.isArray(session.conversation) ? session.conversation.slice(-40) : [];
+  }
+
+  go("brainstorm");
+}
+
+function recentSessionRename(session){
+  const next = window.prompt("Rename this research session:", session.name || "New Research");
+  if(next === null) return;
+  const name = String(next).trim();
+  if(!name) return;
+
+  session.name = name;
+  session.updatedAt = new Date().toISOString();
+
+  const canvas = findCanvasForSession(session);
+  if(canvas){
+    canvas.name = name;
+    canvas.updatedAt = session.updatedAt;
+  }
+
+  saveAll();
+  saveRecentSessions();
+  renderRecent();
+  if(current && current.id === session.canvasId) renderCanvas();
+}
+
+function recentSessionDelete(session){
+  const confirmed = window.confirm("Delete this research conversation from Recent? Your saved canvas, if any, will remain.");
+  if(!confirmed) return;
+
+  recentSessions = recentSessions.filter(function(item){ return item.id !== session.id; });
+  saveRecentSessions();
+  renderRecent();
+}
+
+function recentSessionTogglePin(session){
+  session.pinned = !Boolean(session.pinned);
+  session.updatedAt = new Date().toISOString();
+  saveRecentSessions();
+  renderRecent();
+  if(typeof renderPinned === "function") renderPinned();
+}
+
 let current=null, selectedMode="Thinking Mode", selectedLevel="Basic", currentBlock=0;
 
 function saveAll(){localStorage.setItem("qtrc_canvases",JSON.stringify(canvases));}
@@ -1468,8 +1605,41 @@ let setupModeChosen=false;
 let setupLevelChosen=false;
 function qtrcStartSelectedSession(){
   if(!setupModeChosen || !setupLevelChosen) return;
-  const c={id:Date.now(),name:"Untitled Tafsir Research",mode:selectedMode,level:selectedLevel,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),validated:false,blocks:blockNames.map((name,i)=>({name,content:"",status:"Exploratory",notes:"",requirement:""}))};
-  canvases.unshift(c); current=c; saveAll(); renderRecent(); go("brainstorm");
+
+  const now = new Date().toISOString();
+  const canvas = {
+    id:Date.now(),
+    name:"New Research",
+    mode:selectedMode,
+    level:selectedLevel,
+    createdAt:now,
+    updatedAt:now,
+    validated:false,
+    pinned:false,
+    blocks:blockNames.map(function(name){
+      return {name,content:"",status:"Exploratory",notes:"",requirement:""};
+    })
+  };
+
+  canvases.unshift(canvas);
+  current = canvas;
+
+  recentSessions.unshift({
+    id:Date.now() + Math.random(),
+    canvasId:canvas.id,
+    name:"New Research",
+    mode:selectedMode,
+    level:selectedLevel,
+    conversation:[],
+    pinned:false,
+    createdAt:now,
+    updatedAt:now
+  });
+
+  saveAll();
+  saveRecentSessions();
+  renderRecent();
+  go("brainstorm");
 }
 function qtrcSelectMode(button){selectedMode=button.dataset.value;setupModeChosen=true;document.querySelectorAll("#modeOptions .launch-option").forEach(x=>x.classList.remove("selected"));button.classList.add("selected");qtrcStartSelectedSession();}
 function qtrcSelectLevel(button){selectedLevel=button.dataset.value;setupLevelChosen=true;document.querySelectorAll("#levelOptions .launch-option").forEach(x=>x.classList.remove("selected"));button.classList.add("selected");qtrcStartSelectedSession();}
@@ -1477,9 +1647,87 @@ document.querySelectorAll("#modeOptions .launch-option").forEach(b=>b.addEventLi
 document.querySelectorAll("#levelOptions .launch-option").forEach(b=>b.addEventListener("click",()=>qtrcSelectLevel(b)));
 
 function renderRecent(){
- const r=document.getElementById("recent"); r.innerHTML="";
- canvases.slice(0,5).forEach(c=>{const b=document.createElement("button");b.textContent=c.name;b.onclick=()=>{current=c;go("canvas")};r.appendChild(b)});
+  const r = document.getElementById("recent");
+  if(!r) return;
+
+  r.innerHTML = "";
+
+  const sessions = recentSessions.slice().sort(function(a,b){
+    return String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+  }).slice(0,7);
+
+  if(!sessions.length){
+    const empty = document.createElement("div");
+    empty.className = "muted";
+    empty.style.padding = "7px 10px";
+    empty.style.fontSize = "10px";
+    empty.textContent = "No research sessions yet.";
+    r.appendChild(empty);
+    return;
+  }
+
+  sessions.forEach(function(session){
+    const row = document.createElement("div");
+    row.className = "recent-session";
+
+    const open = document.createElement("button");
+    open.className = "recent-session-open";
+    open.innerHTML = `
+      <span class="recent-session-title">${esc(session.name || "New Research")}</span>
+      <span class="recent-session-meta">
+        ${esc(session.mode || "Thinking Mode")} · ${esc(session.level || "Basic")}
+        ${session.pinned ? '<span class="pinned-mini">★</span>' : ''}
+      </span>`;
+    open.onclick = function(){ qtrcRestoreSession(session); };
+
+    const actions = document.createElement("div");
+    actions.className = "recent-session-actions";
+
+    const menuButton = document.createElement("button");
+    menuButton.className = "recent-session-menu-button";
+    menuButton.type = "button";
+    menuButton.setAttribute("aria-label","Research session actions");
+    menuButton.textContent = "⋯";
+
+    const menu = document.createElement("div");
+    menu.className = "recent-session-menu hidden";
+
+    const rename = document.createElement("button");
+    rename.textContent = "Rename";
+    rename.onclick = function(){ menu.classList.add("hidden"); recentSessionRename(session); };
+
+    const pin = document.createElement("button");
+    pin.textContent = session.pinned ? "Unpin" : "Pin";
+    pin.onclick = function(){ menu.classList.add("hidden"); recentSessionTogglePin(session); };
+
+    const del = document.createElement("button");
+    del.className = "danger";
+    del.textContent = "Delete";
+    del.onclick = function(){ menu.classList.add("hidden"); recentSessionDelete(session); };
+
+    menu.appendChild(rename);
+    menu.appendChild(pin);
+    menu.appendChild(del);
+
+    menuButton.onclick = function(event){
+      event.stopPropagation();
+      document.querySelectorAll(".recent-session-menu").forEach(function(other){
+        if(other !== menu) other.classList.add("hidden");
+      });
+      menu.classList.toggle("hidden");
+    };
+
+    actions.appendChild(menuButton);
+    actions.appendChild(menu);
+    row.appendChild(open);
+    row.appendChild(actions);
+    r.appendChild(row);
+  });
 }
+
+document.addEventListener("click", function(){
+  document.querySelectorAll(".recent-session-menu").forEach(function(menu){ menu.classList.add("hidden"); });
+});
 function renderDashboard(){
  const g=document.getElementById("canvasGrid");
  if(!canvases.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">No canvases yet.<br><br><button class="btn primary" data-view="setup">Create your first canvas</button></div>';return}
@@ -3932,6 +4180,16 @@ const originalRenderCanvas=renderCanvas;renderCanvas=function(){originalRenderCa
 const shamelaConnectButton=document.getElementById("shamelaConnectButton");if(shamelaConnectButton){shamelaConnectButton.onclick=function(){alert("Maktabah Shamela connector is ready for configuration. It will only be activated after an official access arrangement and API credentials are available.")}}
 const originalGo=go;go=function(view){originalGo(view);if(view==="library")renderLibrary();if(view==="pinned")renderPinned();if(view==="canvas"&&current&&window.qtrcBrainOpen){}if(view==="brainstorm"&&window.qtrcBrainOpen)window.qtrcBrainOpen()};
 renderLibrary();renderPinned();
+
+
+/* Persist the live Research Session into Recent history. */
+if(typeof brainV3AddMessage === "function"){
+  const __qtrcOriginalBrainV3AddMessage = brainV3AddMessage;
+  brainV3AddMessage = function(role,text){
+    __qtrcOriginalBrainV3AddMessage(role,text);
+    persistCurrentSession();
+  };
+}
 </script>
 
 </body>
