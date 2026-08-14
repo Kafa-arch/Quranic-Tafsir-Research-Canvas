@@ -399,6 +399,35 @@ html[data-theme="dark"] .sep{background:#343434}
 
 
 
+
+
+/* QTRC_CLICKABILITY_REPAIR_V1 */
+.side-bottom{
+  position:relative;
+  z-index:100;
+  pointer-events:auto;
+}
+.profile-wrap,
+.profile-trigger,
+.profile-menu{
+  pointer-events:auto;
+}
+.profile-trigger{
+  position:relative;
+  z-index:101;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.profile-menu{
+  z-index:102;
+}
+.profile-menu button,
+.nav button,
+.btn{
+  pointer-events:auto;
+  touch-action:manipulation;
+}
+
 </style>
 </head>
 <body>
@@ -5044,6 +5073,124 @@ brainThinkV2.onclick = async function(){
         "light";
     }
   );
+})();
+</script>
+
+
+<script id="QTRC_CLICKABILITY_REPAIR_V1">
+(function(){
+
+  function closeProfileMenu(){
+    const menu = document.getElementById("profileMenu");
+    if(menu) menu.classList.add("hidden");
+  }
+
+  function toggleProfileMenu(event){
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    const menu = document.getElementById("profileMenu");
+    if(!menu) return;
+
+    menu.classList.toggle("hidden");
+  }
+
+  function handleViewButton(button, event){
+    const view =
+      button &&
+      button.dataset &&
+      button.dataset.view;
+
+    if(!view || typeof window.go !== "function"){
+      return false;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    closeProfileMenu();
+    window.go(view);
+
+    return true;
+  }
+
+  document.addEventListener(
+    "click",
+    function(event){
+
+      const trigger =
+        event.target &&
+        event.target.closest &&
+        event.target.closest(
+          "#profileTrigger"
+        );
+
+      if(trigger){
+        toggleProfileMenu(event);
+        return;
+      }
+
+      const viewButton =
+        event.target &&
+        event.target.closest &&
+        event.target.closest(
+          "button[data-view]"
+        );
+
+      if(viewButton){
+        handleViewButton(
+          viewButton,
+          event
+        );
+        return;
+      }
+
+      const insideMenu =
+        event.target &&
+        event.target.closest &&
+        event.target.closest(
+          "#profileMenu"
+        );
+
+      if(!insideMenu){
+        closeProfileMenu();
+      }
+    },
+    true
+  );
+
+  const trigger =
+    document.getElementById(
+      "profileTrigger"
+    );
+
+  if(trigger){
+    trigger.style.pointerEvents = "auto";
+    trigger.style.cursor = "pointer";
+  }
+
+  /* Appearance was intentionally removed.
+     Remove any stale controls left by older revisions. */
+  const appearanceButton =
+    document.getElementById(
+      "appearanceMenuButton"
+    );
+
+  const appearanceSubmenu =
+    document.getElementById(
+      "appearanceSubmenu"
+    );
+
+  if(appearanceButton){
+    appearanceButton.remove();
+  }
+
+  if(appearanceSubmenu){
+    appearanceSubmenu.remove();
+  }
+
 })();
 </script>
 
