@@ -1168,8 +1168,7 @@ button{cursor:pointer}
       <section id="settings" class="view hidden">
         <div class="setup"><h1>Settings</h1>
           <div class="card" style="margin-top:22px"><h3>Profile</h3><label class="muted">Full Name</label><input value="Abdullah Kafabihi" style="width:100%;margin:7px 0 15px;padding:11px;border:1px solid var(--line);border-radius:9px"><label class="muted">Language</label><select style="width:100%;margin-top:7px;padding:11px;border:1px solid var(--line);border-radius:9px"><option>Indonesian</option><option>English</option></select></div>
-<div class="card" style="margin-top:12px"><h3>QTRC API</h3><label class="muted">Backend URL</label><input id="apiBaseUrl" placeholder="https://your-qtrc-api.vercel.app" style="width:100%;margin:7px 0 10px;padding:11px;border:1px solid var(--line);border-radius:9px"><button class="btn" id="saveApiUrl">Save API URL</button><p class="muted" style="margin-top:10px;line-height:1.5">Your API key is never entered here. Keep it on the backend as an environment variable.</p></div>
-          <div class="card" style="margin-top:12px"><h3>Data</h3><button class="btn" id="clearData">Clear local canvas data</button></div>
+<div class="card" style="margin-top:12px"><h3>Data</h3><button class="btn" id="clearData">Clear local canvas data</button></div>
         </div>
       </section>
     </div>
@@ -1216,9 +1215,7 @@ button{cursor:pointer}
 
         try{
 
-          const base =
-            (localStorage.getItem("qtrc_api_base_url") || "")
-              .replace(/\\/$/,"");
+          const base = "";
 
           const response =
             await fetch(
@@ -1304,27 +1301,86 @@ button{cursor:pointer}
 })();
 </script>
 
-<script id="QTRC_SUPABASE_ANON_AUTH_V1">
-
 <script>
 const QTRC_CONFIG = {
   // Set this to your deployed backend URL, e.g. https://your-qtrc-api.vercel.app
-  API_BASE_URL: localStorage.getItem("qtrc_api_base_url") || ""
+  API_BASE_URL: ""
 };
 
 async function qtrcApi(path, payload){
-  const url = (QTRC_CONFIG.API_BASE_URL || "").replace(/\/$/,"") + path;
-  const res = await fetch(url, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
-  });
-  if(!res.ok){
-    let msg="QTRC API request failed.";
-    try { const data=await res.json(); if(data.error) msg=data.error; } catch(e){}
-    throw new Error(msg);
+
+  let accessToken = "";
+
+  try{
+
+    if(window.qtrcSupabaseReady){
+
+      const supabase =
+        await window.qtrcSupabaseReady;
+
+      const sessionResult =
+        await supabase.auth.getSession();
+
+      accessToken =
+        sessionResult?.data?.session?.access_token ||
+        "";
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "QTRC auth session unavailable:",
+      error
+    );
+
   }
+
+  const url = path;
+
+  const headers = {
+    "Content-Type":"application/json"
+  };
+
+  if(accessToken){
+
+    headers.Authorization =
+      "Bearer " + accessToken;
+
+  }
+
+  const res =
+    await fetch(
+      url,
+      {
+        method:"POST",
+        headers,
+        body:JSON.stringify(payload)
+      }
+    );
+
+  if(!res.ok){
+
+    let msg =
+      "QTRC API request failed.";
+
+    try{
+
+      const data =
+        await res.json();
+
+      if(data.error){
+        msg = data.error;
+      }
+
+    }catch(e){}
+
+    throw new Error(msg);
+
+  }
+
   return res.json();
+
 }
 
 function qtrcContext(){
@@ -1516,8 +1572,6 @@ document.getElementById("analyzeBlock").onclick=async()=>{
 };
 
 document.getElementById("copyCitation").onclick=async()=>{await navigator.clipboard.writeText(document.getElementById("citation").textContent.trim());alert("Citation copied.")};
-const apiInput=document.getElementById("apiBaseUrl"); if(apiInput) apiInput.value=QTRC_CONFIG.API_BASE_URL;
-const saveApi=document.getElementById("saveApiUrl"); if(saveApi) saveApi.onclick=()=>{localStorage.setItem("qtrc_api_base_url",apiInput.value.trim().replace(/\/$/,""));QTRC_CONFIG.API_BASE_URL=apiInput.value.trim().replace(/\/$/,"");alert("QTRC API URL saved.");};
 document.getElementById("clearData").onclick=()=>{if(confirm("Clear all locally saved canvases?")){localStorage.removeItem("qtrc_canvases");canvases=[];current=null;renderRecent();go("home")}};
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
@@ -2018,8 +2072,8 @@ brainFileInput.addEventListener(
           name:reference.name,
           type:reference.type,
           size:reference.size,
-          storagePath:reference.path,
-          uploadToken:reference.token,
+          storagePath:reference.storagePath,
+          bucket:reference.bucket || "qtrc-research",
           cloud:true
         });
 
