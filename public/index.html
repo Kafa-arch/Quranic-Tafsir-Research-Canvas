@@ -336,96 +336,86 @@ body{font-size:15px;line-height:1.55}
 
 
 
-/* QTRC_SETTINGS_FUNCTIONAL_V3 */
-html[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#151515;
-  --panel:#1d1d1d;
-  --text:#f3f3f3;
-  --muted:#a2a2a2;
-  --line:#353535;
-  --soft:#282828;
-  --accent:#f3f3f3;
+
+/* QTRC_SETTINGS_V11_CANONICAL_CSS */
+.qtrc-settings-page{
+  width:min(900px,calc(100vw - 64px))!important;
+  max-width:900px!important;
+  margin:0 auto!important;
+  padding:58px 0 100px!important;
 }
-html[data-theme="dark"] body{background:#151515;color:#f3f3f3}
-html[data-theme="dark"] .sidebar{background:#171717;border-color:#303030}
-html[data-theme="dark"] .topbar{background:rgba(22,22,22,.92);border-color:#303030}
-html[data-theme="dark"] .main,
-html[data-theme="dark"] .content{background:#151515}
-html[data-theme="dark"] .card,
-html[data-theme="dark"] .canvas-card,
-html[data-theme="dark"] .panel,
-html[data-theme="dark"] .block,
-html[data-theme="dark"] .visual-block,
-html[data-theme="dark"] .qtrc-canvas,
-html[data-theme="dark"] .connector-card,
-html[data-theme="dark"] .library-card,
-html[data-theme="dark"] .profile-menu,
-html[data-theme="dark"] .qtrc-settings-links,
-html[data-theme="dark"] .citation-card,
-html[data-theme="dark"] .qtrc-guide-grid>div{
-  background:#1d1d1d;
-  border-color:#353535;
-  color:#f3f3f3;
+.qtrc-settings-head{
+  margin-bottom:36px!important;
 }
-html[data-theme="dark"] p,
-html[data-theme="dark"] .muted,
-html[data-theme="dark"] .qtrc-setting-row span,
-html[data-theme="dark"] .qtrc-info-section p,
-html[data-theme="dark"] .qtrc-about-column p,
-html[data-theme="dark"] .qtrc-settings-head p{color:#aaa}
-html[data-theme="dark"] .nav button,
-html[data-theme="dark"] .recent button,
-html[data-theme="dark"] .profile-menu-item{color:#ccc}
-html[data-theme="dark"] .nav button:hover,
-html[data-theme="dark"] .recent button:hover,
-html[data-theme="dark"] .nav .active,
-html[data-theme="dark"] .profile-menu-item:hover{background:#292929;color:#fff}
-html[data-theme="dark"] input,
-html[data-theme="dark"] textarea,
-html[data-theme="dark"] select{
-  background:#1d1d1d;
-  color:#f3f3f3;
-  border-color:#3b3b3b;
+.qtrc-settings-head h1{
+  font-size:42px!important;
+  line-height:1.08!important;
+  letter-spacing:-.045em!important;
+  margin:0 0 12px!important;
 }
-html[data-theme="dark"] .btn{background:#1d1d1d;color:#f3f3f3;border-color:#3b3b3b}
-html[data-theme="dark"] .btn.primary{background:#f3f3f3;color:#171717;border-color:#f3f3f3}
-html[data-theme="dark"] .qtrc-setting-group,
-html[data-theme="dark"] .qtrc-setting-row,
-html[data-theme="dark"] .qtrc-settings-links button,
-html[data-theme="dark"] .qtrc-about-credit{border-color:#303030}
-html[data-theme="dark"] .profile-menu-divider,
-html[data-theme="dark"] .sep{background:#343434}
-
-
-
-
-
-/* QTRC_CLICKABILITY_REPAIR_V1 */
-.side-bottom{
-  position:relative;
-  z-index:100;
-  pointer-events:auto;
+.qtrc-settings-head p{
+  font-size:16px!important;
+  line-height:1.65!important;
+  color:#666!important;
+  margin:0!important;
 }
-.profile-wrap,
+.qtrc-setting-group{
+  border-top:1px solid #e4e4e1!important;
+}
+.qtrc-setting-group-title{
+  font-size:11px!important;
+  line-height:1.4!important;
+  letter-spacing:.18em!important;
+  padding:27px 2px 13px!important;
+  color:#8c8c89!important;
+  font-weight:600!important;
+}
+.qtrc-setting-row{
+  min-height:88px!important;
+  padding:20px 2px!important;
+  border-bottom:1px solid #ececea!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:28px!important;
+}
+.qtrc-setting-row strong{
+  display:block!important;
+  font-size:16px!important;
+  line-height:1.4!important;
+  margin-bottom:6px!important;
+  color:#1f1f1f!important;
+}
+.qtrc-setting-row span{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.6!important;
+  color:#737373!important;
+}
+.qtrc-setting-row .btn,
+.qtrc-setting-row select{
+  flex:0 0 auto!important;
+  font-size:14px!important;
+}
+.qtrc-setting-row select{
+  min-width:150px!important;
+  padding:9px 12px!important;
+}
 .profile-trigger,
-.profile-menu{
-  pointer-events:auto;
-}
-.profile-trigger{
-  position:relative;
-  z-index:101;
-  cursor:pointer;
-  touch-action:manipulation;
-}
-.profile-menu{
-  z-index:102;
-}
+.profile-menu,
 .profile-menu button,
 .nav button,
 .btn{
-  pointer-events:auto;
+  pointer-events:auto!important;
   touch-action:manipulation;
+}
+.profile-trigger{
+  cursor:pointer!important;
+  position:relative;
+  z-index:101;
+}
+.profile-menu{
+  z-index:102!important;
 }
 
 </style>
@@ -463,15 +453,7 @@ html[data-theme="dark"] .sep{background:#343434}
         <span>⚙</span><span>Settings</span>
       </button>
 
-      <button class="profile-menu-item" id="appearanceMenuButton" type="button">
-        <span>☼</span><span>Appearance</span><span class="menu-arrow">›</span>
-      </button>
 
-      <div class="appearance-submenu hidden" id="appearanceSubmenu">
-        <button type="button" data-appearance="system">System</button>
-        <button type="button" data-appearance="light">Light</button>
-        <button type="button" data-appearance="dark">Dark</button>
-      </div>
 
       <div class="profile-menu-divider"></div>
 
@@ -1655,21 +1637,7 @@ html[data-theme="dark"] .sep{background:#343434}
       </div>
     </div>
 
-    <div class="qtrc-setting-group">
-      <div class="qtrc-setting-group-title">APPEARANCE</div>
 
-      <div class="qtrc-setting-row">
-        <div>
-          <strong>Theme</strong>
-          <span>Choose how QTRC appears on this device.</span>
-        </div>
-        <select id="qtrcAppearanceSelect">
-          <option value="system">System</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
-    </div>
 
     <div class="qtrc-setting-group">
       <div class="qtrc-setting-group-title">RESEARCH WORKSPACE</div>
@@ -4591,253 +4559,67 @@ brainThinkV2.onclick = async function(){
 </script>
 
 
-<script id="QTRC_INFO_SETTINGS_BEHAVIOR_V1">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="QTRC_SETTINGS_V11_CANONICAL">
 (function(){
+  const QTRC_LANG_KEY = "qtrc_language";
+  const QTRC_NAME_KEY = "qtrc_researcher_name";
 
-  const trigger =
-    document.getElementById("profileTrigger");
-
-  const menu =
-    document.getElementById("profileMenu");
-
-  const appearanceButton =
-    document.getElementById("appearanceMenuButton");
-
-  const appearanceMenu =
-    document.getElementById("appearanceSubmenu");
-
-  if(trigger && menu){
-    trigger.addEventListener(
-      "click",
-      function(event){
-        event.stopPropagation();
-        menu.classList.toggle("hidden");
-      }
-    );
+  function qtrcQuery(selector){
+    return document.querySelector(selector);
   }
 
-  if(appearanceButton && appearanceMenu){
-    appearanceButton.addEventListener(
-      "click",
-      function(event){
-        event.stopPropagation();
-        appearanceMenu.classList.toggle("hidden");
-      }
-    );
-  }
-
-  document.querySelectorAll(
-    "[data-appearance]"
-  ).forEach(
-    function(button){
-      button.addEventListener(
-        "click",
-        function(event){
-          event.stopPropagation();
-
-          const theme =
-            button.dataset.appearance ||
-            "system";
-
-          localStorage.setItem(
-            "qtrc_appearance",
-            theme
-          );
-
-          if(theme === "dark"){
-            document.documentElement.dataset.theme = "dark";
-          }else{
-            document.documentElement.dataset.theme = "light";
-          }
-
-          if(menu){
-            menu.classList.add("hidden");
-          }
-        }
-      );
-    }
-  );
-
-  const saved =
-    localStorage.getItem(
-      "qtrc_appearance"
-    ) || "light";
-
-  const appearanceSelect =
-    document.getElementById(
-      "qtrcAppearanceSelect"
-    );
-
-  if(appearanceSelect){
-    appearanceSelect.value = saved;
-
-    appearanceSelect.addEventListener(
-      "change",
-      function(){
-        const theme =
-          appearanceSelect.value;
-
-        localStorage.setItem(
-          "qtrc_appearance",
-          theme
-        );
-
-        document.documentElement.dataset.theme =
-          theme === "dark" ? "dark" : "light";
-      }
-    );
-  }
-
-  const copyButton =
-    document.getElementById(
-      "copyCitation"
-    );
-
-  const citation =
-    document.getElementById(
-      "citation"
-    );
-
-  if(copyButton && citation){
-    copyButton.addEventListener(
-      "click",
-      async function(){
-        try{
-          await navigator.clipboard.writeText(
-            citation.textContent.trim()
-          );
-
-          copyButton.textContent =
-            "Copied";
-
-          setTimeout(
-            function(){
-              copyButton.textContent =
-                "Copy Citation";
-            },
-            1400
-          );
-        }catch(error){
-          window.alert(
-            "Copy is not available in this browser."
-          );
-        }
-      }
-    );
-  }
-
-  const clearButton =
-    document.getElementById(
-      "clearDataSettings"
-    );
-
-  if(clearButton){
-    clearButton.addEventListener(
-      "click",
-      function(){
-        if(
-          !window.confirm(
-            "Clear all locally saved canvases?"
-          )
-        ){
-          return;
-        }
-
-        localStorage.removeItem(
-          "qtrc_canvases"
-        );
-
-        if(
-          Array.isArray(
-            window.canvases
-          )
-        ){
-          window.canvases = [];
-        }
-
-        window.location.reload();
-      }
-    );
-  }
-
-  document.addEventListener(
-    "click",
-    function(){
-      if(menu){
-        menu.classList.add("hidden");
-      }
-      if(appearanceMenu){
-        appearanceMenu.classList.add("hidden");
-      }
-    }
-  );
-
-  if(
-    typeof window.go ===
-    "function"
-  ){
-    /* no-op: legacy go() remains authoritative */
-  }
-
-})();
-</script>
-
-
-<script id="QTRC_SETTINGS_FUNCTIONAL_V3">
-(function(){
-
-  const STORAGE_LANGUAGE = "qtrc_language";
-  const STORAGE_THEME = "qtrc_appearance";
-  const STORAGE_NAME = "qtrc_researcher_name";
-
-  const languageSelect = document.getElementById("qtrcLanguageSelect");
-  const appearanceSelect = document.getElementById("qtrcAppearanceSelect");
-  const profileTrigger = document.getElementById("profileTrigger");
-  const profileMenu = document.getElementById("profileMenu");
-  const appearanceButton = document.getElementById("appearanceMenuButton");
-  const appearanceSubmenu = document.getElementById("appearanceSubmenu");
-
-  function applyTheme(theme){
-    let resolved = theme;
-
-    if(theme === "system"){
-      resolved =
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-    }
-
-    document.documentElement.dataset.theme = resolved;
-    localStorage.setItem(STORAGE_THEME, theme);
-
-    if(appearanceSelect){
-      appearanceSelect.value = theme;
+  function qtrcCloseProfile(){
+    const menu = qtrcQuery("#profileMenu");
+    if(menu){
+      menu.classList.add("hidden");
     }
   }
 
-  function setText(selector, value){
-    const el = document.querySelector(selector);
-    if(el) el.textContent = value;
+  function qtrcNavigate(view){
+    qtrcCloseProfile();
+
+    if(typeof window.go === "function"){
+      window.go(view);
+    }
   }
 
-  function applyLanguage(lang){
-    const english = lang === "en";
+  function qtrcApplyLanguage(code){
+    const isEnglish = code === "en";
 
-    const labels = {
-      home: english ? "Home" : "Beranda",
-      setup: english ? "Start Research" : "Mulai Riset",
-      library: english ? "Library" : "Pustaka",
-      connect: english ? "Connect" : "Koneksi",
-      pinned: english ? "Pinned" : "Disematkan",
-      dashboard: english ? "My Canvases" : "Canvas Saya"
+    const navLabels = {
+      home: isEnglish ? "Home" : "Beranda",
+      setup: isEnglish ? "Start Research" : "Mulai Riset",
+      library: isEnglish ? "Library" : "Pustaka",
+      connect: isEnglish ? "Connect" : "Koneksi",
+      pinned: isEnglish ? "Pinned" : "Disematkan",
+      dashboard: isEnglish ? "My Canvases" : "Canvas Saya"
     };
 
-    Object.keys(labels).forEach(function(view){
+    Object.keys(navLabels).forEach(function(view){
       const button = document.querySelector(
         '.nav button[data-view="' + view + '"]'
       );
-      if(!button) return;
+      if(!button){
+        return;
+      }
 
       const icon =
         view === "home" ? "ⓘ" :
@@ -4847,350 +4629,335 @@ brainThinkV2.onclick = async function(){
         view === "pinned" ? "★" :
         "▦";
 
-      button.textContent = icon + "  " + labels[view];
+      button.textContent =
+        icon + "  " + navLabels[view];
     });
 
     const profileLabels = {
-      settings: english ? "Settings" : "Pengaturan",
-      guide: english ? "Research Guide" : "Panduan Riset",
-      cite: english ? "How to Cite QTRC" : "Cara Mengutip QTRC",
-      about: english ? "About" : "Tentang"
+      settings: isEnglish ? "Settings" : "Pengaturan",
+      guide: isEnglish ? "Research Guide" : "Panduan Riset",
+      cite: isEnglish ? "How to Cite QTRC" : "Cara Mengutip QTRC",
+      about: isEnglish ? "About" : "Tentang"
     };
 
     Object.keys(profileLabels).forEach(function(view){
       const button = document.querySelector(
         '.profile-menu button[data-view="' + view + '"]'
       );
-      if(!button) return;
+      if(!button){
+        return;
+      }
 
-      const text = button.querySelector("span:nth-child(2)");
-      if(text) text.textContent = profileLabels[view];
+      const spans = button.querySelectorAll("span");
+      if(spans.length > 1){
+        spans[1].textContent =
+          profileLabels[view];
+      }
     });
 
-    setText(
-      ".qtrc-settings-head h1",
-      english ? "Workspace settings." : "Pengaturan workspace."
-    );
+    const groups =
+      document.querySelectorAll(
+        ".qtrc-setting-group-title"
+      );
 
-    setText(
-      ".qtrc-settings-head p",
-      english
-        ? "Manage how QTRC looks and works for your research sessions."
-        : "Atur tampilan dan cara QTRC bekerja dalam sesi riset Anda."
-    );
+    if(groups[0]){
+      groups[0].textContent =
+        isEnglish ? "ACCOUNT" : "AKUN";
+    }
 
-    const groups = document.querySelectorAll(".qtrc-setting-group-title");
-    if(groups[0]) groups[0].textContent = english ? "ACCOUNT" : "AKUN";
-    if(groups[1]) groups[1].textContent = english ? "APPEARANCE" : "TAMPILAN";
-    if(groups[2]) groups[2].textContent = english ? "DATA" : "DATA";
+    if(groups[1]){
+      groups[1].textContent =
+        "DATA";
+    }
 
-    const strongs = Array.from(
-      document.querySelectorAll(".qtrc-setting-row strong")
-    );
+    const names =
+      document.querySelectorAll(
+        ".qtrc-setting-row strong"
+      );
 
-    const researcher = strongs.find(function(el){
-      return ["Researcher","Peneliti"].includes(el.textContent.trim());
+    names.forEach(function(element){
+      const text = element.textContent.trim();
+
+      if(
+        text === "Researcher" ||
+        text === "Peneliti"
+      ){
+        element.textContent =
+          isEnglish ? "Researcher" : "Peneliti";
+      }
+
+      if(
+        text === "Language" ||
+        text === "Bahasa"
+      ){
+        element.textContent =
+          isEnglish ? "Language" : "Bahasa";
+      }
     });
-    if(researcher) researcher.textContent = english ? "Researcher" : "Peneliti";
 
-    const language = strongs.find(function(el){
-      return ["Language","Bahasa"].includes(el.textContent.trim());
-    });
-    if(language) language.textContent = english ? "Language" : "Bahasa";
+    const rows =
+      document.querySelectorAll(
+        ".qtrc-setting-row"
+      );
 
-    const theme = strongs.find(function(el){
-      return ["Theme","Tema"].includes(el.textContent.trim());
-    });
-    if(theme) theme.textContent = english ? "Theme" : "Tema";
-
-    const rows = document.querySelectorAll(".qtrc-setting-row");
     if(rows[0]){
-      const span = rows[0].querySelector("span");
-      if(span){
-        span.textContent =
-          localStorage.getItem(STORAGE_NAME) ||
+      const value = rows[0].querySelector("span");
+      if(value){
+        value.textContent =
+          localStorage.getItem(
+            QTRC_NAME_KEY
+          ) ||
           "Abdullah Kafabihi";
       }
     }
 
+    const languageSelect =
+      qtrcQuery("#qtrcLanguageSelect");
+
     if(languageSelect){
-      languageSelect.value = english ? "English" : "Indonesian";
+      languageSelect.value =
+        isEnglish
+          ? "English"
+          : "Indonesian";
     }
 
-    if(appearanceSelect){
-      appearanceSelect.value =
-        localStorage.getItem(STORAGE_THEME) || "system";
+    const title =
+      qtrcQuery(".qtrc-settings-head h1");
+
+    if(title){
+      title.textContent =
+        isEnglish
+          ? "Workspace settings."
+          : "Pengaturan workspace.";
     }
 
-    localStorage.setItem(STORAGE_LANGUAGE, lang);
-    document.documentElement.lang = english ? "en" : "id";
-  }
+    const subtitle =
+      qtrcQuery(".qtrc-settings-head p");
 
-  if(languageSelect){
-    languageSelect.addEventListener("change", function(){
-      applyLanguage(
-        languageSelect.value === "English" ? "en" : "id"
-      );
-    });
-  }
+    if(subtitle){
+      subtitle.textContent =
+        isEnglish
+          ? "Manage how QTRC works for your research sessions."
+          : "Atur cara QTRC bekerja dalam sesi riset Anda.";
+    }
 
-  if(appearanceSelect){
-    appearanceSelect.addEventListener("change", function(){
-      applyTheme(appearanceSelect.value);
-    });
-  }
+    document.documentElement.lang =
+      isEnglish ? "en" : "id";
 
-  if(profileTrigger && profileMenu){
-    profileTrigger.addEventListener("click", function(event){
-      event.stopPropagation();
-      profileMenu.classList.toggle("hidden");
-    });
-  }
-
-  if(appearanceButton && appearanceSubmenu){
-    appearanceButton.addEventListener("click", function(event){
-      event.stopPropagation();
-      appearanceSubmenu.classList.toggle("hidden");
-    });
-  }
-
-  document.querySelectorAll("[data-appearance]").forEach(function(button){
-    button.addEventListener("click", function(event){
-      event.stopPropagation();
-
-      applyTheme(button.dataset.appearance || "system");
-
-      if(appearanceSubmenu) appearanceSubmenu.classList.add("hidden");
-      if(profileMenu) profileMenu.classList.add("hidden");
-    });
-  });
-
-  const editButton = Array.from(
-    document.querySelectorAll(".qtrc-setting-row .btn")
-  ).find(function(button){
-    return button.textContent.trim() === "Edit";
-  });
-
-  if(editButton){
-    editButton.addEventListener("click", function(){
-      const oldName =
-        localStorage.getItem(STORAGE_NAME) ||
-        "Abdullah Kafabihi";
-
-      const next = window.prompt(
-        "Researcher name:",
-        oldName
-      );
-
-      if(next === null) return;
-
-      const name = next.trim();
-      if(!name) return;
-
-      localStorage.setItem(STORAGE_NAME, name);
-
-      const row = editButton.closest(".qtrc-setting-row");
-      const span = row && row.querySelector("span");
-      if(span) span.textContent = name;
-
-      document.querySelectorAll(
-        ".profile-copy strong"
-      ).forEach(function(el){
-        el.textContent = name;
-      });
-    });
-  }
-
-  const clearData =
-    document.getElementById("clearDataSettings");
-
-  if(clearData){
-    clearData.addEventListener("click", function(){
-      if(!window.confirm(
-        "Clear all locally saved canvases and research history?"
-      )) return;
-
-      [
-        "qtrc_canvases",
-        "qtrc_recent_sessions",
-        "qtrc_library_files"
-      ].forEach(function(key){
-        localStorage.removeItem(key);
-      });
-
-      window.location.reload();
-    });
-  }
-
-  applyTheme(
-    localStorage.getItem(STORAGE_THEME) || "system"
-  );
-
-  applyLanguage(
-    localStorage.getItem(STORAGE_LANGUAGE) || "id"
-  );
-
-  if(window.matchMedia){
-    const media = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+    localStorage.setItem(
+      QTRC_LANG_KEY,
+      code
     );
-
-    media.addEventListener("change", function(){
-      if(
-        localStorage.getItem(STORAGE_THEME) === "system"
-      ){
-        applyTheme("system");
-      }
-    });
   }
 
-  document.addEventListener("click", function(){
-    if(profileMenu) profileMenu.classList.add("hidden");
-    if(appearanceSubmenu) appearanceSubmenu.classList.add("hidden");
-  });
+  function qtrcBind(){
+    const profileTrigger =
+      qtrcQuery("#profileTrigger");
 
-})();
-</script>
+    const profileMenu =
+      qtrcQuery("#profileMenu");
 
+    if(profileTrigger){
+      profileTrigger.onclick =
+        function(event){
+          event.preventDefault();
+          event.stopPropagation();
 
-
-<script id="QTRC_LIGHT_THEME_LOCK_V1">
-(function(){
-  try{
-    localStorage.setItem("qtrc_appearance","light");
-  }catch(_){}
-
-  document.documentElement.dataset.theme = "light";
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-      try{
-        localStorage.setItem("qtrc_appearance","light");
-      }catch(_){}
-
-      document.documentElement.dataset.theme =
-        "light";
-    }
-  );
-})();
-</script>
-
-
-<script id="QTRC_CLICKABILITY_REPAIR_V1">
-(function(){
-
-  function closeProfileMenu(){
-    const menu = document.getElementById("profileMenu");
-    if(menu) menu.classList.add("hidden");
-  }
-
-  function toggleProfileMenu(event){
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    const menu = document.getElementById("profileMenu");
-    if(!menu) return;
-
-    menu.classList.toggle("hidden");
-  }
-
-  function handleViewButton(button, event){
-    const view =
-      button &&
-      button.dataset &&
-      button.dataset.view;
-
-    if(!view || typeof window.go !== "function"){
-      return false;
+          if(profileMenu){
+            profileMenu.classList.toggle(
+              "hidden"
+            );
+          }
+        };
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    closeProfileMenu();
-    window.go(view);
-
-    return true;
-  }
-
-  document.addEventListener(
-    "click",
-    function(event){
-
-      const trigger =
-        event.target &&
-        event.target.closest &&
-        event.target.closest(
-          "#profileTrigger"
-        );
-
-      if(trigger){
-        toggleProfileMenu(event);
-        return;
-      }
-
-      const viewButton =
-        event.target &&
-        event.target.closest &&
-        event.target.closest(
+    if(profileMenu){
+      profileMenu
+        .querySelectorAll(
           "button[data-view]"
-        );
+        )
+        .forEach(function(button){
+          button.onclick =
+            function(event){
+              event.preventDefault();
+              event.stopPropagation();
 
-      if(viewButton){
-        handleViewButton(
-          viewButton,
-          event
+              qtrcNavigate(
+                button.dataset.view
+              );
+            };
+        });
+    }
+
+    document
+      .querySelectorAll(
+        ".nav button[data-view]"
+      )
+      .forEach(function(button){
+        button.onclick =
+          function(event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            qtrcNavigate(
+              button.dataset.view
+            );
+          };
+      });
+
+    const languageSelect =
+      qtrcQuery("#qtrcLanguageSelect");
+
+    if(languageSelect){
+      languageSelect.onchange =
+        function(){
+          qtrcApplyLanguage(
+            languageSelect.value === "English"
+              ? "en"
+              : "id"
+          );
+        };
+    }
+
+    const editButton =
+      Array.from(
+        document.querySelectorAll(
+          ".qtrc-setting-row .btn"
+        )
+      ).find(function(button){
+        return (
+          button.textContent
+            .trim()
+            .toLowerCase() === "edit"
         );
-        return;
+      });
+
+    if(editButton){
+      editButton.onclick =
+        function(event){
+          event.preventDefault();
+
+          const currentName =
+            localStorage.getItem(
+              QTRC_NAME_KEY
+            ) ||
+            "Abdullah Kafabihi";
+
+          const nextName =
+            window.prompt(
+              "Researcher name:",
+              currentName
+            );
+
+          if(nextName === null){
+            return;
+          }
+
+          const name =
+            nextName.trim();
+
+          if(!name){
+            return;
+          }
+
+          localStorage.setItem(
+            QTRC_NAME_KEY,
+            name
+          );
+
+          const row =
+            editButton.closest(
+              ".qtrc-setting-row"
+            );
+
+          const value =
+            row &&
+            row.querySelector(
+              "span"
+            );
+
+          if(value){
+            value.textContent =
+              name;
+          }
+
+          document
+            .querySelectorAll(
+              ".profile-copy strong"
+            )
+            .forEach(function(element){
+              element.textContent =
+                name;
+            });
+        };
+    }
+
+    const clearButton =
+      qtrcQuery("#clearDataSettings");
+
+    if(clearButton){
+      clearButton.onclick =
+        function(event){
+          event.preventDefault();
+
+          if(!window.confirm(
+            "Clear all locally saved canvases and research history?"
+          )){
+            return;
+          }
+
+          [
+            "qtrc_canvases",
+            "qtrc_recent_sessions",
+            "qtrc_library_files"
+          ].forEach(function(key){
+            localStorage.removeItem(
+              key
+            );
+          });
+
+          window.location.reload();
+        };
+    }
+
+    document.addEventListener(
+      "click",
+      function(event){
+        const menu =
+          qtrcQuery("#profileMenu");
+
+        if(
+          menu &&
+          !event.target.closest(
+            "#profileMenu"
+          ) &&
+          !event.target.closest(
+            "#profileTrigger"
+          )
+        ){
+          qtrcCloseProfile();
+        }
       }
-
-      const insideMenu =
-        event.target &&
-        event.target.closest &&
-        event.target.closest(
-          "#profileMenu"
-        );
-
-      if(!insideMenu){
-        closeProfileMenu();
-      }
-    },
-    true
-  );
-
-  const trigger =
-    document.getElementById(
-      "profileTrigger"
     );
 
-  if(trigger){
-    trigger.style.pointerEvents = "auto";
-    trigger.style.cursor = "pointer";
-  }
-
-  /* Appearance was intentionally removed.
-     Remove any stale controls left by older revisions. */
-  const appearanceButton =
-    document.getElementById(
-      "appearanceMenuButton"
+    qtrcApplyLanguage(
+      localStorage.getItem(
+        QTRC_LANG_KEY
+      ) || "id"
     );
+  }
 
-  const appearanceSubmenu =
-    document.getElementById(
-      "appearanceSubmenu"
+  if(
+    document.readyState === "loading"
+  ){
+    document.addEventListener(
+      "DOMContentLoaded",
+      qtrcBind,
+      { once:true }
     );
-
-  if(appearanceButton){
-    appearanceButton.remove();
+  }else{
+    qtrcBind();
   }
-
-  if(appearanceSubmenu){
-    appearanceSubmenu.remove();
-  }
-
 })();
 </script>
 
