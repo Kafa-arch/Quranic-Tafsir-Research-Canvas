@@ -468,6 +468,155 @@ body{font-size:15px;line-height:1.55}
   }
 }
 
+
+
+/* QTRC_SETTINGS_PROPORTIONAL_V12 */
+
+.qtrc-settings-page{
+  width:min(820px,calc(100vw - 48px))!important;
+  max-width:820px!important;
+  margin:0 auto!important;
+  padding:52px 0 84px!important;
+}
+
+.qtrc-settings-head{
+  margin-bottom:42px!important;
+}
+
+.qtrc-settings-head h1{
+  font-size:40px!important;
+  line-height:1.08!important;
+  letter-spacing:-.045em!important;
+  margin:0 0 10px!important;
+}
+
+.qtrc-settings-head p{
+  font-size:16px!important;
+  line-height:1.55!important;
+  color:#666!important;
+  margin:0!important;
+}
+
+.qtrc-setting-group{
+  border:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.qtrc-setting-group-title{
+  display:none!important;
+}
+
+.qtrc-setting-row{
+  min-height:0!important;
+  padding:18px 0!important;
+  border:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:28px!important;
+}
+
+.qtrc-setting-row + .qtrc-setting-row{
+  margin-top:8px!important;
+}
+
+.qtrc-setting-row strong{
+  display:block!important;
+  font-size:16px!important;
+  line-height:1.4!important;
+  font-weight:600!important;
+  margin:0 0 5px!important;
+  color:#202020!important;
+}
+
+.qtrc-setting-row span{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+  color:#737373!important;
+  max-width:620px!important;
+}
+
+.qtrc-setting-row .btn,
+.qtrc-setting-row select{
+  flex:0 0 auto!important;
+  font-size:14px!important;
+}
+
+.qtrc-setting-row select{
+  min-width:150px!important;
+  padding:9px 12px!important;
+}
+
+.qtrc-setting-row:has(#clearDataSettings){
+  margin-top:34px!important;
+  padding-top:8px!important;
+}
+
+.qtrc-setting-row:has(#clearDataSettings) strong{
+  font-size:15px!important;
+}
+
+.qtrc-setting-row:has(#clearDataSettings) span{
+  max-width:620px!important;
+}
+
+#clearDataSettings{
+  min-width:96px!important;
+  padding:9px 14px!important;
+  border-radius:8px!important;
+}
+
+.profile-trigger,
+.profile-menu,
+.profile-menu button,
+.nav button,
+.btn{
+  pointer-events:auto!important;
+  touch-action:manipulation;
+}
+
+.profile-trigger{
+  cursor:pointer!important;
+  position:relative;
+  z-index:101;
+}
+
+.profile-menu{
+  z-index:102!important;
+}
+
+@media(max-width:760px){
+  .qtrc-settings-page{
+    width:calc(100vw - 32px)!important;
+    padding:38px 0 64px!important;
+  }
+
+  .qtrc-settings-head{
+    margin-bottom:30px!important;
+  }
+
+  .qtrc-settings-head h1{
+    font-size:34px!important;
+  }
+
+  .qtrc-settings-head p{
+    font-size:15px!important;
+  }
+
+  .qtrc-setting-row{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+    gap:14px!important;
+  }
+
+  .qtrc-setting-row select,
+  .qtrc-setting-row .btn{
+    align-self:flex-start!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1694,9 +1843,7 @@ body{font-size:15px;line-height:1.55}
     </div>
 
     <div class="qtrc-setting-group" data-qtrc-section="data">
-      <div class="qtrc-setting-group-title" data-qtrc-section="data">DATA</div>
-
-      <div class="qtrc-setting-row">
+<div class="qtrc-setting-row">
         <div>
           <strong>Clear local canvas data</strong>
           <span>Removes locally saved QTRC canvas records from this browser.</span>
