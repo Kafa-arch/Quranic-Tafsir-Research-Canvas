@@ -800,6 +800,552 @@ body{font-size:15px!important;line-height:1.55!important;-webkit-font-smoothing:
   .qv2-depth-items div{border-left:0;border-top:1px solid #333;padding:15px 0}
   .qv2-statement h2{font-size:32px}
 }
+
+
+/* =========================================================
+   QTRC HOME V3 VISUAL SYSTEM
+   Editorial / Academic / Research Instrument
+   ========================================================= */
+
+.qtrc-home-v2{
+  --qtrc-ink:#171716;
+  --qtrc-muted:#686862;
+  --qtrc-soft:#96968f;
+  --qtrc-line:#d8d8d1;
+  --qtrc-paper:#f7f7f3;
+  --qtrc-sage:#aeb9a8;
+  --qtrc-sage-dark:#697661;
+  --qtrc-accent:#dce4d8;
+  color:var(--qtrc-ink);
+}
+
+/* ---------- HERO ---------- */
+
+.qv2-hero{
+  min-height:690px;
+  grid-template-columns:minmax(0,1.05fr) minmax(430px,.95fr);
+  gap:90px;
+  padding:70px 10px 90px;
+}
+
+.qv2-eyebrow{
+  font-size:10px;
+  letter-spacing:.22em;
+  color:var(--qtrc-sage-dark);
+  margin-bottom:26px;
+}
+
+.qv2-hero h1{
+  font-size:76px;
+  line-height:.94;
+  letter-spacing:-.07em;
+}
+
+.qv2-hero h1 span{
+  color:#8d8d87;
+}
+
+.qv2-hero-copy>p{
+  max-width:570px;
+  margin-top:32px;
+  color:#5f5f59;
+  font-size:16px;
+  line-height:1.72;
+}
+
+.qv2-hero-meta{
+  margin-top:34px;
+  font-size:12px;
+  color:#77776f;
+}
+
+/* ---------- LIVING RESEARCH CANVAS ---------- */
+
+.qv2-architecture{
+  position:relative;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(174,185,168,.18),transparent 30%),
+    #181917;
+  border:1px solid #282a27;
+  border-radius:28px;
+  padding:22px;
+  box-shadow:
+    0 35px 80px rgba(20,22,19,.18),
+    0 8px 25px rgba(20,22,19,.08);
+  transform:none;
+  animation:qtrcCanvasFloat 7s ease-in-out infinite;
+  overflow:hidden;
+}
+
+/* moving ambient light */
+.qv2-architecture::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(174,185,168,.08) 65deg,
+      transparent 120deg,
+      transparent 240deg,
+      rgba(174,185,168,.06) 300deg,
+      transparent 360deg
+    );
+  animation:qtrcCanvasOrbit 14s linear infinite;
+  pointer-events:none;
+}
+
+/* subtle architectural frame */
+.qv2-architecture::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border:1px solid rgba(174,185,168,.10);
+  border-radius:20px;
+  pointer-events:none;
+}
+
+.qv2-arch-top,
+.qv2-arch-grid,
+.qv2-arch-footer{
+  position:relative;
+  z-index:2;
+}
+
+.qv2-arch-top{
+  padding:7px 7px 20px;
+}
+
+.qv2-arch-label{
+  color:#7f887a;
+  font-size:9px;
+  letter-spacing:.18em;
+}
+
+.qv2-arch-top strong{
+  font-size:17px;
+  letter-spacing:-.02em;
+}
+
+.qv2-arch-count{
+  color:#798076;
+  font-size:9px;
+}
+
+.qv2-arch-grid{
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.qv2-arch-block{
+  position:relative;
+  min-height:72px;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid rgba(255,255,255,.075);
+  background:#222421;
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    background .35s ease;
+  animation:qtrcBlockFloat 5.5s ease-in-out infinite;
+}
+
+.qv2-arch-block:nth-child(2){animation-delay:.35s}
+.qv2-arch-block:nth-child(3){animation-delay:.7s}
+.qv2-arch-block:nth-child(4){animation-delay:1.05s}
+.qv2-arch-block:nth-child(5){animation-delay:1.4s}
+.qv2-arch-block:nth-child(6){animation-delay:1.75s}
+.qv2-arch-block:nth-child(7){animation-delay:2.1s}
+.qv2-arch-block:nth-child(8){animation-delay:2.45s}
+.qv2-arch-block:nth-child(9){animation-delay:2.8s}
+.qv2-arch-block:nth-child(10){animation-delay:3.15s}
+.qv2-arch-block:nth-child(11){animation-delay:3.5s}
+
+.qv2-arch-block:hover{
+  transform:translateY(-4px) scale(1.015);
+  border-color:rgba(174,185,168,.5);
+}
+
+.qv2-arch-block small{
+  color:#7d837a;
+  font-size:9px;
+}
+
+.qv2-arch-block strong{
+  font-size:13px;
+  line-height:1.2;
+}
+
+.qv2-arch-block.qv2-dark{
+  background:#f0f2eb;
+  border-color:#f0f2eb;
+  color:#171917;
+}
+
+.qv2-arch-block.qv2-accent{
+  background:var(--qtrc-sage);
+  border-color:var(--qtrc-sage);
+  color:#182017;
+  box-shadow:
+    0 0 0 1px rgba(174,185,168,.15),
+    0 8px 30px rgba(174,185,168,.12);
+  animation:
+    qtrcBlockFloat 5.5s ease-in-out infinite,
+    qtrcActiveBlock 3.5s ease-in-out infinite;
+}
+
+.qv2-arch-block.qv2-wide{
+  grid-column:span 2;
+}
+
+.qv2-arch-footer{
+  margin-top:16px;
+  padding:0 7px;
+  color:#666c64;
+  font-size:9px;
+  letter-spacing:.1em;
+}
+
+/* ---------- SECTIONS ---------- */
+
+.qv2-section{
+  padding:92px 10px;
+  border-top:0;
+}
+
+.qv2-section-heading{
+  margin-bottom:42px;
+}
+
+.qv2-section-heading h2{
+  font-size:40px;
+  line-height:1;
+  letter-spacing:-.055em;
+}
+
+.qv2-section-heading>p{
+  max-width:430px;
+  font-size:14px;
+  line-height:1.7;
+  color:#696962;
+}
+
+/* ---------- WHY QTRC ---------- */
+
+.qv2-positioning{
+  padding-top:35px;
+}
+
+.qv2-three{
+  border-top:1px solid var(--qtrc-line);
+}
+
+.qv2-three article,
+.qv2-three article:not(:first-child){
+  padding:30px 30px 25px 0;
+}
+
+.qv2-three article:not(:first-child){
+  padding-left:30px;
+}
+
+.qv2-three h2{
+  font-size:27px;
+  margin-top:35px;
+  letter-spacing:-.045em;
+}
+
+.qv2-three p{
+  max-width:310px;
+  font-size:14px;
+  line-height:1.7;
+  color:#696962;
+}
+
+/* ---------- ARCHITECTURE ---------- */
+
+.qv2-dimensions{
+  border:0;
+  border-radius:0;
+  overflow:visible;
+  gap:12px;
+}
+
+.qv2-dimension{
+  min-height:175px;
+  border:1px solid #deded7 !important;
+  border-radius:14px;
+  padding:30px;
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
+}
+
+.qv2-dimension:hover{
+  transform:translateY(-5px);
+  border-color:#b6bdb1 !important;
+  box-shadow:0 15px 35px rgba(30,32,28,.07);
+}
+
+.qv2-dimension-accent{
+  background:#e7ece3;
+  border-color:#ccd5c7 !important;
+}
+
+.qv2-dimension h3{
+  font-size:22px;
+}
+
+.qv2-dimension p{
+  font-size:13px;
+}
+
+/* ---------- PROCESS ---------- */
+
+.qv2-process-section{
+  margin:0 -32px;
+  padding:85px 42px;
+  background:#eceee9;
+  border-top:0;
+}
+
+.qv2-process{
+  gap:0;
+  position:relative;
+}
+
+.qv2-process article{
+  padding-right:35px;
+}
+
+.qv2-process article:not(:last-child)::after{
+  content:"";
+  position:absolute;
+  top:17px;
+  left:0;
+  width:100%;
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    #b8beb4,
+    rgba(184,190,180,.18)
+  );
+  z-index:0;
+}
+
+.qv2-process-num{
+  position:relative;
+  z-index:2;
+  width:36px;
+  height:36px;
+  border:1px solid #b5bbb1;
+  background:#eceee9;
+  font-size:10px;
+}
+
+.qv2-process h3{
+  font-size:20px;
+}
+
+.qv2-process p{
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* ---------- MODES ---------- */
+
+.qv2-modes{
+  gap:16px;
+}
+
+.qv2-mode{
+  border:1px solid #d9d9d2;
+  border-radius:18px;
+  padding:34px;
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+
+.qv2-mode:hover{
+  transform:translateY(-5px);
+  box-shadow:0 18px 40px rgba(25,26,24,.08);
+}
+
+.qv2-mode-dark{
+  background:#1c1d1a;
+  border-color:#1c1d1a;
+}
+
+.qv2-mode h3{
+  font-size:29px;
+  margin-top:55px;
+}
+
+.qv2-mode p{
+  font-size:14px;
+  line-height:1.7;
+}
+
+.qv2-tags span{
+  font-size:10px;
+  padding:6px 10px;
+}
+
+/* ---------- DEPTH ---------- */
+
+.qv2-depth{
+  margin-top:40px;
+  padding:78px 42px;
+  border-radius:22px;
+  background:#1b1c19;
+}
+
+.qv2-depth h2{
+  font-size:36px;
+}
+
+.qv2-depth-items strong{
+  font-size:17px;
+}
+
+.qv2-depth-items span{
+  font-size:11px;
+}
+
+/* ---------- STATEMENT ---------- */
+
+.qv2-statement{
+  padding:95px 20px 125px;
+}
+
+.qv2-statement h2{
+  max-width:900px;
+  font-size:50px;
+  letter-spacing:-.065em;
+}
+
+.qv2-statement p{
+  font-size:15px;
+}
+
+/* ---------- MOTION ---------- */
+
+@keyframes qtrcCanvasFloat{
+  0%,100%{transform:translateY(0) rotate(.2deg)}
+  50%{transform:translateY(-9px) rotate(-.2deg)}
+}
+
+@keyframes qtrcCanvasOrbit{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@keyframes qtrcBlockFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-3px)}
+}
+
+@keyframes qtrcActiveBlock{
+  0%,100%{box-shadow:0 0 0 0 rgba(174,185,168,.05)}
+  50%{box-shadow:0 0 0 5px rgba(174,185,168,.08)}
+}
+
+/* ---------- REDUCED MOTION ---------- */
+
+@media(prefers-reduced-motion:reduce){
+  .qv2-architecture,
+  .qv2-arch-block,
+  .qv2-arch-block.qv2-accent{
+    animation:none;
+  }
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media(max-width:900px){
+  .qv2-hero{
+    grid-template-columns:1fr;
+    gap:55px;
+  }
+
+  .qv2-hero h1{
+    font-size:58px;
+  }
+}
+
+@media(max-width:680px){
+  .qv2-hero h1{
+    font-size:45px;
+  }
+
+  .qv2-section-heading h2{
+    font-size:32px;
+  }
+
+  .qv2-three,
+  .qv2-dimensions,
+  .qv2-modes,
+  .qv2-process{
+    grid-template-columns:1fr;
+  }
+
+  .qv2-process article:not(:last-child)::after{
+    display:none;
+  }
+
+  .qv2-statement h2{
+    font-size:36px;
+  }
+}
+
+
+
+/* QTRC CANVAS INTERACTION — HOVER WIGGLE */
+.qv2-arch-block{
+  cursor:pointer;
+  will-change:transform;
+}
+
+.qv2-arch-block:hover{
+  animation:qtrcBlockWiggle .72s ease-in-out infinite !important;
+  border-color:rgba(174,185,168,.65) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.18),
+    0 0 0 1px rgba(174,185,168,.16) !important;
+  z-index:5;
+}
+
+.qv2-arch-block.qv2-dark:hover{
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.14),
+    0 0 0 1px rgba(174,185,168,.22) !important;
+}
+
+.qv2-arch-block.qv2-accent:hover{
+  box-shadow:
+    0 12px 32px rgba(174,185,168,.22),
+    0 0 0 5px rgba(174,185,168,.09) !important;
+}
+
+@keyframes qtrcBlockWiggle{
+  0%   { transform:translateY(0) rotate(0deg); }
+  20%  { transform:translateY(-3px) rotate(-2.2deg); }
+  40%  { transform:translateY(1px) rotate(1.8deg); }
+  60%  { transform:translateY(-2px) rotate(-1.4deg); }
+  80%  { transform:translateY(0) rotate(.9deg); }
+  100% { transform:translateY(0) rotate(0deg); }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .qv2-arch-block:hover{
+    animation:none !important;
+    transform:translateY(-3px) !important;
+  }
+}
+
 </style>
 </head>
 <body>
