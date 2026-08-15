@@ -700,6 +700,106 @@ body{font-size:15px!important;line-height:1.55!important;-webkit-font-smoothing:
 .modal.hidden{display:none!important}
 @media(max-width:900px){.sidebar{width:210px!important}.canvas-layout{grid-template-columns:1fr!important}.qtrc-sidebar{width:auto!important}}
 @media(max-width:680px){.sidebar{display:none!important}.content{padding:28px 18px 60px!important}.info-hero h1,.launch-hero h1{font-size:34px!important}.setup h1{font-size:29px!important}}
+
+.qtrc-home-v2{max-width:1120px;margin:0 auto;color:#171717}
+.qv2-hero{min-height:650px;display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:70px;align-items:center;padding:65px 10px 85px}
+.qv2-hero-copy{max-width:590px}
+.qv2-eyebrow,.qv2-section-label{font-size:9px;letter-spacing:.18em;font-weight:700;color:#999}
+.qv2-eyebrow{margin-bottom:22px}
+.qv2-hero h1{margin:0;font-size:64px;line-height:.98;letter-spacing:-.065em;font-weight:700}
+.qv2-hero h1 span{color:#8b8b8b}
+.qv2-hero-copy>p{max-width:540px;margin:28px 0 0;color:#666;font-size:15px;line-height:1.75}
+.qv2-hero-meta{display:flex;align-items:center;gap:11px;margin-top:30px;color:#777;font-size:11px}
+.qv2-hero-meta i{width:3px;height:3px;border-radius:50%;background:#bbb}
+
+.qv2-architecture{background:#171717;color:#fff;border-radius:22px;padding:18px;box-shadow:0 22px 60px rgba(0,0,0,.12);transform:rotate(1deg)}
+.qv2-arch-top{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 5px 18px}
+.qv2-arch-label{display:block;font-size:8px;letter-spacing:.15em;color:#777;margin-bottom:5px}
+.qv2-arch-top strong{font-size:14px;font-weight:600}
+.qv2-arch-count{font-size:8px;letter-spacing:.12em;color:#777}
+.qv2-arch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.qv2-arch-block{min-height:64px;padding:10px;border:1px solid #303030;border-radius:9px;background:#202020;display:flex;flex-direction:column;justify-content:space-between}
+.qv2-arch-block small{color:#777;font-size:8px}
+.qv2-arch-block strong{font-size:11px;font-weight:550}
+.qv2-arch-block.qv2-dark{background:#f5f5f2;color:#171717;border-color:#f5f5f2}
+.qv2-arch-block.qv2-accent{background:#d9dfd5;color:#171717;border-color:#d9dfd5}
+.qv2-arch-block.qv2-wide{grid-column:span 2}
+.qv2-arch-footer{display:flex;justify-content:space-between;margin-top:13px;padding:0 5px;color:#666;font-size:8px;letter-spacing:.08em;text-transform:uppercase}
+
+.qv2-section{padding:82px 10px;border-top:1px solid #e7e7e5}
+.qv2-section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:50px;margin-bottom:30px}
+.qv2-section-heading h2{margin:9px 0 0;font-size:32px;line-height:1.05;letter-spacing:-.045em}
+.qv2-section-heading>p{max-width:390px;margin:0;color:#777;font-size:12px;line-height:1.65}
+
+.qv2-three{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #ddd}
+.qv2-three article{padding:25px 25px 15px 0;border-right:1px solid #ddd}
+.qv2-three article:not(:first-child){padding-left:25px}
+.qv2-three article:last-child{border-right:0}
+.qv2-three span{font-size:9px;color:#aaa}
+.qv2-three h2{margin:28px 0 9px;font-size:22px;letter-spacing:-.035em}
+.qv2-three p{margin:0;max-width:280px;color:#777;font-size:12px;line-height:1.65}
+
+.qv2-dimensions{display:grid;grid-template-columns:1fr 1fr;border:1px solid #dededb;border-radius:16px;overflow:hidden}
+.qv2-dimension{display:grid;grid-template-columns:54px 1fr;gap:12px;padding:25px;min-height:155px;background:#fff}
+.qv2-dimension:nth-child(1),.qv2-dimension:nth-child(2){border-bottom:1px solid #dededb}
+.qv2-dimension:nth-child(odd){border-right:1px solid #dededb}
+.qv2-dim-number{font-size:10px;color:#aaa}
+.qv2-dimension span{font-size:8px;letter-spacing:.13em;color:#999;font-weight:700}
+.qv2-dimension h3{margin:9px 0 7px;font-size:18px;letter-spacing:-.025em}
+.qv2-dimension p{margin:0;color:#777;font-size:11px;line-height:1.6}
+.qv2-dimension-accent{background:#f0f2ed}
+
+.qv2-process-section{background:#f1f1ee;margin:0 -32px;padding-left:42px;padding-right:42px}
+.qv2-process{display:grid;grid-template-columns:repeat(4,1fr);gap:25px}
+.qv2-process article{position:relative}
+.qv2-process-num{width:35px;height:35px;border:1px solid #ccc;border-radius:50%;display:grid;place-items:center;background:#f1f1ee;font-size:9px;margin-bottom:20px}
+.qv2-process h3{margin:0 0 7px;font-size:17px;letter-spacing:-.025em}
+.qv2-process p{max-width:200px;margin:0;color:#777;font-size:11px;line-height:1.6}
+
+.qv2-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qv2-mode{border:1px solid #dededb;border-radius:16px;padding:27px;background:#fff}
+.qv2-mode-dark{background:#191919;border-color:#191919;color:#fff}
+.qv2-mode-top{display:flex;justify-content:space-between;font-size:9px;color:#999;letter-spacing:.12em}
+.qv2-mode h3{margin:42px 0 10px;font-size:24px;letter-spacing:-.04em}
+.qv2-mode p{max-width:450px;margin:0;color:#777;font-size:12px;line-height:1.7}
+.qv2-mode-dark p{color:#aaa}
+.qv2-tags{display:flex;gap:6px;margin-top:25px}
+.qv2-tags span{padding:5px 8px;border:1px solid #ddd;border-radius:99px;color:#777;font-size:9px}
+
+.qv2-depth{display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:center;padding:75px 35px;background:#171717;color:#fff;border-radius:20px;margin:30px 10px 80px}
+.qv2-depth h2{margin:12px 0 0;font-size:31px;line-height:1.02;letter-spacing:-.045em}
+.qv2-depth .qv2-section-label{color:#777}
+.qv2-depth-items{display:grid;grid-template-columns:repeat(3,1fr)}
+.qv2-depth-items div{padding:8px 20px;border-left:1px solid #333}
+.qv2-depth-items strong{display:block;font-size:15px;margin-bottom:6px}
+.qv2-depth-items span{color:#888;font-size:10px}
+
+.qv2-statement{text-align:center;padding:65px 20px 110px}
+.qv2-statement .qv2-section-label{margin-bottom:18px}
+.qv2-statement h2{max-width:780px;margin:0 auto;font-size:42px;line-height:1.05;letter-spacing:-.055em}
+.qv2-statement p{max-width:510px;margin:18px auto 0;color:#777;font-size:13px;line-height:1.7}
+
+@media(max-width:900px){
+  .qv2-hero{grid-template-columns:1fr;gap:45px}
+  .qv2-hero h1{font-size:52px}
+  .qv2-section-heading{display:block}
+  .qv2-section-heading>p{margin-top:15px}
+  .qv2-process{grid-template-columns:1fr 1fr;gap:35px 20px}
+  .qv2-depth{grid-template-columns:1fr;gap:35px}
+}
+@media(max-width:680px){
+  .qv2-hero{padding:45px 0 60px}
+  .qv2-hero h1{font-size:42px}
+  .qv2-hero-meta{flex-wrap:wrap}
+  .qv2-three,.qv2-dimensions,.qv2-modes,.qv2-process{grid-template-columns:1fr}
+  .qv2-three article,.qv2-three article:not(:first-child){padding:22px 0;border-right:0;border-bottom:1px solid #ddd}
+  .qv2-dimension{border-right:0!important;border-bottom:1px solid #dededb!important}
+  .qv2-dimension:last-child{border-bottom:0!important}
+  .qv2-depth{margin-left:0;margin-right:0;padding:45px 25px}
+  .qv2-depth-items{grid-template-columns:1fr}
+  .qv2-depth-items div{border-left:0;border-top:1px solid #333;padding:15px 0}
+  .qv2-statement h2{font-size:32px}
+}
 </style>
 </head>
 <body>
@@ -765,267 +865,180 @@ body{font-size:15px!important;line-height:1.55!important;-webkit-font-smoothing:
 
     <div class="content">
       <section id="home" class="view">
-  <div class="info-shell">
+  <div class="qtrc-home-v2">
+    <div class="qv2-hero">
+      <div class="qv2-hero-copy">
+        <div class="qv2-eyebrow">QUR’ANIC TAFSIR RESEARCH CANVAS+</div>
+        <h1>Design research<br><span>with epistemic clarity.</span></h1>
+        <p>
+          QTRC is a research workspace for developing, examining, and structuring
+          interpretive Qur’anic tafsir research — from an emerging idea to a
+          defensible research architecture.
+        </p>
+        <div class="qv2-hero-meta">
+          <span>11 connected blocks</span>
+          <i></i>
+          <span>2 research modes</span>
+          <i></i>
+          <span>3 research depths</span>
+        </div>
+      </div>
 
-    <div class="info-hero">
-      <div class="eyebrow">QUR’ANIC TAFSIR RESEARCH CANVAS+</div>
-      <h1>Design the research<br><span>before you build the canvas.</span></h1>
-      <p>
-        QTRC is a conceptual research framework for structuring and developing
-        interpretive Qur’anic tafsir research. It helps make the architecture
-        of a research project visible, connected, and open to critical reflection.
-      </p>
+      <div class="qv2-architecture">
+        <div class="qv2-arch-top">
+          <div>
+            <span class="qv2-arch-label">QTRC ARCHITECTURE</span>
+            <strong>Research Canvas</strong>
+          </div>
+          <span class="qv2-arch-count">11 BLOCKS</span>
+        </div>
+
+        <div class="qv2-arch-grid">
+          <div class="qv2-arch-block qv2-dark"><small>01</small><strong>Topic</strong></div>
+          <div class="qv2-arch-block qv2-dark"><small>02</small><strong>Research Question</strong></div>
+          <div class="qv2-arch-block"><small>03</small><strong>Objective</strong></div>
+          <div class="qv2-arch-block"><small>04</small><strong>Corpus</strong></div>
+          <div class="qv2-arch-block"><small>05</small><strong>Context</strong></div>
+          <div class="qv2-arch-block"><small>06</small><strong>Sources</strong></div>
+          <div class="qv2-arch-block"><small>07</small><strong>Theory</strong></div>
+          <div class="qv2-arch-block qv2-accent"><small>08</small><strong>Method</strong></div>
+          <div class="qv2-arch-block qv2-wide"><small>09</small><strong>Analysis Strategy</strong></div>
+          <div class="qv2-arch-block"><small>10</small><strong>Contribution &amp; Novelty</strong></div>
+          <div class="qv2-arch-block qv2-wide"><small>11</small><strong>Title</strong></div>
+        </div>
+
+        <div class="qv2-arch-footer">
+          <span>Research architecture</span>
+          <span>01—11</span>
+        </div>
+      </div>
     </div>
 
-    <div class="info-grid">
-      <div class="info-card accent-card">
-        <div class="info-kicker">WHAT IS QTRC?</div>
-        <h2>A framework for research thinking.</h2>
-        <p>
-          QTRC helps researchers map the essential elements of a tafsir research
-          project and examine how those elements relate to one another.
-        </p>
-      </div>
-
-      <div class="info-card">
-        <div class="info-kicker">NOT A REPLACEMENT</div>
-        <h2>Not another tafsir methodology.</h2>
-        <p>
-          QTRC does not replace established tafsir methodologies. It provides
-          a conceptual space for designing, organizing, and reflecting on research.
-        </p>
-      </div>
-
-      <div class="info-card">
-        <div class="info-kicker">THE PRINCIPLE</div>
-        <h2>Make the research architecture visible.</h2>
-        <p>
-          Research questions, corpus, context, theory, method, analysis, and
-          contribution should be understood as connected parts of one design.
-        </p>
+    <div class="qv2-section qv2-positioning">
+      <div class="qv2-section-label">WHY QTRC</div>
+      <div class="qv2-three">
+        <article>
+          <span>01</span>
+          <h2>Structure</h2>
+          <p>Make the essential elements of a tafsir research project visible and connected.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Examine</h2>
+          <p>Surface assumptions, dependencies, gaps, and tensions within the emerging research design.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Refine</h2>
+          <p>Move from an initial research idea toward a clearer and more defensible architecture.</p>
+        </article>
       </div>
     </div>
 
-    <div class="info-section-head">
+    <div class="qv2-section">
+      <div class="qv2-section-heading">
+        <div>
+          <div class="qv2-section-label">THE RESEARCH ARCHITECTURE</div>
+          <h2>Four dimensions of one research design.</h2>
+        </div>
+        <p>QTRC treats the research project as an interconnected system, not a collection of isolated fields.</p>
+      </div>
+
+      <div class="qv2-dimensions">
+        <article class="qv2-dimension">
+          <div class="qv2-dim-number">01</div>
+          <div>
+            <span>PROBLEM ORIENTATION</span>
+            <h3>What is being investigated?</h3>
+            <p>Topic · Research Question · Objective</p>
+          </div>
+        </article>
+        <article class="qv2-dimension">
+          <div class="qv2-dim-number">02</div>
+          <div>
+            <span>RESEARCH FOUNDATIONS</span>
+            <h3>What does the research stand on?</h3>
+            <p>Corpus Qur’aniyyah · Context · Data &amp; Sources</p>
+          </div>
+        </article>
+        <article class="qv2-dimension">
+          <div class="qv2-dim-number">03</div>
+          <div>
+            <span>METHODOLOGICAL INSTRUMENTS</span>
+            <h3>How is the research developed?</h3>
+            <p>Theoretical Framework · Method of Tafsir · Analysis Strategy</p>
+          </div>
+        </article>
+        <article class="qv2-dimension qv2-dimension-accent">
+          <div class="qv2-dim-number">04</div>
+          <div>
+            <span>RESEARCH CONTRIBUTION</span>
+            <h3>What does the research contribute?</h3>
+            <p>Contribution &amp; Novelty · Title</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="qv2-section qv2-process-section">
+      <div class="qv2-section-heading">
+        <div>
+          <div class="qv2-section-label">HOW QTRC WORKS</div>
+          <h2>From conversation to architecture.</h2>
+        </div>
+        <p>The canvas does not need to be completed before the research thinking begins.</p>
+      </div>
+
+      <div class="qv2-process">
+        <article><div class="qv2-process-num">01</div><h3>Discuss</h3><p>Bring an idea, question, text, problem, or draft.</p></article>
+        <article><div class="qv2-process-num">02</div><h3>Identify</h3><p>QTRC recognizes research elements emerging from the discussion.</p></article>
+        <article><div class="qv2-process-num">03</div><h3>Examine</h3><p>Dependencies, gaps, assumptions, and tensions become visible.</p></article>
+        <article><div class="qv2-process-num">04</div><h3>Structure</h3><p>The confirmed elements form the research canvas.</p></article>
+      </div>
+    </div>
+
+    <div class="qv2-section">
+      <div class="qv2-section-heading">
+        <div>
+          <div class="qv2-section-label">YOUR EPISTEMIC STANCE</div>
+          <h2>Two ways to work with QTRC.</h2>
+        </div>
+        <p>Choose the stance that matches what your research needs at that moment.</p>
+      </div>
+
+      <div class="qv2-modes">
+        <article class="qv2-mode">
+          <div class="qv2-mode-top"><span>01</span><strong>EXPLORE</strong></div>
+          <h3>Canvas Thinking Mode</h3>
+          <p>Develop ideas, clarify concepts, reveal assumptions, and construct provisional research structures.</p>
+          <div class="qv2-tags"><span>Explore</span><span>Clarify</span><span>Develop</span></div>
+        </article>
+        <article class="qv2-mode qv2-mode-dark">
+          <div class="qv2-mode-top"><span>02</span><strong>AUDIT</strong></div>
+          <h3>Canvas Validation Mode</h3>
+          <p>Stress-test the research design for unsupported assumptions, weak dependencies, incoherence, and claims requiring stronger grounding.</p>
+          <div class="qv2-tags"><span>Check</span><span>Challenge</span><span>Validate</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="qv2-depth">
       <div>
-        <div class="info-kicker">THE QTRC ARCHITECTURE</div>
-        <h2>Four areas. Eleven connected blocks.</h2>
+        <div class="qv2-section-label">RESEARCH DEPTH</div>
+        <h2>Three depths.<br>One research space.</h2>
       </div>
-      <p>
-        The canvas organizes the major elements of an interpretive research design
-        into a connected architecture.
-      </p>
-    </div>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-kicker">01 · PROBLEM ORIENTATION</div>
-        <h2>Where the research begins.</h2>
-        <p>
-          Topic, Research Question, and Objective establish the direction
-          and purpose of the research.
-        </p>
-      </div>
-
-      <div class="info-card">
-        <div class="info-kicker">02 · RESEARCH FOUNDATIONS</div>
-        <h2>What the research stands on.</h2>
-        <p>
-          Corpus Qur’aniyyah, Context, and Data &amp; Sources establish the
-          textual, contextual, and evidentiary foundations of the study.
-        </p>
-      </div>
-
-      <div class="info-card">
-        <div class="info-kicker">03 · METHODOLOGICAL INSTRUMENTS</div>
-        <h2>How the research is developed.</h2>
-        <p>
-          Theoretical Framework, Method of Tafsir, and Analysis Strategy
-          shape the interpretive and analytical process.
-        </p>
-      </div>
-
-      <div class="info-card accent-card">
-        <div class="info-kicker">04 · RESEARCH VALIDATION</div>
-        <h2>What the research contributes.</h2>
-        <p>
-          Contribution &amp; Novelty and Title bring the research architecture
-          toward a clear and defensible scholarly direction.
-        </p>
+      <div class="qv2-depth-items">
+        <div><strong>Basic</strong><span>Foundational clarity</span></div>
+        <div><strong>Intermediate</strong><span>Critical development</span></div>
+        <div><strong>Expert</strong><span>Epistemological scrutiny</span></div>
       </div>
     </div>
 
-    <div class="info-section-head">
-      <div>
-        <div class="info-kicker">THE ELEVEN BLOCKS</div>
-        <h2>One research architecture.</h2>
-      </div>
-      <p>
-        The blocks are connected rather than treated as isolated fields.
-      </p>
+    <div class="qv2-statement">
+      <div class="qv2-section-label">THE QTRC PRINCIPLE</div>
+      <h2>QTRC does not make the scholarly decision for you.</h2>
+      <p>It makes the reasoning around that decision more visible, structured, and accountable.</p>
     </div>
-
-    <div class="depth-strip">
-      <div><strong>01</strong><span>Topic</span></div>
-      <div><strong>02</strong><span>Research Question</span></div>
-      <div><strong>03</strong><span>Objective</span></div>
-      <div><strong>04</strong><span>Corpus Qur’aniyyah</span></div>
-      <div><strong>05</strong><span>Context</span></div>
-      <div><strong>06</strong><span>Data &amp; Sources</span></div>
-      <div><strong>07</strong><span>Theoretical Framework</span></div>
-      <div><strong>08</strong><span>Method of Tafsir</span></div>
-      <div><strong>09</strong><span>Analysis Strategy</span></div>
-      <div><strong>10</strong><span>Contribution &amp; Novelty</span></div>
-      <div><strong>11</strong><span>Title</span></div>
-    </div>
-
-    <div class="info-section-head">
-      <div>
-        <div class="info-kicker">HOW QTRC WORKS</div>
-        <h2>From research discussion to research architecture.</h2>
-      </div>
-      <p>
-        QTRC is designed to help the researcher progressively clarify,
-        connect, and refine the elements of a research design.
-      </p>
-    </div>
-
-    <div class="mode-info-grid">
-      <div class="mode-info-card">
-        <div class="mode-info-top">
-          <span class="mode-symbol">01</span>
-          <span class="mode-tag">DISCUSS</span>
-        </div>
-        <h3>Develop the research idea.</h3>
-        <p>
-          Begin with a topic, question, problem, text, context, or emerging
-          research idea.
-        </p>
-        <div class="mode-points">
-          <span>Explore</span>
-          <span>Clarify</span>
-          <span>Question</span>
-        </div>
-      </div>
-
-      <div class="mode-info-card">
-        <div class="mode-info-top">
-          <span class="mode-symbol">02</span>
-          <span class="mode-tag">IDENTIFY</span>
-        </div>
-        <h3>Map the research elements.</h3>
-        <p>
-          QTRC progressively identifies the elements of the research architecture
-          emerging from the discussion.
-        </p>
-        <div class="mode-points">
-          <span>Map</span>
-          <span>Connect</span>
-          <span>Distinguish</span>
-        </div>
-      </div>
-
-      <div class="mode-info-card">
-        <div class="mode-info-top">
-          <span class="mode-symbol">03</span>
-          <span class="mode-tag">REFINE</span>
-        </div>
-        <h3>Review the architecture.</h3>
-        <p>
-          Gaps, tensions, dependencies, and areas requiring further clarification
-          become visible as the design develops.
-        </p>
-        <div class="mode-points">
-          <span>Review</span>
-          <span>Challenge</span>
-          <span>Refine</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section-head">
-      <div>
-        <div class="info-kicker">TWO MODES</div>
-        <h2>Choose the epistemic stance.</h2>
-      </div>
-      <p>
-        The selected mode determines how QTRC approaches the research discussion.
-      </p>
-    </div>
-
-    <div class="mode-info-grid">
-      <div class="mode-info-card">
-        <div class="mode-info-top">
-          <span class="mode-symbol">↗</span>
-          <span class="mode-tag">EXPLORE</span>
-        </div>
-        <h3>Canvas Thinking Mode</h3>
-        <p>
-          Develop ideas, reveal assumptions, connect concepts, and construct
-          provisional research structures without treating uncertainty as settled.
-        </p>
-        <div class="mode-points">
-          <span>Explore</span>
-          <span>Clarify</span>
-          <span>Develop</span>
-        </div>
-      </div>
-
-      <div class="mode-info-card">
-        <div class="mode-info-top">
-          <span class="mode-symbol">✓</span>
-          <span class="mode-tag">AUDIT</span>
-        </div>
-        <h3>Canvas Validation Mode</h3>
-        <p>
-          Stress-test the research design for unsupported assumptions, weak
-          dependencies, incoherence, and claims requiring stronger grounding.
-        </p>
-        <div class="mode-points">
-          <span>Check</span>
-          <span>Challenge</span>
-          <span>Validate</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section-head">
-      <div>
-        <div class="info-kicker">THREE RESEARCH DEPTHS</div>
-        <h2>Different depths of intervention.</h2>
-      </div>
-      <p>
-        Research depth determines how far QTRC intervenes in the development
-        and scrutiny of the research architecture.
-      </p>
-    </div>
-
-    <div class="depth-strip">
-      <div>
-        <strong>Basic</strong>
-        <span>Foundational clarity and descriptive structure.</span>
-      </div>
-      <div>
-        <strong>Intermediate</strong>
-        <span>Analytical distinctions, comparison, and critical refinement.</span>
-      </div>
-      <div>
-        <strong>Expert</strong>
-        <span>Constructive, epistemological, and paradigmatic scrutiny.</span>
-      </div>
-    </div>
-
-    <div class="info-footer-card">
-      <div>
-        <div class="info-kicker">CORE PRINCIPLE</div>
-        <h2>QTRC does not make the scholarly decision for you.</h2>
-        <p>
-          It makes the reasoning around that decision more visible,
-          structured, and accountable.
-        </p>
-      </div>
-    </div>
-
   </div>
 </section>
 
