@@ -1628,6 +1628,322 @@ body{font-size:15px!important;line-height:1.55!important;-webkit-font-smoothing:
 }
 
 </style>
+
+<style id="qtrc-original-canvas-ui">
+
+/* =========================================================
+   QTRC ORIGINAL CANVAS UI
+   ========================================================= */
+
+.qv2-architecture{
+  background:#111111 !important;
+  border:1px solid #292929 !important;
+  border-radius:26px !important;
+  padding:24px !important;
+  box-shadow:
+    0 28px 70px rgba(0,0,0,.18),
+    0 8px 22px rgba(0,0,0,.08) !important;
+}
+
+.qv2-architecture::before{
+  display:none !important;
+}
+
+.qv2-architecture::after{
+  border-color:rgba(255,255,255,.08) !important;
+}
+
+.qtrc-original-grid{
+  display:grid !important;
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  grid-template-rows:
+    minmax(76px,1fr)
+    minmax(76px,1fr)
+    minmax(92px,1fr)
+    minmax(92px,1fr)
+    minmax(92px,1fr)
+    minmax(92px,1fr) !important;
+  gap:7px !important;
+  align-items:stretch !important;
+}
+
+/* Exact QTRC architecture */
+
+.qtrc-original-grid .qtrc-info-block:nth-child(1){
+  grid-column:1 / -1;
+  grid-row:1;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(2){
+  grid-column:1 / -1;
+  grid-row:2;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(3){
+  grid-column:1 / 4;
+  grid-row:3;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(4){
+  grid-column:4 / 7;
+  grid-row:3;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(5){
+  grid-column:1 / 4;
+  grid-row:4;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(6){
+  grid-column:4 / 7;
+  grid-row:4;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(7){
+  grid-column:1 / 4;
+  grid-row:5;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(8){
+  grid-column:4 / 7;
+  grid-row:5;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(9){
+  grid-column:1 / 3;
+  grid-row:6;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(10){
+  grid-column:3 / 5;
+  grid-row:6;
+}
+
+.qtrc-original-grid .qtrc-info-block:nth-child(11){
+  grid-column:5 / 7;
+  grid-row:6;
+}
+
+/* Blocks */
+
+.qtrc-info-block{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  min-height:0 !important;
+  padding:20px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  text-align:center !important;
+
+  background:#d9d9d9 !important;
+  border:1px solid #bcbcbc !important;
+  border-radius:7px !important;
+
+  color:#111111 !important;
+
+  cursor:pointer;
+
+  box-shadow:none !important;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease !important;
+
+  animation:none !important;
+}
+
+.qtrc-info-block strong{
+  display:block;
+  max-width:92%;
+  color:#111111 !important;
+  font-size:14px !important;
+  font-weight:650 !important;
+  line-height:1.25 !important;
+  letter-spacing:-.02em !important;
+}
+
+.qtrc-info-block:hover{
+  background:#e7e7e7 !important;
+  border-color:#999999 !important;
+
+  transform:translateY(-3px) scale(1.012) !important;
+
+  box-shadow:
+    0 9px 22px rgba(0,0,0,.18) !important;
+
+  z-index:5;
+}
+
+.qtrc-info-block:active{
+  transform:translateY(-1px) scale(.995) !important;
+}
+
+.qtrc-info-block:focus-visible{
+  outline:2px solid #ffffff;
+  outline-offset:3px;
+}
+
+/* ---------------------------------------------------------
+   QTRC Block Definition Modal
+   --------------------------------------------------------- */
+
+.qtrc-definition-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+
+  display:grid;
+  place-items:center;
+
+  padding:24px;
+
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+
+.qtrc-definition-card{
+  width:min(520px,100%);
+
+  background:#ffffff;
+  color:#111111;
+
+  border:1px solid #d5d5d5;
+  border-radius:18px;
+
+  padding:30px;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.25);
+
+  animation:qtrcDefinitionIn .2s ease-out;
+}
+
+.qtrc-definition-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+
+  padding-bottom:18px;
+  border-bottom:1px solid #e3e3e3;
+}
+
+.qtrc-definition-head h2{
+  margin:0;
+
+  color:#111111;
+
+  font-size:24px;
+  line-height:1.1;
+  letter-spacing:-.04em;
+}
+
+.qtrc-definition-close{
+  width:34px;
+  height:34px;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid #d8d8d8;
+  border-radius:50%;
+
+  background:#ffffff;
+  color:#111111;
+
+  font-size:20px;
+  line-height:1;
+
+  cursor:pointer;
+}
+
+.qtrc-definition-close:hover{
+  background:#eeeeee;
+}
+
+.qtrc-definition-body{
+  padding-top:20px;
+}
+
+.qtrc-definition-body p{
+  margin:0;
+
+  color:#444444;
+
+  font-size:14px;
+  line-height:1.75;
+}
+
+.qtrc-definition-label{
+  margin:22px 0 8px;
+
+  color:#888888;
+
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+@keyframes qtrcDefinitionIn{
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@media(max-width:900px){
+  .qtrc-original-grid{
+    grid-template-columns:repeat(2,1fr) !important;
+    grid-template-rows:none !important;
+  }
+
+  .qtrc-original-grid .qtrc-info-block{
+    grid-column:auto !important;
+    grid-row:auto !important;
+    min-height:82px !important;
+  }
+
+  .qtrc-original-grid .qtrc-info-block:nth-child(1),
+  .qtrc-original-grid .qtrc-info-block:nth-child(2){
+    grid-column:1 / -1 !important;
+  }
+}
+
+@media(max-width:560px){
+  .qtrc-original-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .qtrc-original-grid .qtrc-info-block,
+  .qtrc-original-grid .qtrc-info-block:nth-child(n){
+    grid-column:1 !important;
+    grid-row:auto !important;
+    min-height:76px !important;
+  }
+
+  .qtrc-definition-card{
+    padding:24px;
+  }
+
+  .qtrc-definition-head h2{
+    font-size:21px;
+  }
+}
+
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -1720,21 +2036,66 @@ body{font-size:15px!important;line-height:1.55!important;-webkit-font-smoothing:
           <span class="qv2-arch-count">11 BLOCKS</span>
         </div>
 
-        <div class="qv2-arch-grid">
-          <div class="qv2-arch-block qv2-dark"><small>01</small><strong>Topic</strong></div>
-          <div class="qv2-arch-block qv2-dark"><small>02</small><strong>Research Question</strong></div>
-          <div class="qv2-arch-block"><small>03</small><strong>Objective</strong></div>
-          <div class="qv2-arch-block"><small>04</small><strong>Corpus</strong></div>
-          <div class="qv2-arch-block"><small>05</small><strong>Context</strong></div>
-          <div class="qv2-arch-block"><small>06</small><strong>Sources</strong></div>
-          <div class="qv2-arch-block"><small>07</small><strong>Theory</strong></div>
-          <div class="qv2-arch-block qv2-accent"><small>08</small><strong>Method</strong></div>
-          <div class="qv2-arch-block qv2-wide"><small>09</small><strong>Analysis Strategy</strong></div>
-          <div class="qv2-arch-block"><small>10</small><strong>Contribution &amp; Novelty</strong></div>
-          <div class="qv2-arch-block qv2-wide"><small>11</small><strong>Title</strong></div>
-        </div>
+        
+<div class="qv2-arch-grid qtrc-original-grid">
 
-        <div class="qv2-arch-footer">
+  <button class="qv2-arch-block qv2-wide qtrc-info-block"
+          data-qtrc-block="title">
+    <strong>Title</strong>
+  </button>
+
+  <button class="qv2-arch-block qv2-wide qtrc-info-block"
+          data-qtrc-block="contribution">
+    <strong>Contribution &amp; Novelty</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="theory">
+    <strong>Theoretical Framework</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="topic">
+    <strong>Topic</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="method">
+    <strong>Method of Tafsir</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="question">
+    <strong>Research Question</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="analysis">
+    <strong>Analysis Strategy</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="objective">
+    <strong>Objective</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="corpus">
+    <strong>Corpus Qur'aniyyah</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="sources">
+    <strong>Data &amp; Sources</strong>
+  </button>
+
+  <button class="qv2-arch-block qtrc-info-block"
+          data-qtrc-block="context">
+    <strong>Context</strong>
+  </button>
+
+</div>
+<div class="qv2-arch-footer">
           <span>Research architecture</span>
           <span>01—11</span>
         </div>
@@ -6419,5 +6780,146 @@ brainThinkV2.onclick = async function(){
   });
 })();
 </script>
+
+<script id="qtrc-block-definitions">
+
+(function(){
+
+  const definitions = {
+
+    title:{
+      title:"Title",
+      text:"The working title of the research. It should communicate the main subject, scope, and direction of the study as clearly as possible."
+    },
+
+    contribution:{
+      title:"Contribution & Novelty",
+      text:"The contribution and novelty of the research. This block clarifies what the study adds to existing scholarship and why that contribution matters."
+    },
+
+    theory:{
+      title:"Theoretical Framework",
+      text:"The theoretical framework that guides how the research problem, Qur’anic corpus, interpretation, and analysis are conceptually understood."
+    },
+
+    topic:{
+      title:"Topic",
+      text:"The central subject or area of inquiry that the research intends to investigate. It establishes the initial scope and direction of the study."
+    },
+
+    method:{
+      title:"Method of Tafsir",
+      text:"The tafsir method used to interpret the Qur’anic corpus. This identifies the interpretive approach through which the research engages the text."
+    },
+
+    question:{
+      title:"Research Question",
+      text:"The central question the research seeks to answer. It translates the topic into a focused and investigable problem."
+    },
+
+    analysis:{
+      title:"Analysis Strategy",
+      text:"The strategy used to examine and connect the collected material so that the research can move from evidence and interpretation toward a defensible argument."
+    },
+
+    objective:{
+      title:"Objective",
+      text:"The intended outcomes of the research. Objectives clarify what the study seeks to examine, explain, develop, or demonstrate."
+    },
+
+    corpus:{
+      title:"Corpus Qur'aniyyah",
+      text:"The Qur’anic material selected as the primary textual corpus of the study, including the relevant verses, passages, surahs, or textual units."
+    },
+
+    sources:{
+      title:"Data & Sources",
+      text:"The data and scholarly sources used to support the research, including primary, secondary, and contextual materials relevant to the study."
+    },
+
+    context:{
+      title:"Context",
+      text:"The historical, intellectual, social, linguistic, or other contextual dimensions needed to understand the Qur’anic text and the research problem."
+    }
+
+  };
+
+  function closeDefinition(){
+    const modal=document.getElementById("qtrcDefinitionModal");
+    if(modal) modal.remove();
+    document.body.style.overflow="";
+  }
+
+  function openDefinition(key){
+
+    const data=definitions[key];
+    if(!data) return;
+
+    closeDefinition();
+
+    const modal=document.createElement("div");
+    modal.id="qtrcDefinitionModal";
+    modal.className="qtrc-definition-modal";
+
+    modal.innerHTML=`
+      <div class="qtrc-definition-card"
+           role="dialog"
+           aria-modal="true"
+           aria-labelledby="qtrcDefinitionTitle">
+
+        <div class="qtrc-definition-head">
+          <h2 id="qtrcDefinitionTitle">${data.title}</h2>
+
+          <button
+            type="button"
+            class="qtrc-definition-close"
+            aria-label="Close">
+            ×
+          </button>
+        </div>
+
+        <div class="qtrc-definition-body">
+          <div class="qtrc-definition-label">
+            QTRC BLOCK
+          </div>
+
+          <p>${data.text}</p>
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow="hidden";
+
+    modal.querySelector(".qtrc-definition-close")
+      .addEventListener("click",closeDefinition);
+
+    modal.addEventListener("click",function(event){
+      if(event.target===modal) closeDefinition();
+    });
+  }
+
+  document.addEventListener("click",function(event){
+
+    const block=event.target.closest(".qtrc-info-block");
+
+    if(block){
+      const key=block.dataset.qtrcBlock;
+      openDefinition(key);
+    }
+
+  });
+
+  document.addEventListener("keydown",function(event){
+    if(event.key==="Escape"){
+      closeDefinition();
+    }
+  });
+
+})();
+
+</script>
+
 </body>
 </html>
